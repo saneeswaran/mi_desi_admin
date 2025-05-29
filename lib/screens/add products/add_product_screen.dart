@@ -5,7 +5,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:desi_shopping_seller/model/brand_model.dart';
 import 'package:desi_shopping_seller/providers/brand_provider.dart';
 import 'package:desi_shopping_seller/providers/product_provider.dart';
-import 'package:desi_shopping_seller/screens/add%20products/componenets/add_brands.dart';
 import 'package:desi_shopping_seller/util/util.dart';
 import 'package:desi_shopping_seller/widgets/custom_elevated_button.dart';
 import 'package:desi_shopping_seller/widgets/custom_text_form_field.dart';
@@ -214,176 +213,173 @@ class _AddProductScreenState extends State<AddProductScreen> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.blue,
-        tooltip: "Add Brands",
-        onPressed: () => moveToNextPageWithFadeAnimations(
-          context: context,
-          route: const AddBrands(),
-        ),
-        child: const Icon(Icons.add, color: Colors.white),
-      ),
-      body: Stack(
-        children: [
-          AbsorbPointer(
-            absorbing: isAddingProduct,
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Form(
-                key: formKey,
-                child: Column(
-                  spacing: size.height * 0.01,
-                  children: [
-                    // Images
-                    images.isEmpty
-                        ? GestureDetector(
-                            onTap: pickImage,
-                            child: Container(
-                              height: size.height * 0.3,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.blue),
-                                borderRadius: BorderRadius.circular(12),
+    return SafeArea(
+      child: Scaffold(
+        body: Stack(
+          children: [
+            AbsorbPointer(
+              absorbing: isAddingProduct,
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    spacing: size.height * 0.01,
+                    children: [
+                      // Images
+                      images.isEmpty
+                          ? GestureDetector(
+                              onTap: pickImage,
+                              child: Container(
+                                height: size.height * 0.3,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.blue),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: const Center(
+                                  child: Text('Tap to select images'),
+                                ),
                               ),
-                              child: const Center(
-                                child: Text('Tap to select images'),
+                            )
+                          : GestureDetector(
+                              onTap: pickImage,
+                              child: CarouselSlider(
+                                items: images
+                                    .map(
+                                      (e) => Image.file(e, fit: BoxFit.cover),
+                                    )
+                                    .toList(),
+                                options: CarouselOptions(height: 200),
                               ),
                             ),
-                          )
-                        : GestureDetector(
-                            onTap: pickImage,
-                            child: CarouselSlider(
-                              items: images
-                                  .map((e) => Image.file(e, fit: BoxFit.cover))
-                                  .toList(),
-                              options: CarouselOptions(height: 200),
-                            ),
-                          ),
-                    const SizedBox(height: 10),
+                      const SizedBox(height: 10),
 
-                    // Videos
-                    videos.isEmpty
-                        ? GestureDetector(
-                            onTap: pickVideos,
-                            child: Container(
+                      // Videos
+                      videos.isEmpty
+                          ? GestureDetector(
+                              onTap: pickVideos,
+                              child: Container(
+                                height: 100,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.blue),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: const Center(
+                                  child: Text('Tap to select videos'),
+                                ),
+                              ),
+                            )
+                          : SizedBox(
                               height: 100,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.blue),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: const Center(
-                                child: Text('Tap to select videos'),
-                              ),
-                            ),
-                          )
-                        : SizedBox(
-                            height: 100,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: videoThumbnails.length,
-                              itemBuilder: (_, i) => GestureDetector(
-                                onTap: () {
-                                  videoControllers[i].play();
-                                  showDialog(
-                                    context: context,
-                                    builder: (_) => AlertDialog(
-                                      contentPadding: EdgeInsets.zero,
-                                      content: AspectRatio(
-                                        aspectRatio: videoControllers[i]
-                                            .value
-                                            .aspectRatio,
-                                        child: VideoPlayer(videoControllers[i]),
-                                      ),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () {
-                                            videoControllers[i].pause();
-                                            Navigator.pop(context);
-                                          },
-                                          child: const Text('Close'),
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: videoThumbnails.length,
+                                itemBuilder: (_, i) => GestureDetector(
+                                  onTap: () {
+                                    videoControllers[i].play();
+                                    showDialog(
+                                      context: context,
+                                      builder: (_) => AlertDialog(
+                                        contentPadding: EdgeInsets.zero,
+                                        content: AspectRatio(
+                                          aspectRatio: videoControllers[i]
+                                              .value
+                                              .aspectRatio,
+                                          child: VideoPlayer(
+                                            videoControllers[i],
+                                          ),
                                         ),
-                                      ],
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              videoControllers[i].pause();
+                                              Navigator.pop(context);
+                                            },
+                                            child: const Text('Close'),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                    margin: const EdgeInsets.only(right: 8),
+                                    width: size.width * 0.3,
+                                    child: Image.file(
+                                      File(videoThumbnails[i]),
+                                      fit: BoxFit.cover,
                                     ),
-                                  );
-                                },
-                                child: Container(
-                                  margin: const EdgeInsets.only(right: 8),
-                                  width: size.width * 0.3,
-                                  child: Image.file(
-                                    File(videoThumbnails[i]),
-                                    fit: BoxFit.cover,
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                    const SizedBox(height: 10),
+                      const SizedBox(height: 10),
 
-                    CustomTextFormField(
-                      hintText: 'Name',
-                      controller: nameController,
-                    ),
-                    CustomTextFormField(
-                      hintText: 'Description',
-                      controller: descriptionController,
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: CustomTextFormField(
-                            hintText: 'Price',
-                            controller: priceController,
-                            keyboardType: TextInputType.number,
+                      CustomTextFormField(
+                        hintText: 'Name',
+                        controller: nameController,
+                      ),
+                      CustomTextFormField(
+                        hintText: 'Description',
+                        controller: descriptionController,
+                        maxLines: 5,
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: CustomTextFormField(
+                              hintText: 'Price',
+                              controller: priceController,
+                              keyboardType: TextInputType.number,
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: CustomTextFormField(
-                            hintText: 'Offer Price',
-                            controller: offerPriceController,
-                            keyboardType: TextInputType.number,
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: CustomTextFormField(
+                              hintText: 'Offer Price',
+                              controller: offerPriceController,
+                              keyboardType: TextInputType.number,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    CustomTextFormField(
-                      hintText: 'Stock',
-                      controller: stockController,
-                      keyboardType: TextInputType.number,
-                    ),
-                    CustomTextFormField(
-                      hintText: 'Quantity',
-                      controller: quantityController,
-                    ),
-                    isBrandLoading
-                        ? const CircularProgressIndicator()
-                        : _brandDropDown(),
-                    _cashOnDelivery(),
-                    CustomTextFormField(
-                      hintText: 'Tax',
-                      controller: taxAmountController,
-                      keyboardType: TextInputType.number,
-                    ),
-                    const SizedBox(height: 20),
-                    CustomElevatedButton(
-                      text: isAddingProduct ? 'Adding...' : 'Submit',
-                      onPressed: addProduct,
-                    ),
-                  ],
+                        ],
+                      ),
+                      CustomTextFormField(
+                        hintText: 'Stock',
+                        controller: stockController,
+                        keyboardType: TextInputType.number,
+                      ),
+                      CustomTextFormField(
+                        hintText: 'Quantity',
+                        controller: quantityController,
+                      ),
+                      isBrandLoading
+                          ? const CircularProgressIndicator()
+                          : _brandDropDown(),
+                      _cashOnDelivery(),
+                      CustomTextFormField(
+                        hintText: 'Tax %',
+                        controller: taxAmountController,
+                        keyboardType: TextInputType.number,
+                      ),
+                      const SizedBox(height: 20),
+                      CustomElevatedButton(
+                        text: isAddingProduct ? 'Adding...' : 'Submit',
+                        onPressed: addProduct,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
 
-          if (isAddingProduct)
-            Container(
-              color: Colors.black.withOpacity(0.4),
-              child: const Center(child: CircularProgressIndicator()),
-            ),
-        ],
+            if (isAddingProduct)
+              Container(
+                color: Colors.black.withOpacity(0.4),
+                child: const Center(child: CircularProgressIndicator()),
+              ),
+          ],
+        ),
       ),
     );
   }

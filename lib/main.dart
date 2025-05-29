@@ -35,18 +35,18 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'my desi seller',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        scaffoldBackgroundColor: const Color.fromRGBO(17, 17, 17, 1),
-        appBarTheme: const AppBarTheme(
-          iconTheme: IconThemeData(color: Colors.white),
-          titleTextStyle: TextStyle(
-            color: Colors.white,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
-          backgroundColor: Color.fromRGBO(23, 21, 28, 1),
-        ),
-      ),
+      // theme: ThemeData(
+      //   scaffoldBackgroundColor: const Color.fromRGBO(17, 17, 17, 1),
+      //   appBarTheme: const AppBarTheme(
+      //     iconTheme: IconThemeData(color: Colors.white),
+      //     titleTextStyle: TextStyle(
+      //       color: Colors.white,
+      //       fontSize: 24,
+      //       fontWeight: FontWeight.bold,
+      //     ),
+      //     backgroundColor: Color.fromRGBO(23, 21, 28, 1),
+      //   ),
+      // ),
       home: StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, asyncSnapshot) {

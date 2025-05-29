@@ -1,34 +1,29 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:desi_shopping_seller/providers/brand_provider.dart';
 import 'package:desi_shopping_seller/providers/product_provider.dart';
+import 'package:desi_shopping_seller/screens/add%20products/add_product_screen.dart';
 import 'package:desi_shopping_seller/screens/add%20products/componenets/view_products.dart';
 import 'package:desi_shopping_seller/util/util.dart';
 import 'package:desi_shopping_seller/widgets/custom_elevated_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class AllProductsPage extends StatefulWidget {
+class AllProductsPage extends StatelessWidget {
   const AllProductsPage({super.key});
-
-  @override
-  State<AllProductsPage> createState() => _AllProductsPageState();
-}
-
-class _AllProductsPageState extends State<AllProductsPage> {
-  @override
-  void initState() {
-    super.initState();
-
-    Future.wait([
-      context.read<BrandProvider>().getBrands(context: context),
-      context.read<ProductProvider>().getSellerProducts(context: context),
-    ]);
-  }
 
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        shape: const CircleBorder(),
+        backgroundColor: Theme.of(context).primaryColor,
+        child: const Icon(Icons.add, color: Colors.white),
+        onPressed: () => moveToNextPageWithFadeAnimations(
+          context: context,
+          route: const AddProductScreen(),
+        ),
+      ),
       body: Container(
         padding: EdgeInsets.all(size.width * 0.03),
         height: size.height * 0.9,
@@ -37,7 +32,7 @@ class _AllProductsPageState extends State<AllProductsPage> {
           spacing: size.height * 0.02,
           children: [
             _brandbuilder(size: size),
-            _filterDate(size: size),
+            _filterDate(size: size, context: context),
             _allProducts(size: size),
           ],
         ),
@@ -160,7 +155,7 @@ class _AllProductsPageState extends State<AllProductsPage> {
     );
   }
 
-  Widget _filterDate({required Size size}) {
+  Widget _filterDate({required Size size, required BuildContext context}) {
     final provider = Provider.of<ProductProvider>(context);
     return Row(
       spacing: size.width * 0.03,
