@@ -42,4 +42,18 @@ class OrderProvider extends ChangeNotifier {
     }
     return _allOrders;
   }
+
+  void filterOrder({required String query}) {
+    _filterOrders = _allOrders
+        .where((e) => e.title.toLowerCase().contains(query.toLowerCase()))
+        .toList();
+    notifyListeners();
+  }
+
+  void filterOrdersByMonth() {
+    _filterOrders = _allOrders
+        .where((e) => e.createdAt.toDate().month == DateTime.now().month)
+        .toList();
+    notifyListeners();
+  }
 }

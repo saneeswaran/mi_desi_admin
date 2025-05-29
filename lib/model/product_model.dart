@@ -9,7 +9,8 @@ class ProductModel {
   final double price;
   final int stock;
   final double taxAmount;
-  final BrandModel brand; // your BrandModel instance
+  final String cashOnDelivery;
+  final BrandModel brand;
   final List<String> imageUrl;
   final String quantity;
   final List<String> videoUrl;
@@ -24,6 +25,7 @@ class ProductModel {
     required this.price,
     required this.stock,
     required this.taxAmount,
+    required this.cashOnDelivery,
     required this.brand,
     required this.imageUrl,
     required this.quantity,
@@ -41,6 +43,7 @@ class ProductModel {
       'price': price,
       'stock': stock,
       'taxAmount': taxAmount,
+      'cashOnDelivery': cashOnDelivery,
       'brand': {
         'id': brand.id,
         'sellerId': brand.sellerId,
@@ -65,6 +68,7 @@ class ProductModel {
       price: (map['price'] as num).toDouble(),
       stock: map['stock'] as int,
       taxAmount: (map['taxAmount'] as num).toDouble(),
+      cashOnDelivery: map['cashOnDelivery'] as String,
       brand: BrandModel(
         id: map['brand']['id'] as String?,
         sellerId: map['brand']['sellerId'] as String,
@@ -82,6 +86,6 @@ class ProductModel {
 
   @override
   String toString() {
-    return 'ProductModel(id: $id, title: $title, price: $price, stock: $stock, brand: ${brand.title}, rating: $rating, createdAt: $createdAt, imageUrl: $imageUrl, videoUrl: $videoUrl, quantity: $quantity, taxAmount: $taxAmount, description: $description, sellerid: $sellerid, )';
+    return 'ProductModel(id: $id, title: $title, price: $price, stock: $stock, brand: ${brand.title}, rating: $rating, createdAt: $createdAt, imageUrl: $imageUrl, videoUrl: $videoUrl, quantity: $quantity, taxAmount: $taxAmount, description: $description, sellerid: $sellerid, cashOnDelivery: $cashOnDelivery)';
   }
 }

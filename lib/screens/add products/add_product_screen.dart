@@ -40,6 +40,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   bool isBrandLoading = true;
   bool isAddingProduct = false;
   BrandModel? selectedBrand;
+  String? cashOnDelivery;
 
   @override
   void initState() {
@@ -119,6 +120,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
       price: double.parse(priceController.text),
       stock: int.parse(stockController.text),
       taxAmount: double.parse(taxAmountController.text),
+      cashOnDelivery: cashOnDelivery!,
       quantity: quantityController.text,
       brand: selectedBrand!,
       imageFiles: images,
@@ -167,9 +169,45 @@ class _AddProductScreenState extends State<AddProductScreen> {
               borderRadius: BorderRadius.circular(12),
               borderSide: const BorderSide(color: Colors.blue),
             ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.blue),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.blue),
+            ),
           ),
         );
       },
+    );
+  }
+
+  Widget _cashOnDelivery() {
+    final List<String> options = ['Yes', 'No'];
+    final items = options
+        .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+        .toList();
+    onChanged(val) => setState(() => cashOnDelivery = val);
+
+    return DropdownButtonFormField<String>(
+      items: items,
+      onChanged: onChanged,
+      decoration: InputDecoration(
+        labelText: "Cash On Delivery",
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Colors.blue),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Colors.blue),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Colors.blue),
+        ),
+      ),
     );
   }
 
@@ -323,6 +361,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     isBrandLoading
                         ? const CircularProgressIndicator()
                         : _brandDropDown(),
+                    _cashOnDelivery(),
                     CustomTextFormField(
                       hintText: 'Tax',
                       controller: taxAmountController,
