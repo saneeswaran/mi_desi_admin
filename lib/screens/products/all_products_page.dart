@@ -46,7 +46,7 @@ class AllProductsPage extends StatelessWidget {
       width: size.width,
       child: Consumer<BrandProvider>(
         builder: (context, value, child) {
-          final allBrands = value.filterBrands;
+          final allBrands = value.filteredBrands;
           final currentIndex = value.currentIndex;
           return ListView.builder(
             itemCount: allBrands.length + 1,

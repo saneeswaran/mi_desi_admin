@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:desi_shopping_seller/providers/brand_provider.dart';
-import 'package:desi_shopping_seller/screens/add%20products/componenets/add_brands.dart';
+import 'package:desi_shopping_seller/screens/brands%20page/components/add_brands.dart';
 import 'package:desi_shopping_seller/screens/brands%20page/components/view_brands.dart';
 import 'package:desi_shopping_seller/util/util.dart';
 import 'package:desi_shopping_seller/widgets/custom_text_form_field.dart';
@@ -21,9 +21,7 @@ class _BrandPageState extends State<BrandPage> {
     super.initState();
     Future.wait([context.read<BrandProvider>().getBrands(context: context)]);
     searchController.addListener(() {
-      context.read<BrandProvider>().filterBrandsByQuery(
-        query: searchController.text,
-      );
+      context.read<BrandProvider>().filterBrandsByQuery(searchController.text);
     });
   }
 
@@ -54,7 +52,7 @@ class _BrandPageState extends State<BrandPage> {
           Expanded(
             child: Consumer<BrandProvider>(
               builder: (context, value, index) {
-                final brand = value.filterBrands;
+                final brand = value.filteredBrands;
                 return GridView.builder(
                   itemCount: brand.length,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

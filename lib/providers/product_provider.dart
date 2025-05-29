@@ -156,7 +156,7 @@ class ProductProvider extends ChangeNotifier {
             .collection('brands')
             .doc(brandId)
             .update({'productsCount': FieldValue.increment(-1)});
-
+        _allProducts.removeWhere((element) => element.id == productId);
         notifyListeners();
         return true;
       }

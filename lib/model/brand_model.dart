@@ -5,7 +5,7 @@ class BrandModel {
   final String sellerId;
   final String title;
   final String imageUrl;
-  final int productsCount;
+  int productsCount;
 
   BrandModel({
     this.id,

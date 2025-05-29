@@ -1,8 +1,16 @@
+// ignore_for_file: deprecated_member_use
+
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:desi_shopping_seller/model/product_model.dart';
+import 'package:desi_shopping_seller/providers/brand_provider.dart';
+import 'package:desi_shopping_seller/providers/product_provider.dart';
 import 'package:desi_shopping_seller/screens/add%20products/componenets/product_details.dart';
+import 'package:desi_shopping_seller/widgets/custom_elevated_button.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
 class ViewProducts extends StatefulWidget {
@@ -19,6 +27,7 @@ class _ViewProductsState extends State<ViewProducts> {
   int currentIndex = 0;
   int imageIndex = 0;
   int videoIndex = 0;
+  bool isDelete = false;
 
   late List<VideoPlayerController> _videoControllers;
 
@@ -49,46 +58,114 @@ class _ViewProductsState extends State<ViewProducts> {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.grey[100],
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.all(size.width * 0.02),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  elevation: 4,
-                  child: Padding(
-                    padding: EdgeInsets.all(size.width * 0.03),
-                    child: Column(
-                      children: [
-                        currentIndex == 0
-                            ? _customImageBuilder(size: size, context: context)
-                            : videos.isEmpty
-                            ? SizedBox(
-                                height: size.height * 0.4,
-                                width: size.width,
-                                child: const Center(
-                                  child: Text("No videos found"),
-                                ),
-                              )
-                            : _customVideoBuilder(size: size),
-                        SizedBox(height: size.height * 0.02),
-                        _customRow(size: size),
-                      ],
-                    ),
+      body: Stack(
+        children: [
+          SafeArea(
+            child: AbsorbPointer(
+              absorbing: isDelete,
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.all(size.width * 0.02),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        elevation: 4,
+                        child: Padding(
+                          padding: EdgeInsets.all(size.width * 0.03),
+                          child: Column(
+                            children: [
+                              currentIndex == 0
+                                  ? _customImageBuilder(
+                                      size: size,
+                                      context: context,
+                                    )
+                                  : videos.isEmpty
+                                  ? SizedBox(
+                                      height: size.height * 0.4,
+                                      width: size.width,
+                                      child: const Center(
+                                        child: Text("No videos found"),
+                                      ),
+                                    )
+                                  : _customVideoBuilder(size: size),
+                              SizedBox(height: size.height * 0.02),
+                              _customRow(size: size),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: size.height * 0.02),
+                      ProductDetails(product: widget.product),
+                      SizedBox(height: size.height * 0.02),
+                      _rowButtons(size: size),
+                    ],
                   ),
                 ),
-                SizedBox(height: size.height * 0.02),
-                ProductDetails(product: widget.product),
-              ],
+              ),
             ),
           ),
-        ),
+          isDelete
+              ? Container(
+                  height: size.height,
+                  width: size.width,
+                  color: Colors.black38,
+                  child: const Center(child: CircularProgressIndicator()),
+                )
+              : const SizedBox(),
+        ],
       ),
+    );
+  }
+
+  Widget _rowButtons({required Size size}) {
+    final provider = Provider.of<ProductProvider>(context, listen: false);
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        SizedBox(
+          height: size.height * 0.06,
+          width: size.width * 0.4,
+          child: CustomElevatedButton(
+            text: "Delete",
+            onPressed: () async {
+              Provider.of<BrandProvider>(
+                context,
+                listen: false,
+              ).decrementProductCountForBrand(
+                widget.product.brand.id.toString(),
+              );
+              final bool isSuccess = await provider.deleteProduct(
+                context: context,
+                productId: widget.product.id.toString(),
+                brandId: widget.product.brand.id.toString(),
+              );
+
+              log(isSuccess.toString());
+              setState(() {
+                isDelete = true;
+              });
+              if (isSuccess && mounted) {
+                setState(() => isDelete = false);
+                Navigator.pop(context);
+              }
+            },
+            color: Colors.red,
+          ),
+        ),
+        SizedBox(
+          height: size.height * 0.06,
+          width: size.width * 0.4,
+          child: CustomElevatedButton(
+            text: "Update",
+            onPressed: () {},
+            color: Colors.blue,
+          ),
+        ),
+      ],
     );
   }
 

@@ -94,7 +94,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
-                      color: const Color.fromRGBO(28, 28, 28, 1),
+                      color: generateColors(dashBoardItems.length)[index],
                       border: Border(
                         left: BorderSide(
                           color: generateColors(dashBoardItems.length)[index],
