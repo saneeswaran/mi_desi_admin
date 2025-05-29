@@ -2,6 +2,7 @@ import 'package:desi_shopping_seller/firebase_options.dart';
 import 'package:desi_shopping_seller/providers/order_provider.dart';
 import 'package:desi_shopping_seller/providers/product_provider.dart';
 import 'package:desi_shopping_seller/providers/brand_provider.dart';
+import 'package:desi_shopping_seller/providers/user_provider.dart';
 import 'package:desi_shopping_seller/screens/auth/login_page.dart';
 import 'package:desi_shopping_seller/screens/dash%20board/dash_board_page.dart';
 import 'package:desi_shopping_seller/screens/drawer/advance_drawer_page.dart';
@@ -19,6 +20,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => ProductProvider()),
         ChangeNotifierProvider(create: (_) => BrandProvider()),
         ChangeNotifierProvider(create: (_) => OrderProvider()),
+        ChangeNotifierProvider(create: (_) => UserProvider()),
       ],
       child: const MyApp(),
     ),

@@ -42,12 +42,14 @@ class _OrdersPageState extends State<OrdersPage> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
                         image: DecorationImage(
-                          image: CachedNetworkImageProvider(orders.imageUrl[0]),
+                          image: CachedNetworkImageProvider(
+                            orders.product.imageUrl[0],
+                          ),
                         ),
                       ),
                     ),
                     Text(
-                      orders.title,
+                      orders.product.title,
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,

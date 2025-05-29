@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 final List<String> dashBoardItems = [
   'Today Orders',
-  'Total Pending Orders',
-  'Today Total Orders',
+  'Today Pending Orders',
   'Today Delivery',
+  'Today Cancelled',
   'Total Orders',
   "Total Pending",
   "Total Delivery",
