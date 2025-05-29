@@ -1,0 +1,90 @@
+{
+  "project_info": {
+    "project_number": "1095262983676",
+    "project_id": "midesi-65562",
+    "storage_bucket": "midesi-65562.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1095262983676:android:4078984907bee79ed74e79",
+        "android_client_info": {
+          "package_name": "com.example.desi_shopping"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1095262983676-v0n4gl06mg7vt8t6jcajk5d9m7rd50is.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.desi_shopping",
+            "certificate_hash": "9f37c52b14079a10411ea8c0e65fd01d2b6ce30a"
+          }
+        },
+        {
+          "client_id": "1095262983676-vea9bstc10l0qa0fs5btqaqr8l2cfiod.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUidEMNaB9nvhRazwnWn2Ifkk99LMhyQA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1095262983676-vea9bstc10l0qa0fs5btqaqr8l2cfiod.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1095262983676-lp4nc1ak4nktbbte1nih6a68sd6cij53.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.desiShoppingSeller"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1095262983676:android:addd6a2b65c32eb0d74e79",
+        "android_client_info": {
+          "package_name": "com.example.desi_shopping_seller"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1095262983676-vea9bstc10l0qa0fs5btqaqr8l2cfiod.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUidEMNaB9nvhRazwnWn2Ifkk99LMhyQA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1095262983676-vea9bstc10l0qa0fs5btqaqr8l2cfiod.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1095262983676-lp4nc1ak4nktbbte1nih6a68sd6cij53.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.desiShoppingSeller"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
