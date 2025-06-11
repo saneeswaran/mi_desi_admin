@@ -13,6 +13,7 @@ class ProductModel {
   final BrandModel brand;
   final List<String> imageUrl;
   final List<String> videoUrl;
+  final int? offerPrice;
   final Timestamp createdAt = Timestamp.now();
   double rating;
 
@@ -28,6 +29,7 @@ class ProductModel {
     required this.brand,
     required this.imageUrl,
     required this.videoUrl,
+    this.offerPrice,
     double? rating,
   }) : rating = rating ?? 0.0;
 
@@ -50,6 +52,7 @@ class ProductModel {
       },
       'imageUrl': imageUrl,
       'videoUrl': videoUrl,
+      'offerPrice': offerPrice,
       'createdAt': createdAt,
       'rating': rating,
     };
@@ -74,6 +77,7 @@ class ProductModel {
       ),
       imageUrl: List<String>.from(map['imageUrl']),
       videoUrl: List<String>.from(map['videoUrl']),
+      offerPrice: map['offerPrice'] as int?,
       rating: (map['rating'] ?? 0.0).toDouble(),
     );
   }
@@ -91,6 +95,7 @@ class ProductModel {
     List<String>? imageUrl,
     List<String>? videoUrl,
     Timestamp? createdAt,
+    int? offerPrice,
     double? rating,
   }) {
     return ProductModel(
@@ -105,6 +110,7 @@ class ProductModel {
       brand: brand ?? this.brand,
       imageUrl: imageUrl ?? this.imageUrl,
       videoUrl: videoUrl ?? this.videoUrl,
+      offerPrice: offerPrice ?? this.offerPrice,
       rating: rating ?? this.rating,
     );
   }

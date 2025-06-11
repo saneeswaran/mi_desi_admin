@@ -1,4 +1,5 @@
 import 'package:desi_shopping_seller/firebase_options.dart';
+import 'package:desi_shopping_seller/providers/banners_provider.dart';
 import 'package:desi_shopping_seller/providers/order_provider.dart';
 import 'package:desi_shopping_seller/providers/product_provider.dart';
 import 'package:desi_shopping_seller/providers/brand_provider.dart';
@@ -21,6 +22,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => BrandProvider()),
         ChangeNotifierProvider(create: (_) => OrderProvider()),
         ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => BannersProvider()),
       ],
       child: const MyApp(),
     ),
