@@ -240,6 +240,27 @@ class ProductProvider extends ChangeNotifier {
     return _allProducts;
   }
 
+  Future<bool> bannerOfferValueUpdate({
+    required BuildContext context,
+    required String productId,
+    required int offerPrice,
+  }) async {
+    try {
+      final CollectionReference collectionReference = FirebaseFirestore.instance
+          .collection('products');
+      final DocumentSnapshot documentSnapshot = await collectionReference
+          .doc(productId)
+          .get();
+      await documentSnapshot.reference.update({'offerPrice': offerPrice});
+      return true;
+    } on FirebaseException catch (e) {
+      if (context.mounted) showSnackBar(context: context, e: e);
+    } catch (e) {
+      if (context.mounted) showSnackBar(context: context, e: e);
+    }
+    return false;
+  }
+
   Future<List<ProductModel>> filter({required String query}) async {
     _filterProducts = _allProducts
         .where((e) => e.title.toLowerCase().contains(query.toLowerCase()))

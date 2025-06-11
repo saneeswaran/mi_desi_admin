@@ -2,6 +2,8 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:desi_shopping_seller/providers/banners_provider.dart';
+import 'package:desi_shopping_seller/providers/product_provider.dart';
+import 'package:desi_shopping_seller/screens/add%20products/componenets/view_products.dart';
 import 'package:desi_shopping_seller/screens/banners/components/add_banners.dart';
 import 'package:desi_shopping_seller/util/util.dart';
 import 'package:flutter/material.dart';
@@ -53,68 +55,90 @@ class _BannersPageState extends State<BannersPage> {
                   physics: const AlwaysScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
                     final banners = value.filterBanners[index];
-                    return Container(
-                      // border container
-                      height: size.height * 0.2,
-                      width: size.width * 1,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 5,
-                            blurRadius: 7,
-                            offset: const Offset(0, 1),
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            height: size.height * 0.2,
-                            width: size.width * 1,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: CachedNetworkImageProvider(
-                                  banners.imageUrl,
-                                ),
-                                fit: BoxFit.cover,
-                              ),
+                    return GestureDetector(
+                      onTap: () {
+                        final productsProvider = Provider.of<ProductProvider>(
+                          context,
+                          listen: false,
+                        ).filterProduct;
+
+                        for (var product in productsProvider) {
+                          if (product.id == banners.productId) {
+                            moveToNextPageWithFadeAnimations(
+                              context: context,
+                              route: ViewProducts(product: product),
+                            );
+                          }
+                        }
+                      },
+                      child: Container(
+                        // border container
+                        height: size.height * 0.2,
+                        width: size.width * 1,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset: const Offset(0, 1),
                             ),
-                          ),
-                          Expanded(
-                            child: Container(
-                              padding: EdgeInsets.all(size.width * 0.02),
+                          ],
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
                               height: size.height * 0.2,
-                              width: size.width * 1,
-                              child: Column(
-                                children: [
-                                  Text(
-                                    banners.product.title,
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.grey,
-                                    ),
+                              width: size.width * 0.4,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(size.width * 0.02),
+                                ),
+                                image: DecorationImage(
+                                  image: CachedNetworkImageProvider(
+                                    banners.imageUrl,
                                   ),
-                                  Text(
-                                    banners.product.brand.title,
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                  Text(
-                                    banners.product.offerPrice.toString(),
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                            Expanded(
+                              child: Container(
+                                padding: EdgeInsets.all(size.width * 0.02),
+                                height: size.height * 0.2,
+                                width: size.width * 1,
+                                child: const Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // Text(
+                                    //   banners.product.title,
+                                    //   style: const TextStyle(
+                                    //     fontSize: 16,
+                                    //     color: Colors.grey,
+                                    //   ),
+                                    // ),
+                                    // Text(
+                                    //   banners.product.brand.title,
+                                    //   style: const TextStyle(
+                                    //     color: Colors.black,
+                                    //     fontSize: 16,
+                                    //   ),
+                                    // ),
+                                    // Text(
+                                    //   banners.product.offerPrice.toString(),
+                                    //   style: const TextStyle(
+                                    //     fontSize: 16,
+                                    //     fontWeight: FontWeight.bold,
+                                    //   ),
+                                    // ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   },

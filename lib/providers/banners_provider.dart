@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:desi_shopping_seller/model/banner_model.dart';
-import 'package:desi_shopping_seller/model/product_model.dart';
 import 'package:desi_shopping_seller/util/util.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +39,7 @@ class BannersProvider extends ChangeNotifier {
 
   Future<bool> addBanners({
     required BuildContext context,
-    required ProductModel product,
+    required String productId,
     required File image,
   }) async {
     try {
@@ -48,14 +47,14 @@ class BannersProvider extends ChangeNotifier {
           .collection('banners');
       final docRef = collectionReference.doc();
       final FirebaseStorage storage = FirebaseStorage.instance;
-      final ref = storage.ref().child('banners/${product.id}');
+      final ref = storage.ref().child('banners/$productId');
       await ref.putFile(image);
       final downloadUrl = await ref.getDownloadURL();
 
       // add banner
       final BannerModel bannerModel = BannerModel(
         imageUrl: downloadUrl,
-        product: product,
+        productId: productId,
         bannerId: docRef.id,
       );
       await docRef.set(bannerModel.toMap());
@@ -77,18 +76,18 @@ class BannersProvider extends ChangeNotifier {
 
   Future<bool> deleteBanner({
     required BuildContext context,
-    required ProductModel product,
+    required String productId,
   }) async {
     try {
       final CollectionReference collectionReference = FirebaseFirestore.instance
           .collection('banners');
       final storage = FirebaseStorage.instance;
-      final querySnapshot = await collectionReference.doc(product.id).get();
+      final querySnapshot = await collectionReference.doc(productId).get();
 
       if (querySnapshot.exists) {
         await querySnapshot.reference.delete();
-        await storage.ref().child('banners/${product.id}').delete();
-        _allBanners.removeWhere((e) => e.product.id == product.id);
+        await storage.ref().child('banners/$productId').delete();
+        _allBanners.removeWhere((e) => e.productId == productId);
         _filterBanners = _allBanners;
         return true;
       }
