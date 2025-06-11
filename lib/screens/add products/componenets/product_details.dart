@@ -32,7 +32,6 @@ class ProductDetails extends StatelessWidget {
               _divider(),
               _detailTile("Brand", product.brand.title),
               _divider(),
-              _detailTile("Quantity", product.quantity),
               _divider(),
               _detailTile("Rating", product.rating.toString()),
             ],

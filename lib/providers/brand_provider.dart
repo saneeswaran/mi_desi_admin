@@ -202,6 +202,30 @@ class BrandProvider extends ChangeNotifier {
     }
   }
 
+  //please do not modify this
+
+  Future<List<BrandModel>> fetchIfNeeded({
+    required BuildContext context,
+  }) async {
+    try {
+      final CollectionReference collectionReference = FirebaseFirestore.instance
+          .collection('brands');
+
+      final brandsList = await collectionReference.get();
+
+      if (brandsList.docs.length != _allBrands.length) {
+        if (context.mounted) await getBrands(context: context);
+      } else {
+        return _allBrands;
+      }
+    } on FirebaseException catch (e) {
+      if (context.mounted) _showError(context, e);
+    } catch (e) {
+      if (context.mounted) _showError(context, e);
+    }
+    return _allBrands;
+  }
+
   void _showMessage(BuildContext context, String message) {
     if (context.mounted) {
       ScaffoldMessenger.of(

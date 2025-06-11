@@ -83,4 +83,26 @@ class OrderProvider extends ChangeNotifier {
     }
     return _allOrders;
   }
+
+  Future<List<OrderModel>> fetchIfNeeded({
+    required BuildContext context,
+  }) async {
+    try {
+      final CollectionReference collectionReference = FirebaseFirestore.instance
+          .collection('customers')
+          .doc()
+          .collection('orders');
+
+      final orders = await collectionReference.get();
+
+      if (orders.docs.length != _allOrders.length) {
+        if (context.mounted) await getAllOrders(context: context);
+      }
+    } on FirebaseException catch (e) {
+      if (context.mounted) showSnackBar(context: context, e: e);
+    } catch (e) {
+      if (context.mounted) showSnackBar(context: context, e: e);
+    }
+    return _allOrders;
+  }
 }

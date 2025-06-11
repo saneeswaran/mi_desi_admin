@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:desi_shopping_seller/model/user_model.dart';
 import 'package:desi_shopping_seller/util/util.dart';
@@ -26,10 +28,12 @@ class UserProvider extends ChangeNotifier {
       _filterUsers = List.from(_allUsers);
       notifyListeners();
     } on FirebaseException catch (e) {
+      log("user provider error");
       if (context.mounted) {
         showSnackBar(context: context, e: e);
       }
     } catch (e) {
+      log("user provider error");
       if (context.mounted) {
         showSnackBar(context: context, e: e);
       }

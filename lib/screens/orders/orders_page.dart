@@ -43,13 +43,13 @@ class _OrdersPageState extends State<OrdersPage> {
                         borderRadius: BorderRadius.circular(12),
                         image: DecorationImage(
                           image: CachedNetworkImageProvider(
-                            orders.product.imageUrl[0],
+                            orders.product[index].imageUrl[0],
                           ),
                         ),
                       ),
                     ),
                     Text(
-                      orders.product.title,
+                      orders.product[index].title,
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,

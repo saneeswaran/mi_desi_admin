@@ -5,60 +5,65 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:desi_shopping_seller/model/product_model.dart';
 
 class OrderModel {
-  final String customerId;
-  final String productId;
-  final ProductModel product;
-  final String orderId;
-  final String status;
+  final String userId;
+  final String sellerId;
+  final double totalAmount;
   final String address;
-  final Timestamp createdAt = Timestamp.now();
+  final String paymentMethod;
+  final String orderStatus;
+  final String isShowCashOnDelivery;
+  final String orderDate;
+  final String orderId;
+  final Timestamp timestamp;
+  final List<ProductModel> product;
+  final createdAt = Timestamp.now();
   OrderModel({
-    required this.customerId,
-    required this.productId,
-    required this.product,
-    required this.orderId,
-    required this.status,
+    required this.userId,
+    required this.sellerId,
+    required this.totalAmount,
     required this.address,
+    required this.paymentMethod,
+    required this.orderStatus,
+    required this.isShowCashOnDelivery,
+    required this.orderDate,
+    required this.orderId,
+    required this.timestamp,
+    required this.product,
   });
-
-  OrderModel copyWith({
-    String? customerId,
-    String? productId,
-    ProductModel? product,
-    String? orderId,
-    String? status,
-    String? address,
-  }) {
-    return OrderModel(
-      customerId: customerId ?? this.customerId,
-      productId: productId ?? this.productId,
-      product: product ?? this.product,
-      orderId: orderId ?? this.orderId,
-      status: status ?? this.status,
-      address: address ?? this.address,
-    );
-  }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'customerId': customerId,
-      'productId': productId,
-      'product': product.toMap(),
-      'orderId': orderId,
-      'status': status,
+      'userId': userId,
+      'sellerId': sellerId,
+      'totalAmount': totalAmount,
       'address': address,
-      'createdAt': createdAt,
+      'paymentMethod': paymentMethod,
+      'orderStatus': orderStatus,
+      'isShowCashOnDelivery': isShowCashOnDelivery,
+      'orderDate': orderDate,
+      'orderId': orderId,
+      'timestamp': timestamp.millisecondsSinceEpoch,
+      'product': product.map((x) => x.toMap()).toList(),
     };
   }
 
   factory OrderModel.fromMap(Map<String, dynamic> map) {
     return OrderModel(
-      customerId: map['customerId'] as String,
-      productId: map['productId'] as String,
-      product: ProductModel.fromMap(map['product'] as Map<String, dynamic>),
-      orderId: map['orderId'] as String,
-      status: map['status'] as String,
+      userId: map['userId'] as String,
+      sellerId: map['sellerId'] as String,
+      totalAmount: map['totalAmount'] as double,
       address: map['address'] as String,
+      paymentMethod: map['paymentMethod'] as String,
+      orderStatus: map['orderStatus'] as String,
+      isShowCashOnDelivery: map['isShowCashOnDelivery'] as String,
+      orderDate: map['orderDate'] as String,
+      orderId: map['orderId'] as String,
+      timestamp: map['timestamp'] as Timestamp,
+      product: List<ProductModel>.from(
+        (map['products'] as List<int>).map<ProductModel>(
+          (x) => ProductModel.fromMap(x as Map<String, dynamic>),
+        ),
+      ),
     );
   }
 
@@ -67,30 +72,5 @@ class OrderModel {
   factory OrderModel.fromJson(String source) =>
       OrderModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
-  @override
-  String toString() {
-    return 'OrderModel(customerId: $customerId, productId: $productId, product: $product, orderId: $orderId, status: $status, address: $address)';
-  }
-
-  @override
-  bool operator ==(covariant OrderModel other) {
-    if (identical(this, other)) return true;
-
-    return other.customerId == customerId &&
-        other.productId == productId &&
-        other.product == product &&
-        other.orderId == orderId &&
-        other.status == status &&
-        other.address == address;
-  }
-
-  @override
-  int get hashCode {
-    return customerId.hashCode ^
-        productId.hashCode ^
-        product.hashCode ^
-        orderId.hashCode ^
-        status.hashCode ^
-        address.hashCode;
-  }
+  get status => null;
 }

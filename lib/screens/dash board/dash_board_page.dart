@@ -23,14 +23,14 @@ class _DashBoardPageState extends State<DashBoardPage> {
         context,
         listen: false,
       );
-      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      //   final userProvider = Provider.of<UserProvider>(context, listen: false);
       final orderProvider = Provider.of<OrderProvider>(context, listen: false);
 
       await Future.wait([
-        brandProvider.getBrands(context: context),
-        productProvider.getSellerProducts(context: context),
-        userProvider.getAllUsers(context: context),
-        orderProvider.getAllOrders(context: context),
+        brandProvider.fetchIfNeeded(context: context),
+        productProvider.fetchIfNeeded(context: context),
+        //    userProvider.getAllUsers(context: context),
+        orderProvider.fetchIfNeeded(context: context),
       ]);
 
       _loadDashboardData();

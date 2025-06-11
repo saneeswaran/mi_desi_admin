@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:desi_shopping_seller/model/brand_model.dart';
+import 'brand_model.dart';
 
 class ProductModel {
   final String? id;
@@ -12,10 +12,9 @@ class ProductModel {
   final String cashOnDelivery;
   final BrandModel brand;
   final List<String> imageUrl;
-  final String quantity;
   final List<String> videoUrl;
-  final Timestamp createdAt;
-  final double rating;
+  final Timestamp createdAt = Timestamp.now();
+  double rating;
 
   ProductModel({
     this.id,
@@ -28,11 +27,9 @@ class ProductModel {
     required this.cashOnDelivery,
     required this.brand,
     required this.imageUrl,
-    required this.quantity,
     required this.videoUrl,
-    Timestamp? createdAt,
-    required this.rating,
-  }) : createdAt = createdAt ?? Timestamp.now();
+    double? rating,
+  }) : rating = rating ?? 0.0;
 
   Map<String, dynamic> toMap() {
     return {
@@ -52,7 +49,6 @@ class ProductModel {
         'productsCount': brand.productsCount,
       },
       'imageUrl': imageUrl,
-      'quantity': quantity,
       'videoUrl': videoUrl,
       'createdAt': createdAt,
       'rating': rating,
@@ -61,31 +57,60 @@ class ProductModel {
 
   factory ProductModel.fromMap(Map<String, dynamic> map) {
     return ProductModel(
-      id: map['id'] as String?,
-      sellerid: map['sellerid'] as String,
-      title: map['title'] as String,
-      description: map['description'] as String,
+      id: map['id'],
+      sellerid: map['sellerid'],
+      title: map['title'],
+      description: map['description'],
       price: (map['price'] as num).toDouble(),
-      stock: map['stock'] as int,
+      stock: map['stock'],
       taxAmount: (map['taxAmount'] as num).toDouble(),
-      cashOnDelivery: map['cashOnDelivery'] as String,
+      cashOnDelivery: map['cashOnDelivery'],
       brand: BrandModel(
-        id: map['brand']['id'] as String?,
-        sellerId: map['brand']['sellerId'] as String,
-        title: map['brand']['title'] as String,
-        imageUrl: map['brand']['imageUrl'] as String,
-        productsCount: map['brand']['productsCount'] as int,
+        id: map['brand']['id'],
+        sellerId: map['brand']['sellerId'],
+        title: map['brand']['title'],
+        imageUrl: map['brand']['imageUrl'],
+        productsCount: map['brand']['productsCount'],
       ),
       imageUrl: List<String>.from(map['imageUrl']),
-      quantity: map['quantity'] as String,
       videoUrl: List<String>.from(map['videoUrl']),
-      createdAt: map['createdAt'] ?? Timestamp.now(),
-      rating: (map['rating'] as num).toDouble(),
+      rating: (map['rating'] ?? 0.0).toDouble(),
+    );
+  }
+
+  ProductModel copyWith({
+    String? id,
+    String? sellerid,
+    String? title,
+    String? description,
+    double? price,
+    int? stock,
+    double? taxAmount,
+    String? cashOnDelivery,
+    BrandModel? brand,
+    List<String>? imageUrl,
+    List<String>? videoUrl,
+    Timestamp? createdAt,
+    double? rating,
+  }) {
+    return ProductModel(
+      id: id ?? this.id,
+      sellerid: sellerid ?? this.sellerid,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      price: price ?? this.price,
+      stock: stock ?? this.stock,
+      taxAmount: taxAmount ?? this.taxAmount,
+      cashOnDelivery: cashOnDelivery ?? this.cashOnDelivery,
+      brand: brand ?? this.brand,
+      imageUrl: imageUrl ?? this.imageUrl,
+      videoUrl: videoUrl ?? this.videoUrl,
+      rating: rating ?? this.rating,
     );
   }
 
   @override
   String toString() {
-    return 'ProductModel(id: $id, title: $title, price: $price, stock: $stock, brand: ${brand.title}, rating: $rating, createdAt: $createdAt, imageUrl: $imageUrl, videoUrl: $videoUrl, quantity: $quantity, taxAmount: $taxAmount, description: $description, sellerid: $sellerid, cashOnDelivery: $cashOnDelivery)';
+    return 'ProductModel(id: $id, title: $title)';
   }
 }

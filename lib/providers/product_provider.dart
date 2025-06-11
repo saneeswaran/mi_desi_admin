@@ -84,7 +84,6 @@ class ProductProvider extends ChangeNotifier {
         cashOnDelivery: cashOnDelivery,
         brand: brand,
         imageUrl: imageUrls,
-        quantity: quantity,
         videoUrl: videoUrls,
         rating: 0.0,
       );
@@ -207,7 +206,6 @@ class ProductProvider extends ChangeNotifier {
         rating: 0.0,
         imageUrl: imageUrl,
         videoUrl: videoUrl,
-        quantity: quantity,
       );
 
       await querySnapshot.docs.first.reference.update(productModel.toMap());
@@ -218,6 +216,28 @@ class ProductProvider extends ChangeNotifier {
       if (context.mounted) showSnackBar(context: context, e: e);
     }
     return false;
+  }
+
+  Future<List<ProductModel>> fetchIfNeeded({
+    required BuildContext context,
+  }) async {
+    try {
+      final CollectionReference collectionReference = FirebaseFirestore.instance
+          .collection('products');
+
+      final allProducts = await collectionReference.get();
+
+      if (allProducts.docs.length != _allProducts.length) {
+        if (context.mounted) await getSellerProducts(context: context);
+      } else {
+        return _allProducts;
+      }
+    } on FirebaseException catch (e) {
+      if (context.mounted) showSnackBar(context: context, e: e);
+    } catch (e) {
+      if (context.mounted) showSnackBar(context: context, e: e);
+    }
+    return _allProducts;
   }
 
   Future<List<ProductModel>> filter({required String query}) async {
