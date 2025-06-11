@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-// ignore_for_file: 
 class BannerModel {
   final String bannerId;
   final String imageUrl;
