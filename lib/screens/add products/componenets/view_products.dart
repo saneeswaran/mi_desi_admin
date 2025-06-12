@@ -7,6 +7,8 @@ import 'package:desi_shopping_seller/model/product_model.dart';
 import 'package:desi_shopping_seller/providers/brand_provider.dart';
 import 'package:desi_shopping_seller/providers/product_provider.dart';
 import 'package:desi_shopping_seller/screens/add%20products/componenets/product_details.dart';
+import 'package:desi_shopping_seller/screens/add%20products/componenets/update_product.dart';
+import 'package:desi_shopping_seller/util/util.dart';
 import 'package:desi_shopping_seller/widgets/custom_elevated_button.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
@@ -161,7 +163,10 @@ class _ViewProductsState extends State<ViewProducts> {
           width: size.width * 0.4,
           child: CustomElevatedButton(
             text: "Update",
-            onPressed: () {},
+            onPressed: () => moveToNextPageWithFadeAnimations(
+              context: context,
+              route: UpdateProductScreen(product: widget.product),
+            ),
             color: Colors.blue,
           ),
         ),

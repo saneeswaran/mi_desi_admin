@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:desi_shopping_seller/constants/constants.dart';
+import 'package:desi_shopping_seller/providers/banners_provider.dart';
 import 'package:desi_shopping_seller/providers/product_provider.dart';
 import 'package:desi_shopping_seller/screens/banners/components/banner_offer_page.dart';
 import 'package:desi_shopping_seller/util/util.dart';
@@ -21,10 +22,27 @@ class ProductDetailsForBanners extends StatelessWidget {
           itemBuilder: (context, index) {
             final products = value.filterProduct[index];
             return GestureDetector(
-              onTap: () => moveToNextPageWithFadeAnimations(
-                context: context,
-                route: BannerOfferPage(product: products),
-              ),
+              onTap: () {
+                final banners = Provider.of<BannersProvider>(
+                  context,
+                  listen: false,
+                ).filterBanners;
+                final bannerHasProduct = banners.any(
+                  (e) => e.productId == products.id,
+                );
+
+                if (bannerHasProduct) {
+                  showSnackBar(
+                    context: context,
+                    e: "Banner already added to this product.",
+                  );
+                } else {
+                  moveToNextPageWithFadeAnimations(
+                    context: context,
+                    route: BannerOfferPage(product: products),
+                  );
+                }
+              },
               child: Container(
                 margin: EdgeInsets.all(size.width * 0.03),
                 height: size.height * 0.30,

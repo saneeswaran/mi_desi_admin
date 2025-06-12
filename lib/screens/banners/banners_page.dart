@@ -51,6 +51,30 @@ class _BannersPageState extends State<BannersPage> {
           width: size.width * 1,
           child: Column(
             children: [
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 35),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Banner Image",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      "Product Image",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               Consumer<BannersProvider>(
                 builder: (context, value, child) {
                   final bannerCount = value.filterBanners.length;
@@ -59,22 +83,20 @@ class _BannersPageState extends State<BannersPage> {
                     shrinkWrap: true,
                     physics: const AlwaysScrollableScrollPhysics(),
                     itemBuilder: (context, index) {
+                      final product = Provider.of<ProductProvider>(
+                        context,
+                        listen: false,
+                      ).filterProduct;
+                      final selectedProduct = product.where(
+                        (e) => e.id == value.filterBanners[index].productId,
+                      );
                       final banners = value.filterBanners[index];
                       return GestureDetector(
                         onTap: () {
-                          final productsProvider = Provider.of<ProductProvider>(
-                            context,
-                            listen: false,
-                          ).filterProduct;
-
-                          for (var product in productsProvider) {
-                            if (product.id == banners.productId) {
-                              moveToNextPageWithFadeAnimations(
-                                context: context,
-                                route: ViewProducts(product: product),
-                              );
-                            }
-                          }
+                          moveToNextPageWithFadeAnimations(
+                            context: context,
+                            route: ViewProducts(product: selectedProduct.first),
+                          );
                         },
                         child: Slidable(
                           endActionPane: ActionPane(
@@ -122,18 +144,21 @@ class _BannersPageState extends State<BannersPage> {
                             ),
                             child: Row(
                               children: [
-                                Container(
-                                  height: size.height * 0.15,
-                                  width: size.width * 0.4,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(size.width * 0.02),
-                                    ),
-                                    image: DecorationImage(
-                                      image: CachedNetworkImageProvider(
-                                        banners.imageUrl,
+                                Expanded(
+                                  child: Container(
+                                    height: size.height * 0.15,
+                                    width: size.width * 0.3,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(size.width * 0.02),
                                       ),
-                                      fit: BoxFit.cover,
+                                      image: DecorationImage(
+                                        image: CachedNetworkImageProvider(
+                                          cacheKey: banners.bannerId,
+                                          banners.imageUrl,
+                                        ),
+                                        fit: BoxFit.contain,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -142,32 +167,14 @@ class _BannersPageState extends State<BannersPage> {
                                     padding: EdgeInsets.all(size.width * 0.02),
                                     height: size.height * 0.2,
                                     width: size.width * 1,
-                                    child: const Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        // Text(
-                                        //   banners.product.title,
-                                        //   style: const TextStyle(
-                                        //     fontSize: 16,
-                                        //     color: Colors.grey,
-                                        //   ),
-                                        // ),
-                                        // Text(
-                                        //   banners.product.brand.title,
-                                        //   style: const TextStyle(
-                                        //     color: Colors.black,
-                                        //     fontSize: 16,
-                                        //   ),
-                                        // ),
-                                        // Text(
-                                        //   banners.product.offerPrice.toString(),
-                                        //   style: const TextStyle(
-                                        //     fontSize: 16,
-                                        //     fontWeight: FontWeight.bold,
-                                        //   ),
-                                        // ),
-                                      ],
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12),
+                                      image: DecorationImage(
+                                        image: CachedNetworkImageProvider(
+                                          selectedProduct.first.imageUrl[0],
+                                        ),
+                                        fit: BoxFit.contain,
+                                      ),
                                     ),
                                   ),
                                 ),

@@ -17,7 +17,7 @@ class AllProductsPage extends StatelessWidget {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         shape: const CircleBorder(),
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: Colors.blue,
         child: const Icon(Icons.add, color: Colors.white),
         onPressed: () => moveToNextPageWithFadeAnimations(
           context: context,
@@ -235,7 +235,6 @@ class AllProductsPage extends StatelessWidget {
                             image: DecorationImage(
                               image: CachedNetworkImageProvider(
                                 products.imageUrl[0],
-                                cacheKey: products.id,
                               ),
                               fit: BoxFit.cover,
                             ),

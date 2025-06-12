@@ -176,15 +176,15 @@ class ProductProvider extends ChangeNotifier {
     required double taxAmount,
     required String cashOnDelivery,
     required BrandModel brand,
-    required String quantity,
-    required List<String> imageUrl,
-    required List<String> videoUrl,
+    required List<File> imageUrl, // new files only
+    required List<File> videoUrl, // new files only
   }) async {
     try {
       final currentUser = FirebaseAuth.instance.currentUser!.uid;
       final collectionReference = FirebaseFirestore.instance.collection(
         'products',
       );
+      final storage = FirebaseStorage.instance;
 
       final querySnapshot = await collectionReference
           .where('sellerid', isEqualTo: currentUser)
@@ -192,6 +192,46 @@ class ProductProvider extends ChangeNotifier {
           .get();
 
       if (querySnapshot.docs.isEmpty) return false;
+
+      final doc = querySnapshot.docs.first;
+      final data = doc.data();
+
+      List<String> existingImageUrls = List<String>.from(
+        data['imageUrl'] ?? [],
+      );
+      List<String> existingVideoUrls = List<String>.from(
+        data['videoUrl'] ?? [],
+      );
+
+      // Upload new images
+      List<String> uploadedImageUrls = [];
+      for (File file in imageUrl) {
+        final fileName =
+            '${DateTime.now().millisecondsSinceEpoch}_${path.basename(file.path)}';
+        final ref = storage.ref().child('products/images/$fileName');
+        await ref.putFile(file);
+        final downloadUrl = await ref.getDownloadURL();
+        uploadedImageUrls.add(downloadUrl);
+      }
+
+      // Upload new videos
+      List<String> uploadedVideoUrls = [];
+      for (File file in videoUrl) {
+        final fileName =
+            '${DateTime.now().millisecondsSinceEpoch}_${path.basename(file.path)}';
+        final ref = storage.ref().child('products/videos/$fileName');
+        await ref.putFile(file);
+        final downloadUrl = await ref.getDownloadURL();
+        uploadedVideoUrls.add(downloadUrl);
+      }
+
+      // Combine old + new (or only old if new is empty)
+      final finalImageUrls = imageUrl.isEmpty
+          ? existingImageUrls
+          : uploadedImageUrls;
+      final finalVideoUrls = videoUrl.isEmpty
+          ? existingVideoUrls
+          : uploadedVideoUrls;
 
       ProductModel productModel = ProductModel(
         id: productId,
@@ -203,19 +243,27 @@ class ProductProvider extends ChangeNotifier {
         taxAmount: taxAmount,
         cashOnDelivery: cashOnDelivery,
         brand: brand,
-        rating: 0.0,
-        imageUrl: imageUrl,
-        videoUrl: videoUrl,
+        rating: data['rating'] ?? 0.0,
+        imageUrl: finalImageUrls,
+        videoUrl: finalVideoUrls,
       );
 
-      await querySnapshot.docs.first.reference.update(productModel.toMap());
+      final int index = _allProducts.indexWhere(
+        (element) => element.id == productId,
+      );
+      if (index != -1) {
+        _allProducts[index] = productModel;
+      } else {
+        _allProducts.add(productModel);
+      }
 
+      await doc.reference.update(productModel.toMap());
       notifyListeners();
       return true;
     } catch (e) {
       if (context.mounted) showSnackBar(context: context, e: e);
+      return false;
     }
-    return false;
   }
 
   Future<List<ProductModel>> fetchIfNeeded({
