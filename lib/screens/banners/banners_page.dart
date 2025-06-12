@@ -1,5 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:desi_shopping_seller/providers/banners_provider.dart';
 import 'package:desi_shopping_seller/providers/product_provider.dart';
@@ -79,11 +81,13 @@ class _BannersPageState extends State<BannersPage> {
                             motion: const StretchMotion(),
                             children: [
                               SlidableAction(
-                                onPressed: (context) {
-                                  value.deleteBanner(
-                                    context: context,
-                                    productId: banners.productId,
-                                  );
+                                onPressed: (context) async {
+                                  final bool isSuccess = await value
+                                      .deleteBanner(
+                                        context: context,
+                                        productId: banners.productId,
+                                      );
+                                  log(isSuccess.toString());
                                 },
                                 backgroundColor: Colors.red,
                                 icon: Icons.delete,

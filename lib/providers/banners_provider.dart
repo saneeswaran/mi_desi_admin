@@ -79,19 +79,32 @@ class BannersProvider extends ChangeNotifier {
     required String productId,
   }) async {
     try {
-      final CollectionReference collectionReference = FirebaseFirestore.instance
-          .collection('banners');
+      final collectionReference = FirebaseFirestore.instance.collection(
+        'banners',
+      );
       final storage = FirebaseStorage.instance;
-      final querySnapshot = await collectionReference.doc(productId).get();
 
-      if (querySnapshot.exists) {
-        await querySnapshot.reference.delete();
+      final querySnapshot = await collectionReference
+          .where('productId', isEqualTo: productId)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        final bannerDoc = querySnapshot.docs.first;
+
+        await bannerDoc.reference.delete();
+
         await storage.ref().child('banners/$productId').delete();
+
         _allBanners.removeWhere((e) => e.productId == productId);
         _filterBanners = _allBanners;
+
+        notifyListeners();
         return true;
+      } else {
+        if (context.mounted) {
+          showSnackBar(context: context, e: "Banner not found.");
+        }
       }
-      notifyListeners();
     } on FirebaseException catch (e) {
       if (context.mounted) {
         showSnackBar(context: context, e: e);
@@ -126,7 +139,7 @@ class BannersProvider extends ChangeNotifier {
       final downloadUrl = await task.ref.getDownloadURL();
 
       final newData = BannerModel(
-        bannerId: collectionReference.doc(productId).id,
+        bannerId: collectionReference.doc().id,
         imageUrl: downloadUrl,
         productId: productId,
       );
@@ -136,6 +149,16 @@ class BannersProvider extends ChangeNotifier {
       final newBannerSnapshot = querySnapshot.docs.where(
         (e) => e['productId'] == productId,
       );
+
+      final index = _allBanners.indexWhere((e) => e.productId == productId);
+
+      if (index != -1) {
+        _allBanners[index] = newData;
+        _filterBanners = _allBanners;
+      } else {
+        _allBanners.add(newData);
+        _filterBanners = _allBanners;
+      }
       await newBannerSnapshot.first.reference.update(newData.toMap());
       notifyListeners();
       return true;
