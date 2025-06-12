@@ -132,7 +132,7 @@ class BrandProvider extends ChangeNotifier {
     required BuildContext context,
     required String brandId,
     required String title,
-    required String imageUrl, // can be a URL or local path
+    required String imageUrl,
   }) async {
     try {
       final currentUser = FirebaseAuth.instance.currentUser;
@@ -173,7 +173,7 @@ class BrandProvider extends ChangeNotifier {
       final index = _allBrands.indexWhere((element) => element.id == brandId);
       if (index != -1) _allBrands[index] = brandModel;
 
-      _filteredBrands = List.from(_allBrands);
+      _filteredBrands = _allBrands;
       notifyListeners();
       return true;
     } catch (e) {

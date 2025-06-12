@@ -104,6 +104,53 @@ class BannersProvider extends ChangeNotifier {
     return false;
   }
 
+  Future<bool> updateBanners({
+    required BuildContext context,
+    required String productId,
+    required File image,
+    required int offerPrice,
+  }) async {
+    try {
+      final CollectionReference collectionReference = FirebaseFirestore.instance
+          .collection('banners');
+      final CollectionReference productCollection = FirebaseFirestore.instance
+          .collection('products');
+      final storage = FirebaseStorage.instance;
+      final QuerySnapshot querySnapshot = await collectionReference
+          .where('productId', isEqualTo: productId)
+          .get();
+      final task = await storage
+          .ref()
+          .child('banners/$productId')
+          .putFile(image);
+      final downloadUrl = await task.ref.getDownloadURL();
+
+      final newData = BannerModel(
+        bannerId: collectionReference.doc(productId).id,
+        imageUrl: downloadUrl,
+        productId: productId,
+      );
+
+      await productCollection.doc(productId).update({'offerPrice': offerPrice});
+
+      final newBannerSnapshot = querySnapshot.docs.where(
+        (e) => e['productId'] == productId,
+      );
+      await newBannerSnapshot.first.reference.update(newData.toMap());
+      notifyListeners();
+      return true;
+    } on FirebaseException catch (e) {
+      if (context.mounted) {
+        showSnackBar(context: context, e: e);
+      }
+    } catch (e) {
+      if (context.mounted) {
+        showSnackBar(context: context, e: e);
+      }
+    }
+    return false;
+  }
+
   Future<List<BannerModel>> fetchIfNeeded({
     required BuildContext context,
   }) async {

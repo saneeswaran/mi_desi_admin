@@ -2,14 +2,10 @@ import 'dart:convert';
 
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 class BannerModel {
-  final String bannerId;
+  final String? bannerId;
   final String imageUrl;
   final String productId;
-  BannerModel({
-    required this.bannerId,
-    required this.imageUrl,
-    required this.productId,
-  });
+  BannerModel({this.bannerId, required this.imageUrl, required this.productId});
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
