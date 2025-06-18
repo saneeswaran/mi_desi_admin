@@ -6,7 +6,7 @@ import 'package:desi_shopping_seller/providers/product_provider.dart';
 import 'package:desi_shopping_seller/providers/brand_provider.dart';
 import 'package:desi_shopping_seller/providers/statemanagement_provider.dart';
 import 'package:desi_shopping_seller/providers/user_provider.dart';
-import 'package:desi_shopping_seller/screens/auth/login_page.dart';
+import 'package:desi_shopping_seller/screens/auth/register_page.dart';
 import 'package:desi_shopping_seller/screens/dash%20board/dash_board_page.dart';
 import 'package:desi_shopping_seller/screens/drawer/advance_drawer_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
               title: 'DashBoard',
             );
           } else {
-            return const LoginPage();
+            return const RegisterPage();
           }
         },
       ),

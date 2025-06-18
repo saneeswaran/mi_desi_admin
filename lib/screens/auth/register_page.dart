@@ -1,5 +1,8 @@
 import 'package:desi_shopping_seller/constants/constants.dart';
 import 'package:desi_shopping_seller/providers/auth_providers.dart';
+import 'package:desi_shopping_seller/providers/statemanagement_provider.dart';
+import 'package:desi_shopping_seller/screens/auth/components/terms_and_conditions.dart';
+import 'package:desi_shopping_seller/screens/auth/login_page.dart';
 import 'package:desi_shopping_seller/screens/dash%20board/dash_board_page.dart';
 import 'package:desi_shopping_seller/screens/drawer/advance_drawer_page.dart';
 import 'package:desi_shopping_seller/util/util.dart';
@@ -8,35 +11,30 @@ import 'package:desi_shopping_seller/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
+
+  @override
+  State<RegisterPage> createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
+  final formKey = GlobalKey<FormState>();
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormState>();
-    final emailController = TextEditingController();
-    final passwordController = TextEditingController();
-    final Size size = MediaQuery.of(context).size;
-
-    void login() async {
-      final authProvider = Provider.of<AuthProviders>(context, listen: false);
-      final bool isSuccess = await authProvider.loginAdmin(
-        context: context,
-        email: emailController.text,
-        password: passwordController.text,
-      );
-
-      if (formKey.currentState!.validate()) return;
-      if (isSuccess && context.mounted) {
-        replaceCurrentPageWithFadeAnimations(
-          context: context,
-          route: const AdvanceDrawerPage(
-            body: DashBoardPage(),
-            title: "DashBoard",
-          ),
-        );
-      }
-    }
+    final size = MediaQuery.of(context).size;
 
     return Scaffold(
       body: Stack(
@@ -103,6 +101,13 @@ class LoginPage extends StatelessWidget {
                                     ),
                                   ),
                                   const SizedBox(height: 20),
+                                  _customText(text: "Name"),
+                                  CustomTextFormField(
+                                    hintText: "Name",
+                                    controller: nameController,
+                                    color: AppColors.textFormFieldColor,
+                                  ),
+                                  const SizedBox(height: 12),
                                   _customText(text: "Email"),
                                   CustomTextFormField(
                                     hintText: "Email",
@@ -117,7 +122,18 @@ class LoginPage extends StatelessWidget {
                                     color: AppColors.textFormFieldColor,
                                     isObscure: true,
                                   ),
-
+                                  const SizedBox(height: 10),
+                                  Consumer<StatemanagementProvider>(
+                                    builder: (context, provider, _) {
+                                      return _customCheckBox(
+                                        context: context,
+                                        value: provider.loading,
+                                        onChanged: (val) {
+                                          provider.setLoading(val ?? false);
+                                        },
+                                      );
+                                    },
+                                  ),
                                   const SizedBox(height: 10),
                                   SizedBox(
                                     height: size.height * 0.05,
@@ -125,7 +141,7 @@ class LoginPage extends StatelessWidget {
                                     child: CustomElevatedButton(
                                       color: Colors.pink,
                                       text: "Register",
-                                      onPressed: login,
+                                      onPressed: () {},
                                     ),
                                   ),
                                   const SizedBox(height: 20),
@@ -158,6 +174,32 @@ class LoginPage extends StatelessWidget {
           fontWeight: FontWeight.bold,
         ),
       ),
+    );
+  }
+
+  Widget _customCheckBox({
+    required BuildContext context,
+    required bool value,
+    required Function(bool?)? onChanged,
+  }) {
+    return Row(
+      children: [
+        Checkbox(value: value, onChanged: onChanged, activeColor: Colors.pink),
+        const Text("I accept", style: TextStyle(fontSize: 16)),
+        TextButton(
+          onPressed: () => moveToNextPageWithFadeAnimations(
+            context: context,
+            route: const TermsAndConditions(),
+          ),
+          child: const Text(
+            "Terms & Conditions",
+            style: TextStyle(
+              fontSize: 14,
+              decoration: TextDecoration.underline,
+            ),
+          ),
+        ),
+      ],
     );
   }
 

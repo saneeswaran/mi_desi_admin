@@ -8,6 +8,7 @@ class CustomTextFormField extends StatelessWidget {
   final EdgeInsetsGeometry? contentPadding;
   final Color color;
   final bool isObscure;
+  final FocusNode? focusNode;
   const CustomTextFormField({
     super.key,
     required this.hintText,
@@ -17,6 +18,7 @@ class CustomTextFormField extends StatelessWidget {
     this.contentPadding,
     this.color = Colors.blue,
     this.isObscure = false,
+    this.focusNode,
   });
 
   @override
@@ -32,6 +34,7 @@ class CustomTextFormField extends StatelessWidget {
       keyboardType: keyboardType,
       maxLines: maxLines,
       obscureText: isObscure,
+      focusNode: focusNode,
       decoration: InputDecoration(
         contentPadding: contentPadding,
         hintText: hintText,

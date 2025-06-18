@@ -1,17 +1,21 @@
 import 'dart:convert';
 
-class UserModel {
+import 'package:desi_shopping_seller/enum/app_enum.dart';
+
+class PartnerModel {
   final String uid;
   final String name;
   final String email;
-  final String? photoURL;
+  final String photoURL;
   final String password;
-  UserModel({
+  final PartnerStatus activeStatus;
+  PartnerModel({
     required this.uid,
     required this.name,
     required this.email,
-    this.photoURL,
+    required this.photoURL,
     required this.password,
+    this.activeStatus = PartnerStatus.inactive,
   });
 
   Map<String, dynamic> toMap() {
@@ -24,18 +28,19 @@ class UserModel {
     };
   }
 
-  factory UserModel.fromMap(Map<String, dynamic> map) {
-    return UserModel(
+  factory PartnerModel.fromMap(Map<String, dynamic> map) {
+    return PartnerModel(
       uid: map['uid'] as String,
       name: map['name'] as String,
       email: map['email'] as String,
-      photoURL: map['photoURL'] ?? '',
+      photoURL: map['photoURL'] as String,
       password: map['password'] as String,
+      activeStatus: map['activeStatus'] as PartnerStatus,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory UserModel.fromJson(String source) =>
-      UserModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory PartnerModel.fromJson(String source) =>
+      PartnerModel.fromMap(json.decode(source) as Map<String, dynamic>);
 }
