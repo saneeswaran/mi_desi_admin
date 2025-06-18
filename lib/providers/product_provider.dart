@@ -2,12 +2,14 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:desi_shopping_seller/model/brand_model.dart';
 import 'package:desi_shopping_seller/model/product_model.dart';
+import 'package:desi_shopping_seller/providers/banners_provider.dart';
 import 'package:desi_shopping_seller/util/util.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart' as path;
+import 'package:provider/provider.dart';
 
 class ProductProvider extends ChangeNotifier {
   List<ProductModel> _allProducts = [];
@@ -35,6 +37,14 @@ class ProductProvider extends ChangeNotifier {
     required String title,
     required String description,
     required double price,
+    required String netVolume,
+    required String dosage,
+    required String composition,
+    required String storage,
+    required String manufacturedBy,
+    required String marketedBy,
+    required String shelfLife,
+    required String additionalInformation,
     required int stock,
     required double taxAmount,
     required String cashOnDelivery,
@@ -49,14 +59,14 @@ class ProductProvider extends ChangeNotifier {
         'products',
       );
       final docRef = collectionReference.doc();
-      final FirebaseStorage storage = FirebaseStorage.instance;
+      final FirebaseStorage storageCollection = FirebaseStorage.instance;
 
       // Upload images
       List<String> imageUrls = [];
       for (File file in imageFiles) {
         final fileName =
             '${DateTime.now().millisecondsSinceEpoch}_${path.basename(file.path)}';
-        final ref = storage.ref().child('products/images/$fileName');
+        final ref = storageCollection.ref().child('products/images/$fileName');
         await ref.putFile(file);
         final downloadUrl = await ref.getDownloadURL();
         imageUrls.add(downloadUrl);
@@ -67,7 +77,7 @@ class ProductProvider extends ChangeNotifier {
       for (File file in videoFiles) {
         final fileName =
             '${DateTime.now().millisecondsSinceEpoch}_${path.basename(file.path)}';
-        final ref = storage.ref().child('products/videos/$fileName');
+        final ref = storageCollection.ref().child('products/videos/$fileName');
         await ref.putFile(file);
         final downloadUrl = await ref.getDownloadURL();
         videoUrls.add(downloadUrl);
@@ -79,6 +89,14 @@ class ProductProvider extends ChangeNotifier {
         title: title,
         description: description,
         price: price,
+        netVolume: netVolume,
+        dosage: dosage,
+        composition: composition,
+        storage: storage,
+        manufacturedBy: manufacturedBy,
+        marketedBy: marketedBy,
+        shelfLife: shelfLife,
+        additionalInformation: additionalInformation,
         stock: stock,
         taxAmount: taxAmount,
         cashOnDelivery: cashOnDelivery,
@@ -148,16 +166,32 @@ class ProductProvider extends ChangeNotifier {
           .where('id', isEqualTo: productId)
           .get();
 
-      if (querySnapshot.docs.isNotEmpty) {
-        await querySnapshot.docs.first.reference.delete();
+      if (querySnapshot.docs.isNotEmpty && context.mounted) {
+        final banner = Provider.of<BannersProvider>(
+          context,
+          listen: false,
+        ).allBanners;
 
-        await FirebaseFirestore.instance
-            .collection('brands')
-            .doc(brandId)
-            .update({'productsCount': FieldValue.increment(-1)});
-        _allProducts.removeWhere((element) => element.id == productId);
-        notifyListeners();
-        return true;
+        final bool bannerHasProduct = banner.any(
+          (e) => e.productId == productId,
+        );
+
+        if (bannerHasProduct && context.mounted) {
+          showSnackBar(
+            context: context,
+            e: "Product have banner.Please remove banner first.",
+          );
+        } else {
+          await querySnapshot.docs.first.reference.delete();
+
+          await FirebaseFirestore.instance
+              .collection('brands')
+              .doc(brandId)
+              .update({'productsCount': FieldValue.increment(-1)});
+          _allProducts.removeWhere((element) => element.id == productId);
+          notifyListeners();
+          return true;
+        }
       }
       return false;
     } catch (e) {

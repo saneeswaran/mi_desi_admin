@@ -81,7 +81,7 @@ class _BrandPageState extends State<BrandPage> {
                                     image: CachedNetworkImageProvider(
                                       brands.imageUrl,
                                     ),
-                                    fit: BoxFit.cover,
+                                    fit: BoxFit.contain,
                                   ),
                                 ),
                               ),

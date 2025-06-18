@@ -1,5 +1,3 @@
-// ignore_for_file: deprecated_member_use
-
 import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';

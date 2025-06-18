@@ -7,6 +7,14 @@ class ProductModel {
   final String title;
   final String description;
   final double price;
+  final String? netVolume;
+  final String? dosage;
+  final String? composition;
+  final String? storage;
+  final String? manufacturedBy;
+  final String? marketedBy;
+  final String? shelfLife;
+  final String? additionalInformation;
   final int stock;
   final double taxAmount;
   final String cashOnDelivery;
@@ -23,6 +31,14 @@ class ProductModel {
     required this.title,
     required this.description,
     required this.price,
+    this.netVolume,
+    this.dosage,
+    this.composition,
+    this.storage,
+    this.manufacturedBy,
+    this.marketedBy,
+    this.shelfLife,
+    this.additionalInformation,
     required this.stock,
     required this.taxAmount,
     required this.cashOnDelivery,
@@ -40,6 +56,14 @@ class ProductModel {
       'title': title,
       'description': description,
       'price': price,
+      'netVolume': netVolume,
+      'dosage': dosage,
+      'composition': composition,
+      'storage': storage,
+      'manufacturedBy': manufacturedBy,
+      'marketedBy': marketedBy,
+      'shelfLife': shelfLife,
+      'additionalInformation': additionalInformation,
       'stock': stock,
       'taxAmount': taxAmount,
       'cashOnDelivery': cashOnDelivery,
@@ -65,6 +89,14 @@ class ProductModel {
       title: map['title'],
       description: map['description'],
       price: (map['price'] as num).toDouble(),
+      netVolume: map['netVolume'] as String,
+      dosage: map['dosage'] as String,
+      composition: map['composition'] as String,
+      storage: map['storage'] as String,
+      manufacturedBy: map['manufacturedBy'] as String,
+      marketedBy: map['marketedBy'] as String,
+      shelfLife: map['shelfLife'] as String,
+      additionalInformation: map['additionalInformation'],
       stock: map['stock'],
       taxAmount: (map['taxAmount'] as num).toDouble(),
       cashOnDelivery: map['cashOnDelivery'],
@@ -88,6 +120,14 @@ class ProductModel {
     String? title,
     String? description,
     double? price,
+    String? netVolume,
+    String? dosage,
+    String? composition,
+    String? storage,
+    String? manufacturedBy,
+    String? marketedBy,
+    String? shelfLife,
+    String? additionalInformation,
     int? stock,
     double? taxAmount,
     String? cashOnDelivery,
@@ -104,6 +144,15 @@ class ProductModel {
       title: title ?? this.title,
       description: description ?? this.description,
       price: price ?? this.price,
+      netVolume: netVolume ?? this.netVolume,
+      dosage: dosage ?? this.dosage,
+      composition: composition ?? this.composition,
+      storage: storage ?? this.storage,
+      manufacturedBy: manufacturedBy ?? this.manufacturedBy,
+      marketedBy: marketedBy ?? this.marketedBy,
+      shelfLife: shelfLife ?? this.shelfLife,
+      additionalInformation:
+          additionalInformation ?? this.additionalInformation,
       stock: stock ?? this.stock,
       taxAmount: taxAmount ?? this.taxAmount,
       cashOnDelivery: cashOnDelivery ?? this.cashOnDelivery,

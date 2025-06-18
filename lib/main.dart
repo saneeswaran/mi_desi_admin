@@ -1,8 +1,10 @@
 import 'package:desi_shopping_seller/firebase_options.dart';
+import 'package:desi_shopping_seller/providers/auth_providers.dart';
 import 'package:desi_shopping_seller/providers/banners_provider.dart';
 import 'package:desi_shopping_seller/providers/order_provider.dart';
 import 'package:desi_shopping_seller/providers/product_provider.dart';
 import 'package:desi_shopping_seller/providers/brand_provider.dart';
+import 'package:desi_shopping_seller/providers/statemanagement_provider.dart';
 import 'package:desi_shopping_seller/providers/user_provider.dart';
 import 'package:desi_shopping_seller/screens/auth/login_page.dart';
 import 'package:desi_shopping_seller/screens/dash%20board/dash_board_page.dart';
@@ -23,6 +25,8 @@ void main() async {
         ChangeNotifierProvider(create: (_) => OrderProvider()),
         ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => BannersProvider()),
+        ChangeNotifierProvider(create: (_) => AuthProviders()),
+        ChangeNotifierProvider(create: (_) => StatemanagementProvider()),
       ],
       child: const MyApp(),
     ),
@@ -37,18 +41,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'my desi seller',
       debugShowCheckedModeBanner: false,
-      // theme: ThemeData(
-      //   scaffoldBackgroundColor: const Color.fromRGBO(17, 17, 17, 1),
-      //   appBarTheme: const AppBarTheme(
-      //     iconTheme: IconThemeData(color: Colors.white),
-      //     titleTextStyle: TextStyle(
-      //       color: Colors.white,
-      //       fontSize: 24,
-      //       fontWeight: FontWeight.bold,
-      //     ),
-      //     backgroundColor: Color.fromRGBO(23, 21, 28, 1),
-      //   ),
-      // ),
       home: StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, asyncSnapshot) {

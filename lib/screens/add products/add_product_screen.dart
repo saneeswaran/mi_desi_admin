@@ -5,6 +5,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:desi_shopping_seller/model/brand_model.dart';
 import 'package:desi_shopping_seller/providers/brand_provider.dart';
 import 'package:desi_shopping_seller/providers/product_provider.dart';
+import 'package:desi_shopping_seller/screens/add%20products/componenets/product_other_components.dart';
 import 'package:desi_shopping_seller/util/util.dart';
 import 'package:desi_shopping_seller/widgets/custom_elevated_button.dart';
 import 'package:desi_shopping_seller/widgets/custom_text_form_field.dart';
@@ -26,6 +27,14 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final nameController = TextEditingController();
   final descriptionController = TextEditingController();
   final priceController = TextEditingController();
+  final netVolumeController = TextEditingController();
+  final dosageController = TextEditingController();
+  final compositionController = TextEditingController();
+  final storageController = TextEditingController();
+  final manufacturedByController = TextEditingController();
+  final marketedByController = TextEditingController();
+  final shelfLifeController = TextEditingController();
+  final additionalInformationController = TextEditingController();
   final stockController = TextEditingController();
   final taxAmountController = TextEditingController();
   final quantityController = TextEditingController();
@@ -117,6 +126,14 @@ class _AddProductScreenState extends State<AddProductScreen> {
       title: nameController.text,
       description: descriptionController.text,
       price: double.parse(priceController.text),
+      netVolume: netVolumeController.text,
+      dosage: dosageController.text,
+      composition: compositionController.text,
+      storage: storageController.text,
+      manufacturedBy: manufacturedByController.text,
+      marketedBy: marketedByController.text,
+      shelfLife: shelfLifeController.text,
+      additionalInformation: additionalInformationController.text,
       stock: int.parse(stockController.text),
       taxAmount: double.parse(taxAmountController.text),
       cashOnDelivery: cashOnDelivery!,
@@ -132,6 +149,14 @@ class _AddProductScreenState extends State<AddProductScreen> {
       nameController.clear();
       descriptionController.clear();
       priceController.clear();
+      netVolumeController.clear();
+      dosageController.clear();
+      compositionController.clear();
+      storageController.clear();
+      manufacturedByController.clear();
+      marketedByController.clear();
+      shelfLifeController.clear();
+      additionalInformationController.clear();
       stockController.clear();
       taxAmountController.clear();
       quantityController.clear();
@@ -149,65 +174,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
     }
 
     setState(() => isAddingProduct = false);
-  }
-
-  Widget _brandDropDown() {
-    return Consumer<BrandProvider>(
-      builder: (_, value, __) {
-        final brands = value.allBrands;
-        return DropdownButtonFormField<BrandModel>(
-          value: selectedBrand,
-          items: brands
-              .map((e) => DropdownMenuItem(value: e, child: Text(e.title)))
-              .toList(),
-          onChanged: (val) => setState(() => selectedBrand = val),
-          validator: (val) => val == null ? 'Please select a brand' : null,
-          decoration: InputDecoration(
-            labelText: 'Select Brand',
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Colors.blue),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Colors.blue),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Colors.blue),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _cashOnDelivery() {
-    final List<String> options = ['Yes', 'No'];
-    final items = options
-        .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-        .toList();
-    onChanged(val) => setState(() => cashOnDelivery = val);
-
-    return DropdownButtonFormField<String>(
-      items: items,
-      onChanged: onChanged,
-      decoration: InputDecoration(
-        labelText: "Cash On Delivery",
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Colors.blue),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Colors.blue),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Colors.blue),
-        ),
-      ),
-    );
   }
 
   @override
@@ -345,6 +311,43 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         ],
                       ),
                       CustomTextFormField(
+                        hintText: 'Net Volume',
+                        controller: stockController,
+                        keyboardType: TextInputType.number,
+                      ),
+                      CustomTextFormField(
+                        hintText: 'Dosage',
+                        controller: stockController,
+                        keyboardType: TextInputType.number,
+                      ),
+                      CustomTextFormField(
+                        hintText: 'Composition',
+                        controller: stockController,
+                        keyboardType: TextInputType.number,
+                      ),
+                      CustomTextFormField(
+                        hintText: 'Storage',
+                        controller: stockController,
+                        keyboardType: TextInputType.number,
+                      ),
+                      CustomTextFormField(
+                        hintText: 'Manufactured',
+                        controller: stockController,
+                        keyboardType: TextInputType.number,
+                      ),
+                      CustomTextFormField(
+                        hintText: 'Shelf Life',
+                        controller: stockController,
+                        keyboardType: TextInputType.number,
+                      ),
+                      CustomTextFormField(
+                        hintText: 'Additional Information',
+                        contentPadding: const EdgeInsetsGeometry.all(5),
+                        controller: stockController,
+
+                        keyboardType: TextInputType.number,
+                      ),
+                      CustomTextFormField(
                         hintText: 'Stock',
                         controller: stockController,
                         keyboardType: TextInputType.number,
@@ -355,8 +358,15 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       ),
                       isBrandLoading
                           ? const CircularProgressIndicator()
-                          : _brandDropDown(),
-                      _cashOnDelivery(),
+                          : ProductOtherComponents.brandDropDown(
+                              selectedBrand: selectedBrand!,
+                              onchanged: (value) =>
+                                  setState(() => selectedBrand = value),
+                            ),
+                      ProductOtherComponents.cashOnDelivery(
+                        onChanged: (value) =>
+                            setState(() => cashOnDelivery = value),
+                      ),
                       CustomTextFormField(
                         hintText: 'Tax %',
                         controller: taxAmountController,

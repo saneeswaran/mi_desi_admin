@@ -5,12 +5,18 @@ class CustomTextFormField extends StatelessWidget {
   final TextEditingController controller;
   final TextInputType keyboardType;
   final int maxLines;
+  final EdgeInsetsGeometry? contentPadding;
+  final Color color;
+  final bool isObscure;
   const CustomTextFormField({
     super.key,
     required this.hintText,
     required this.controller,
     this.keyboardType = TextInputType.text,
     this.maxLines = 1,
+    this.contentPadding,
+    this.color = Colors.blue,
+    this.isObscure = false,
   });
 
   @override
@@ -25,21 +31,22 @@ class CustomTextFormField extends StatelessWidget {
       },
       keyboardType: keyboardType,
       maxLines: maxLines,
-
+      obscureText: isObscure,
       decoration: InputDecoration(
+        contentPadding: contentPadding,
         hintText: hintText,
         isDense: true,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Colors.blue, width: 1.2),
+          borderSide: BorderSide(color: color, width: 1.2),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Colors.blue, width: 1.2),
+          borderSide: BorderSide(color: color, width: 1.2),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Colors.blue, width: 1.2),
+          borderSide: BorderSide(color: color, width: 1.2),
         ),
       ),
     );

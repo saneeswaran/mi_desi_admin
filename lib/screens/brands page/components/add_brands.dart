@@ -121,7 +121,7 @@ class _AddBrandsState extends State<AddBrands> {
                             image: imageUrl != null
                                 ? DecorationImage(
                                     image: FileImage(imageUrl!),
-                                    fit: BoxFit.cover,
+                                    fit: BoxFit.contain,
                                   )
                                 : null,
                           ),

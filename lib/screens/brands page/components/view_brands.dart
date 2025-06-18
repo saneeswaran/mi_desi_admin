@@ -16,6 +16,7 @@ class ViewBrands extends StatefulWidget {
 
 class _ViewBrandsState extends State<ViewBrands> {
   final nameController = TextEditingController();
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -27,66 +28,84 @@ class _ViewBrandsState extends State<ViewBrands> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
-      body: Container(
-        padding: EdgeInsets.all(size.width * 0.03),
-        child: Column(
-          spacing: size.height * 0.02,
+      body: AbsorbPointer(
+        absorbing: isLoading,
+        child: Stack(
           children: [
             Container(
-              height: size.height * 0.50,
-              width: size.width * 1,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                image: DecorationImage(
-                  image: CachedNetworkImageProvider(widget.brand.imageUrl),
-                  fit: BoxFit.cover,
-                ),
+              padding: EdgeInsets.all(size.width * 0.03),
+              child: Column(
+                spacing: size.height * 0.02,
+                children: [
+                  Container(
+                    height: size.height * 0.50,
+                    width: size.width * 1,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      image: DecorationImage(
+                        image: CachedNetworkImageProvider(
+                          widget.brand.imageUrl,
+                        ),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  CustomTextFormField(
+                    hintText: "Brand Name",
+                    controller: nameController,
+                  ),
+                  const Spacer(),
+                  SizedBox(
+                    height: size.height * 0.07,
+                    width: size.width * 1,
+                    child: CustomElevatedButton(
+                      text: "Delete",
+                      color: Colors.red,
+                      onPressed: () async {
+                        setState(() => isLoading = true);
+                        final bool isSuccess = await context
+                            .read<BrandProvider>()
+                            .deleteBrand(
+                              context: context,
+                              brandId: '${widget.brand.id}',
+                            );
+                        if (isSuccess && context.mounted) {
+                          setState(() => isLoading = false);
+                          Navigator.pop(context);
+                        }
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    height: size.height * 0.07,
+                    width: size.width * 1,
+                    child: CustomElevatedButton(
+                      text: "Update",
+                      onPressed: () async {
+                        final bool isSuccess = await context
+                            .read<BrandProvider>()
+                            .updateBrand(
+                              context: context,
+                              brandId: widget.brand.id.toString(),
+                              title: nameController.text,
+                              imageUrl: widget.brand.imageUrl,
+                            );
+                        if (isSuccess && context.mounted) {
+                          Navigator.pop(context);
+                        }
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
-            CustomTextFormField(
-              hintText: "Brand Name",
-              controller: nameController,
-            ),
-            const Spacer(),
-            SizedBox(
-              height: size.height * 0.07,
-              width: size.width * 1,
-              child: CustomElevatedButton(
-                text: "Delete",
-                color: Colors.red,
-                onPressed: () async {
-                  final bool isSuccess = await context
-                      .read<BrandProvider>()
-                      .deleteBrand(
-                        context: context,
-                        brandId: '${widget.brand.id}',
-                      );
-                  if (isSuccess && context.mounted) {
-                    Navigator.pop(context);
-                  }
-                },
+            if (isLoading)
+              Container(
+                height: size.height * 1,
+                width: size.width * 1,
+                color: Colors.black38,
+                child: const Center(child: CircularProgressIndicator()),
               ),
-            ),
-            SizedBox(
-              height: size.height * 0.07,
-              width: size.width * 1,
-              child: CustomElevatedButton(
-                text: "Update",
-                onPressed: () async {
-                  final bool isSuccess = await context
-                      .read<BrandProvider>()
-                      .updateBrand(
-                        context: context,
-                        brandId: widget.brand.id.toString(),
-                        title: nameController.text,
-                        imageUrl: widget.brand.imageUrl,
-                      );
-                  if (isSuccess && context.mounted) {
-                    Navigator.pop(context);
-                  }
-                },
-              ),
-            ),
           ],
         ),
       ),
