@@ -9,6 +9,7 @@ class CustomTextFormField extends StatelessWidget {
   final Color color;
   final bool isObscure;
   final FocusNode? focusNode;
+  final IconButton? suffixIcon;
   const CustomTextFormField({
     super.key,
     required this.hintText,
@@ -19,6 +20,7 @@ class CustomTextFormField extends StatelessWidget {
     this.color = Colors.blue,
     this.isObscure = false,
     this.focusNode,
+    this.suffixIcon,
   });
 
   @override
@@ -36,6 +38,7 @@ class CustomTextFormField extends StatelessWidget {
       obscureText: isObscure,
       focusNode: focusNode,
       decoration: InputDecoration(
+        suffixIcon: suffixIcon,
         contentPadding: contentPadding,
         hintText: hintText,
         isDense: true,

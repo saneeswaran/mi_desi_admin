@@ -126,14 +126,11 @@ class ProductProvider extends ChangeNotifier {
     required BuildContext context,
   }) async {
     try {
-      final currentUser = FirebaseAuth.instance.currentUser!.uid;
       final collectionReference = FirebaseFirestore.instance.collection(
         'products',
       );
 
-      final querySnapshot = await collectionReference
-          .where('sellerid', isEqualTo: currentUser)
-          .get();
+      final querySnapshot = await collectionReference.get();
 
       _allProducts = querySnapshot.docs
           .map((e) => ProductModel.fromMap(e.data()))
@@ -210,8 +207,8 @@ class ProductProvider extends ChangeNotifier {
     required double taxAmount,
     required String cashOnDelivery,
     required BrandModel brand,
-    required List<File> imageUrl, // new files only
-    required List<File> videoUrl, // new files only
+    required List<File> imageUrl,
+    required List<File> videoUrl,
   }) async {
     try {
       final currentUser = FirebaseAuth.instance.currentUser!.uid;
