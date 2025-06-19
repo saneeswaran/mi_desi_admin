@@ -1,6 +1,7 @@
 import 'package:desi_shopping_seller/constants/constants.dart';
 import 'package:desi_shopping_seller/providers/partner_provider.dart';
 import 'package:desi_shopping_seller/providers/statemanagement_provider.dart';
+import 'package:desi_shopping_seller/screens/parner/auth/partner_signup.dart';
 import 'package:desi_shopping_seller/screens/parner/bottom_nav/partner_bottom_nav.dart';
 import 'package:desi_shopping_seller/util/util.dart';
 import 'package:desi_shopping_seller/widgets/custom_elevated_button.dart';
@@ -8,35 +9,46 @@ import 'package:desi_shopping_seller/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class PartnerLogin extends StatelessWidget {
+class PartnerLogin extends StatefulWidget {
   const PartnerLogin({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormState>();
-    final emailController = TextEditingController();
-    final passwordController = TextEditingController();
-    final Size size = MediaQuery.of(context).size;
+  State<PartnerLogin> createState() => _PartnerLoginState();
+}
 
-    void login() async {
-      if (formKey.currentState!.validate()) return;
-      final isSuccess =
-          await Provider.of<PartnerProvider>(
-            context,
-            listen: false,
-          ).partnerLogin(
-            context: context,
-            email: emailController.text,
-            password: passwordController.text,
-          );
+class _PartnerLoginState extends State<PartnerLogin> {
+  final formKey = GlobalKey<FormState>();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
 
-      if (isSuccess && context.mounted) {
-        replaceCurrentPageWithFadeAnimations(
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  void login(BuildContext context) async {
+    if (!formKey.currentState!.validate()) return;
+
+    final isSuccess = await Provider.of<PartnerProvider>(context, listen: false)
+        .partnerLogin(
           context: context,
-          route: const PartnerBottomNav(),
+          email: emailController.text.trim(),
+          password: passwordController.text.trim(),
         );
-      }
+
+    if (isSuccess && context.mounted) {
+      replaceCurrentPageWithFadeAnimations(
+        context: context,
+        route: const PartnerBottomNav(),
+      );
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
 
     return Scaffold(
       body: Stack(
@@ -45,106 +57,107 @@ class PartnerLogin extends StatelessWidget {
             child: Image.asset(AppImages.backgroundImages, fit: BoxFit.cover),
           ),
           SingleChildScrollView(
-            child: Column(
-              children: [
-                const SizedBox(height: 70),
-                SizedBox(
-                  height: size.height * 0.85,
-                  child: Stack(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 70),
+              child: Column(
+                children: [
+                  Stack(
                     children: [
-                      Positioned(
-                        top: size.height * 0.05,
-                        left: size.width * 0.12,
+                      Center(
                         child: Image.asset(
                           AppImages.ayurvedicThayoli,
                           height: size.height * 0.3,
                           fit: BoxFit.contain,
                         ),
                       ),
-                      Positioned(
-                        top: size.height * 0.28,
-                        left: size.width * 0.05,
-                        child: Card(
-                          elevation: 8,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: Container(
-                            padding: const EdgeInsets.all(20),
-                            height: size.height * 0.4,
-                            width: size.width * 0.9,
-                            decoration: BoxDecoration(
+                      Padding(
+                        padding: EdgeInsets.only(top: size.height * 0.28),
+                        child: Center(
+                          child: Card(
+                            elevation: 8,
+                            shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(16),
-                              color: Colors.white,
                             ),
-                            child: Form(
-                              key: formKey,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Center(
-                                    child: Container(
-                                      height: size.height * 0.005,
-                                      width: size.width * 0.1,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(12),
-                                        color: AppColors.textFormFieldColor,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  const Center(
-                                    child: Text(
-                                      "Login",
-                                      style: TextStyle(
-                                        color: Colors.pink,
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 12),
-                                  _customText(text: "Email"),
-                                  CustomTextFormField(
-                                    hintText: "Email",
-                                    controller: emailController,
-                                    color: AppColors.textFormFieldColor,
-                                  ),
-                                  const SizedBox(height: 12),
-                                  _customText(text: "Password"),
-                                  Consumer<StatemanagementProvider>(
-                                    builder: (context, value, child) {
-                                      final obScure = value.isObscure;
-                                      return CustomTextFormField(
-                                        hintText: "Password",
-                                        controller: passwordController,
-                                        color: AppColors.textFormFieldColor,
-                                        suffixIcon: IconButton(
-                                          onPressed: () {},
-                                          icon: Icon(
-                                            obScure
-                                                ? Icons.remove_red_eye_outlined
-                                                : Icons.remove_red_eye,
-                                            color: obScure
-                                                ? Colors.pink
-                                                : Colors.grey,
+                            child: Container(
+                              padding: const EdgeInsets.all(20),
+                              width: size.width * 0.9,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(16),
+                                color: Colors.white,
+                              ),
+                              child: Form(
+                                key: formKey,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Center(
+                                      child: Container(
+                                        height: 4,
+                                        width: 50,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(
+                                            12,
                                           ),
+                                          color: AppColors.textFormFieldColor,
                                         ),
-                                        isObscure: obScure,
-                                      );
-                                    },
-                                  ),
-                                  const SizedBox(height: 10),
-                                  SizedBox(
-                                    height: size.height * 0.05,
-                                    width: size.width * 0.8,
-                                    child: CustomElevatedButton(
-                                      color: Colors.pink,
-                                      text: "Login",
-                                      onPressed: login,
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                    const SizedBox(height: 10),
+                                    const Center(
+                                      child: Text(
+                                        "Login",
+                                        style: TextStyle(
+                                          color: Colors.pink,
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 16),
+                                    _customText(text: "Email"),
+                                    CustomTextFormField(
+                                      hintText: "Email",
+                                      controller: emailController,
+                                      color: AppColors.textFormFieldColor,
+                                      keyboardType: TextInputType.emailAddress,
+                                    ),
+                                    const SizedBox(height: 12),
+                                    _customText(text: "Password"),
+                                    Consumer<StatemanagementProvider>(
+                                      builder: (context, value, _) {
+                                        return CustomTextFormField(
+                                          hintText: "Password",
+                                          controller: passwordController,
+                                          color: AppColors.textFormFieldColor,
+                                          isObscure: value.isObscure,
+                                          suffixIcon: IconButton(
+                                            onPressed: () =>
+                                                value.toggleObscure(),
+                                            icon: Icon(
+                                              value.isObscure
+                                                  ? Icons.visibility_off
+                                                  : Icons.visibility,
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                    const SizedBox(height: 20),
+                                    SizedBox(
+                                      height: size.height * 0.05,
+                                      width: double.infinity,
+                                      child: CustomElevatedButton(
+                                        color: Colors.pink,
+                                        text: "Login",
+                                        onPressed: () => login(context),
+                                      ),
+                                    ),
+                                    _signUpAccount(context),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -152,8 +165,8 @@ class PartnerLogin extends StatelessWidget {
                       ),
                     ],
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],
@@ -172,6 +185,25 @@ class PartnerLogin extends StatelessWidget {
           fontWeight: FontWeight.bold,
         ),
       ),
+    );
+  }
+
+  Widget _signUpAccount(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Text(
+          "Don't have an account? ",
+          style: TextStyle(fontWeight: FontWeight.w700),
+        ),
+        TextButton(
+          onPressed: () => moveToNextPageWithFadeAnimations(
+            context: context,
+            route: const PartnerSignup(),
+          ),
+          child: const Text("Register", style: TextStyle(color: Colors.pink)),
+        ),
+      ],
     );
   }
 }

@@ -6,14 +6,14 @@ class PartnerModel {
   final String uid;
   final String name;
   final String email;
-  final String photoURL;
+  final String? photoURL;
   final String password;
   final PartnerStatus activeStatus;
   PartnerModel({
     required this.uid,
     required this.name,
     required this.email,
-    required this.photoURL,
+    this.photoURL,
     required this.password,
     this.activeStatus = PartnerStatus.inactive,
   });
@@ -25,6 +25,7 @@ class PartnerModel {
       'email': email,
       'photoURL': photoURL,
       'password': password,
+      'activeStatus': activeStatus,
     };
   }
 

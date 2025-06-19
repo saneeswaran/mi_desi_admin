@@ -1,7 +1,9 @@
 import 'package:desi_shopping_seller/constants/constants.dart';
+import 'package:desi_shopping_seller/providers/partner_provider.dart';
 import 'package:desi_shopping_seller/providers/statemanagement_provider.dart';
 import 'package:desi_shopping_seller/screens/admin/auth/components/terms_and_conditions.dart';
 import 'package:desi_shopping_seller/screens/parner/auth/partner_login.dart';
+import 'package:desi_shopping_seller/screens/parner/bottom_nav/partner_bottom_nav.dart';
 import 'package:desi_shopping_seller/util/util.dart';
 import 'package:desi_shopping_seller/widgets/custom_elevated_button.dart';
 import 'package:desi_shopping_seller/widgets/custom_text_form_field.dart';
@@ -20,6 +22,23 @@ class _PartnerSignupState extends State<PartnerSignup> {
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+
+  void register() async {
+    final provider = Provider.of<PartnerProvider>(context, listen: false);
+    final bool isSuccess = await provider.registerPartner(
+      context: context,
+      username: nameController.text,
+      email: emailController.text,
+      password: passwordController.text,
+    );
+
+    if (isSuccess && mounted) {
+      replaceCurrentPageWithFadeAnimations(
+        context: context,
+        route: const PartnerBottomNav(),
+      );
+    }
+  }
 
   @override
   void dispose() {
@@ -138,7 +157,7 @@ class _PartnerSignupState extends State<PartnerSignup> {
                                     child: CustomElevatedButton(
                                       color: Colors.pink,
                                       text: "Register",
-                                      onPressed: () {},
+                                      onPressed: register,
                                     ),
                                   ),
                                   const SizedBox(height: 20),

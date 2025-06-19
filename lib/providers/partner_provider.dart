@@ -1,6 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:desi_shopping_seller/model/brand_model.dart';
 import 'package:desi_shopping_seller/model/partner_model.dart';
@@ -10,7 +8,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
-import 'package:shared_preferences/shared_preferences.dart';
 
 class PartnerProvider extends ChangeNotifier {
   //ref's
@@ -18,10 +15,6 @@ class PartnerProvider extends ChangeNotifier {
   final CollectionReference _collectionReference = FirebaseFirestore.instance
       .collection("partners");
   final FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
-
-  final CollectionReference collectionReference = FirebaseFirestore.instance
-      .collection('partners');
-  final String currentUser = FirebaseAuth.instance.currentUser!.uid;
 
   //------------------------
   PartnerModel? _partner;
@@ -38,7 +31,6 @@ class PartnerProvider extends ChangeNotifier {
     required String username,
     required String email,
     required String password,
-    required Uint8List imageBytes,
   }) async {
     try {
       // Create user with email and password
@@ -47,17 +39,11 @@ class PartnerProvider extends ChangeNotifier {
       //get user uid
       final String uid = userCredential.user!.uid;
 
-      // Upload image to Firebase Storage
-      final ref = _firebaseStorage.ref().child("partner/$uid.jpg");
-      final uploadTask = await ref.putData(imageBytes);
-      final String partnerImageUrl = await uploadTask.ref.getDownloadURL();
-
       // Create partner model
       final PartnerModel partnerModel = PartnerModel(
         uid: uid,
         name: username,
         email: email,
-        photoURL: partnerImageUrl,
         password: password,
       );
 
@@ -65,12 +51,6 @@ class PartnerProvider extends ChangeNotifier {
       await _collectionReference.doc(uid).set(partnerModel.toMap());
 
       // Save locally using SharedPreferences
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString('partner_email', email);
-      prefs.setString('partner_uid', uid);
-      prefs.setString('partner_name', username);
-      prefs.setString('partner_photo', partnerImageUrl);
-
       _partner = partnerModel;
       notifyListeners();
       return true;
@@ -104,13 +84,6 @@ class PartnerProvider extends ChangeNotifier {
       final DocumentSnapshot documentSnapshot = await _collectionReference
           .doc(uid)
           .get();
-
-      //save locally using SharedPreferences
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString('partner_email', email);
-      prefs.setString('partner_uid', uid);
-      prefs.setString('partner_name', documentSnapshot['name']);
-      prefs.setString('partner_photo', documentSnapshot['photoURL']);
 
       // save the details using from map
       _partner = PartnerModel.fromMap(
@@ -153,6 +126,7 @@ class PartnerProvider extends ChangeNotifier {
     required List<File> videoFiles,
   }) async {
     try {
+      final currentUser = FirebaseAuth.instance.currentUser!.uid;
       final collectionReference = FirebaseFirestore.instance.collection(
         'products',
       );
@@ -222,7 +196,8 @@ class PartnerProvider extends ChangeNotifier {
     required BuildContext context,
   }) async {
     try {
-      final QuerySnapshot querySnapshot = await collectionReference
+      final currentUser = FirebaseAuth.instance.currentUser!.uid;
+      final QuerySnapshot querySnapshot = await _collectionReference
           .where("sellerId", isEqualTo: currentUser)
           .get();
       _partnerProducts = querySnapshot.docs
@@ -248,7 +223,8 @@ class PartnerProvider extends ChangeNotifier {
     _partnerProducts.removeWhere((e) => e.id == product.id);
     notifyListeners();
     try {
-      final QuerySnapshot querySnapshot = await collectionReference
+      final currentUser = FirebaseAuth.instance.currentUser!.uid;
+      final QuerySnapshot querySnapshot = await _collectionReference
           .where('sellerId', isEqualTo: currentUser)
           .where("id", isEqualTo: product.id)
           .get();
