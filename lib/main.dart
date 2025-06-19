@@ -11,7 +11,8 @@ import 'package:desi_shopping_seller/providers/statemanagement_provider.dart';
 import 'package:desi_shopping_seller/providers/user_provider.dart';
 import 'package:desi_shopping_seller/screens/admin/dash%20board/dash_board_page.dart';
 import 'package:desi_shopping_seller/screens/admin/drawer/advance_drawer_page.dart';
-import 'package:desi_shopping_seller/screens/admin/splash%20screen/splash_screen.dart';
+import 'package:desi_shopping_seller/screens/admin/splash%20screen/auth_page.dart';
+import 'package:desi_shopping_seller/screens/admin/splash%20screen/splash_page.dart';
 import 'package:desi_shopping_seller/screens/parner/bottom_nav/partner_bottom_nav.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -61,13 +62,13 @@ class MyApp extends StatelessWidget {
                   .get(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const SplashPage();
                 }
 
                 if (snapshot.hasData && snapshot.data!.exists) {
                   final data = snapshot.data!.data() as Map<String, dynamic>;
                   if (data['activeStatus'] == PartnerStatus.inactive) {
-                    return const SplashScreen();
+                    return const SplashPage();
                   } else {
                     return const PartnerBottomNav();
                   }
@@ -80,7 +81,7 @@ class MyApp extends StatelessWidget {
               },
             );
           } else {
-            return const SplashScreen();
+            return const AuthPage();
           }
         },
       ),

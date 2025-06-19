@@ -29,6 +29,14 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
   late TextEditingController stockController;
   late TextEditingController taxAmountController;
   late TextEditingController offerPriceController;
+  late TextEditingController netVolumeController;
+  late TextEditingController dosageController;
+  late TextEditingController compositionController;
+  late TextEditingController storageController;
+  late TextEditingController manufacturedByController;
+  late TextEditingController marketedByController;
+  late TextEditingController shelfLifeController;
+  late TextEditingController additionalInformationController;
 
   List<File> newImages = [];
   List<File> newVideos = [];
@@ -60,6 +68,22 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
       text: widget.product.offerPrice?.toString() ?? "",
     );
     cashOnDelivery = widget.product.cashOnDelivery;
+    netVolumeController = TextEditingController(text: widget.product.netVolume);
+    dosageController = TextEditingController(text: widget.product.dosage);
+    compositionController = TextEditingController(
+      text: widget.product.composition,
+    );
+    storageController = TextEditingController(text: widget.product.storage);
+    manufacturedByController = TextEditingController(
+      text: widget.product.manufacturedBy,
+    );
+    marketedByController = TextEditingController(
+      text: widget.product.manufacturedBy,
+    );
+    shelfLifeController = TextEditingController(text: widget.product.shelfLife);
+    additionalInformationController = TextEditingController(
+      text: widget.product.additionalInformation,
+    );
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final provider = Provider.of<BrandProvider>(context, listen: false);
@@ -80,6 +104,14 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
     stockController.dispose();
     taxAmountController.dispose();
     offerPriceController.dispose();
+    netVolumeController.dispose();
+    dosageController.dispose();
+    compositionController.dispose();
+    storageController.dispose();
+    manufacturedByController.dispose();
+    marketedByController.dispose();
+    shelfLifeController.dispose();
+    additionalInformationController.dispose();
     for (var controller in videoControllers) {
       controller.dispose();
     }
@@ -138,6 +170,15 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
       brand: selectedBrand!,
       imageUrl: newImages,
       videoUrl: newVideos,
+      additionalInformation: additionalInformationController.text,
+      composition: compositionController.text,
+      dosage: dosageController.text,
+      manufacturedBy: manufacturedByController.text,
+      marketedBy: marketedByController.text,
+      netVolume: netVolumeController.text,
+      offerPrice: int.parse(offerPriceController.text),
+      shelfLife: shelfLifeController.text,
+      storage: storageController.text,
     );
 
     if (success && mounted) {
@@ -290,50 +331,44 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
                         ],
                       ),
                       CustomTextFormField(
+                        hintText: 'Net Volume',
+                        controller: netVolumeController,
+                      ),
+                      CustomTextFormField(
+                        hintText: 'Dosage',
+                        controller: dosageController,
+                      ),
+                      CustomTextFormField(
+                        hintText: 'Composition',
+                        controller: compositionController,
+                      ),
+                      CustomTextFormField(
+                        hintText: 'Storage',
+                        controller: storageController,
+                      ),
+                      CustomTextFormField(
+                        hintText: 'Manufactured',
+                        controller: manufacturedByController,
+                      ),
+                      CustomTextFormField(
+                        hintText: 'Shelf Life',
+                        controller: shelfLifeController,
+                      ),
+                      CustomTextFormField(
+                        hintText: 'Additional Information',
+                        maxLines: 5,
+                        controller: additionalInformationController,
+                      ),
+                      CustomTextFormField(
                         hintText: 'Stock',
                         controller: stockController,
                         keyboardType: TextInputType.number,
                       ),
                       isBrandLoading
                           ? const CircularProgressIndicator()
-                          : Consumer<BrandProvider>(
-                              builder: (_, value, __) {
-                                return DropdownButtonFormField<BrandModel>(
-                                  value: selectedBrand,
-                                  items: value.allBrands
-                                      .map(
-                                        (e) => DropdownMenuItem(
-                                          value: e,
-                                          child: Text(e.title),
-                                        ),
-                                      )
-                                      .toList(),
-                                  onChanged: (val) =>
-                                      setState(() => selectedBrand = val),
-                                  validator: (val) => val == null
-                                      ? 'Please select a brand'
-                                      : null,
-                                  decoration: const InputDecoration(
-                                    labelText: 'Select Brand',
-                                    border: OutlineInputBorder(),
-                                  ),
-                                );
-                              },
-                            ),
-                      DropdownButtonFormField<String>(
-                        value: cashOnDelivery,
-                        items: ['Yes', 'No']
-                            .map(
-                              (e) => DropdownMenuItem(value: e, child: Text(e)),
-                            )
-                            .toList(),
-                        onChanged: (val) =>
-                            setState(() => cashOnDelivery = val),
-                        decoration: const InputDecoration(
-                          labelText: 'Cash On Delivery',
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
+                          : _brandDropDown(),
+
+                      _cashOnDeliveryDropDown(),
                       CustomTextFormField(
                         hintText: 'Tax %',
                         controller: taxAmountController,
@@ -357,6 +392,75 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _brandDropDown() {
+    return Consumer<BrandProvider>(
+      builder: (context, provider, child) {
+        final items = provider.filteredBrands
+            .map((e) => DropdownMenuItem(value: e, child: Text(e.title)))
+            .toList();
+        return DropdownButtonFormField(
+          decoration: InputDecoration(
+            labelText: "Select Brand",
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.blue),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.blue),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.blue),
+            ),
+          ),
+          items: items,
+          value: selectedBrand,
+          onChanged: (value) {
+            setState(() {
+              selectedBrand = value;
+            });
+          },
+        );
+      },
+    );
+  }
+
+  Widget _cashOnDeliveryDropDown() {
+    return Consumer<BrandProvider>(
+      builder: (context, provider, child) {
+        final list = ['Yes', 'No'];
+        final items = list
+            .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+            .toList();
+        return DropdownButtonFormField(
+          decoration: InputDecoration(
+            labelText: "Cash On Delivery",
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.blue),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.blue),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.blue),
+            ),
+          ),
+          items: items,
+          value: cashOnDelivery,
+          onChanged: (value) {
+            setState(() {
+              cashOnDelivery = value;
+            });
+          },
+        );
+      },
     );
   }
 }

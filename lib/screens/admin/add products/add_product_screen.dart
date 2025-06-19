@@ -5,7 +5,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:desi_shopping_seller/model/brand_model.dart';
 import 'package:desi_shopping_seller/providers/brand_provider.dart';
 import 'package:desi_shopping_seller/providers/product_provider.dart';
-import 'package:desi_shopping_seller/screens/admin/add%20products/componenets/product_other_components.dart';
 import 'package:desi_shopping_seller/util/util.dart';
 import 'package:desi_shopping_seller/widgets/custom_elevated_button.dart';
 import 'package:desi_shopping_seller/widgets/custom_text_form_field.dart';
@@ -37,7 +36,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final additionalInformationController = TextEditingController();
   final stockController = TextEditingController();
   final taxAmountController = TextEditingController();
-  final quantityController = TextEditingController();
   final offerPriceController = TextEditingController();
 
   List<File> images = [];
@@ -70,7 +68,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
     priceController.dispose();
     stockController.dispose();
     taxAmountController.dispose();
-    quantityController.dispose();
     offerPriceController.dispose();
     for (var controller in videoControllers) {
       controller.dispose();
@@ -118,6 +115,15 @@ class _AddProductScreenState extends State<AddProductScreen> {
       return;
     }
 
+    if (int.parse(offerPriceController.text) >
+        int.parse(priceController.text)) {
+      showSnackBar(
+        context: context,
+        e: 'Offer price cannot be greater than actual price',
+      );
+      return;
+    }
+
     setState(() => isAddingProduct = true);
 
     final provider = context.read<ProductProvider>();
@@ -133,11 +139,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
       manufacturedBy: manufacturedByController.text,
       marketedBy: marketedByController.text,
       shelfLife: shelfLifeController.text,
+      offerPrice: int.parse(offerPriceController.text),
       additionalInformation: additionalInformationController.text,
       stock: int.parse(stockController.text),
       taxAmount: double.parse(taxAmountController.text),
       cashOnDelivery: cashOnDelivery!,
-      quantity: quantityController.text,
+
       brand: selectedBrand!,
       imageFiles: images,
       videoFiles: videos,
@@ -159,7 +166,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
       additionalInformationController.clear();
       stockController.clear();
       taxAmountController.clear();
-      quantityController.clear();
       offerPriceController.clear();
       setState(() {
         images.clear();
@@ -171,6 +177,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
         videoControllers.clear();
         selectedBrand = null;
       });
+      Navigator.pop(context);
     }
 
     setState(() => isAddingProduct = false);
@@ -190,7 +197,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 child: Form(
                   key: formKey,
                   child: Column(
-                    spacing: size.height * 0.01,
+                    spacing: size.height * 0.015,
                     children: [
                       // Images
                       images.isEmpty
@@ -312,61 +319,43 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       ),
                       CustomTextFormField(
                         hintText: 'Net Volume',
-                        controller: stockController,
-                        keyboardType: TextInputType.number,
+                        controller: netVolumeController,
                       ),
                       CustomTextFormField(
                         hintText: 'Dosage',
-                        controller: stockController,
-                        keyboardType: TextInputType.number,
+                        controller: dosageController,
                       ),
                       CustomTextFormField(
                         hintText: 'Composition',
-                        controller: stockController,
-                        keyboardType: TextInputType.number,
+                        controller: compositionController,
                       ),
                       CustomTextFormField(
                         hintText: 'Storage',
-                        controller: stockController,
-                        keyboardType: TextInputType.number,
+                        controller: storageController,
                       ),
                       CustomTextFormField(
                         hintText: 'Manufactured',
-                        controller: stockController,
-                        keyboardType: TextInputType.number,
+                        controller: manufacturedByController,
                       ),
                       CustomTextFormField(
                         hintText: 'Shelf Life',
-                        controller: stockController,
-                        keyboardType: TextInputType.number,
+                        controller: shelfLifeController,
                       ),
                       CustomTextFormField(
                         hintText: 'Additional Information',
-                        contentPadding: const EdgeInsetsGeometry.all(5),
-                        controller: stockController,
-
-                        keyboardType: TextInputType.number,
+                        maxLines: 5,
+                        controller: additionalInformationController,
                       ),
                       CustomTextFormField(
                         hintText: 'Stock',
                         controller: stockController,
                         keyboardType: TextInputType.number,
                       ),
-                      CustomTextFormField(
-                        hintText: 'Quantity',
-                        controller: quantityController,
-                      ),
                       isBrandLoading
                           ? const CircularProgressIndicator()
-                          : ProductOtherComponents.brandDropDown(
-                              selectedBrand: selectedBrand!,
-                              onchanged: (value) =>
-                                  setState(() => selectedBrand = value),
-                            ),
-                      ProductOtherComponents.cashOnDelivery(
-                        onChanged: (value) =>
-                            setState(() => cashOnDelivery = value),
-                      ),
+                          : _brandDropDown(),
+
+                      _cashOnDeliveryDropDown(),
                       CustomTextFormField(
                         hintText: 'Tax %',
                         controller: taxAmountController,
@@ -391,6 +380,75 @@ class _AddProductScreenState extends State<AddProductScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _brandDropDown() {
+    return Consumer<BrandProvider>(
+      builder: (context, provider, child) {
+        final items = provider.filteredBrands
+            .map((e) => DropdownMenuItem(value: e, child: Text(e.title)))
+            .toList();
+        return DropdownButtonFormField(
+          decoration: InputDecoration(
+            labelText: "Select Brand",
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.blue),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.blue),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.blue),
+            ),
+          ),
+          items: items,
+          value: selectedBrand,
+          onChanged: (value) {
+            setState(() {
+              selectedBrand = value;
+            });
+          },
+        );
+      },
+    );
+  }
+
+  Widget _cashOnDeliveryDropDown() {
+    return Consumer<BrandProvider>(
+      builder: (context, provider, child) {
+        final list = ['Yes', 'No'];
+        final items = list
+            .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+            .toList();
+        return DropdownButtonFormField(
+          decoration: InputDecoration(
+            labelText: "Cash On Delivery",
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.blue),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.blue),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.blue),
+            ),
+          ),
+          items: items,
+          value: cashOnDelivery,
+          onChanged: (value) {
+            setState(() {
+              cashOnDelivery = value;
+            });
+          },
+        );
+      },
     );
   }
 }

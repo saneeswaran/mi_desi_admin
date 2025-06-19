@@ -146,14 +146,21 @@ class _PartnerLoginState extends State<PartnerLogin> {
                                       },
                                     ),
                                     const SizedBox(height: 20),
-                                    SizedBox(
-                                      height: size.height * 0.05,
-                                      width: double.infinity,
-                                      child: CustomElevatedButton(
-                                        color: Colors.pink,
-                                        text: "Login",
-                                        onPressed: () => login(context),
-                                      ),
+                                    Consumer<PartnerProvider>(
+                                      builder: (context, provider, child) {
+                                        final value = provider.isLoading;
+                                        return SizedBox(
+                                          height: size.height * 0.05,
+                                          width: double.infinity,
+                                          child: CustomElevatedButton(
+                                            color: Colors.pink,
+                                            text: value
+                                                ? "Loading..."
+                                                : "Login",
+                                            onPressed: () => login(context),
+                                          ),
+                                        );
+                                      },
                                     ),
                                     _signUpAccount(context),
                                   ],

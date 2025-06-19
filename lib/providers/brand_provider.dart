@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:desi_shopping_seller/model/brand_model.dart';
@@ -15,6 +16,15 @@ class BrandProvider extends ChangeNotifier {
 
   int _currentIndex = 0;
   int get currentIndex => _currentIndex;
+
+  //brand
+  BrandModel? _selectedBrand;
+  BrandModel? get selectedBrand => _selectedBrand;
+
+  void changeSelectedBrand(BrandModel? brand) {
+    _selectedBrand = brand;
+    notifyListeners();
+  }
 
   void switchTab(int index) {
     _currentIndex = index;
@@ -66,14 +76,14 @@ class BrandProvider extends ChangeNotifier {
 
       final querySnapshot = await FirebaseFirestore.instance
           .collection('brands')
-          .where('sellerId', isEqualTo: currentUser.uid)
           .get();
 
       _allBrands = querySnapshot.docs
           .map((e) => BrandModel.fromMap(e.data()))
           .toList();
 
-      _filteredBrands = List.from(_allBrands);
+      _filteredBrands = _allBrands;
+      log(_allBrands.length.toString());
       notifyListeners();
     } catch (e) {
       debugPrint('Get Brands Error: $e');

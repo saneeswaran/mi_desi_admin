@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class PartnerProductsPage extends StatelessWidget {
-  const PartnerProductsPage({super.key});
+class RechargeRequestScreen extends StatelessWidget {
+  const RechargeRequestScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

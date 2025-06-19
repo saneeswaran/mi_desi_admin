@@ -24,6 +24,10 @@ class PartnerProvider extends ChangeNotifier {
   List<ProductModel> _partnerProducts = [];
   List<ProductModel> get partnerProducts => _partnerProducts;
 
+  //loading
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
   List<ProductModel> _filterProducts = [];
   List<ProductModel> get filterproducts => _filterProducts;
   Future<bool> registerPartner({
@@ -33,6 +37,7 @@ class PartnerProvider extends ChangeNotifier {
     required String password,
   }) async {
     try {
+      _isLoading = true;
       // Create user with email and password
       final UserCredential userCredential = await _auth
           .createUserWithEmailAndPassword(email: email, password: password);
@@ -45,13 +50,14 @@ class PartnerProvider extends ChangeNotifier {
         name: username,
         email: email,
         password: password,
+        activeStatus: "inactive",
       );
 
       // Save to Firestore
       await _collectionReference.doc(uid).set(partnerModel.toMap());
 
-      // Save locally using SharedPreferences
       _partner = partnerModel;
+      _isLoading = false;
       notifyListeners();
       return true;
     } on FirebaseException catch (e) {
@@ -73,6 +79,7 @@ class PartnerProvider extends ChangeNotifier {
     required String password,
   }) async {
     try {
+      _isLoading = true;
       //sign in with user email and password
       final UserCredential userCredential = await _auth
           .signInWithEmailAndPassword(email: email, password: password);
@@ -89,6 +96,7 @@ class PartnerProvider extends ChangeNotifier {
       _partner = PartnerModel.fromMap(
         documentSnapshot.data() as Map<String, dynamic>,
       );
+      _isLoading = false;
       notifyListeners();
       return true;
     } on FirebaseException catch (e) {
@@ -197,8 +205,10 @@ class PartnerProvider extends ChangeNotifier {
   }) async {
     try {
       final currentUser = FirebaseAuth.instance.currentUser!.uid;
-      final QuerySnapshot querySnapshot = await _collectionReference
-          .where("sellerId", isEqualTo: currentUser)
+      final CollectionReference collectionReference = FirebaseFirestore.instance
+          .collection('products');
+      final QuerySnapshot querySnapshot = await collectionReference
+          .where("sellerid", isEqualTo: currentUser)
           .get();
       _partnerProducts = querySnapshot.docs
           .map((e) => ProductModel.fromMap(e.data() as Map<String, dynamic>))

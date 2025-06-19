@@ -9,7 +9,7 @@ class CustomElevatedButton extends StatelessWidget {
     super.key,
     required this.text,
     required this.onPressed,
-    this.color = Colors.blue,
+    this.color = Colors.pink,
     this.radius = 12,
   });
 

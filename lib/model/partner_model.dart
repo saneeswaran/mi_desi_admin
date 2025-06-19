@@ -6,16 +6,14 @@ class PartnerModel {
   final String uid;
   final String name;
   final String email;
-  final String? photoURL;
   final String password;
-  final PartnerStatus activeStatus;
+  final String activeStatus;
   PartnerModel({
     required this.uid,
     required this.name,
     required this.email,
-    this.photoURL,
     required this.password,
-    this.activeStatus = PartnerStatus.inactive,
+    this.activeStatus = "inactive",
   });
 
   Map<String, dynamic> toMap() {
@@ -23,9 +21,8 @@ class PartnerModel {
       'uid': uid,
       'name': name,
       'email': email,
-      'photoURL': photoURL,
       'password': password,
-      'activeStatus': activeStatus,
+      'activeStatus': partnerStatusToString(PartnerStatus.inactive),
     };
   }
 
@@ -34,9 +31,8 @@ class PartnerModel {
       uid: map['uid'] as String,
       name: map['name'] as String,
       email: map['email'] as String,
-      photoURL: map['photoURL'] as String,
       password: map['password'] as String,
-      activeStatus: map['activeStatus'] as PartnerStatus,
+      activeStatus: map['activeStatus'] as String,
     );
   }
 

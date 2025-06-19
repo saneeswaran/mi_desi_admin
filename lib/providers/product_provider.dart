@@ -49,7 +49,7 @@ class ProductProvider extends ChangeNotifier {
     required double taxAmount,
     required String cashOnDelivery,
     required BrandModel brand,
-    required String quantity,
+    required int offerPrice,
     required List<File> imageFiles,
     required List<File> videoFiles,
   }) async {
@@ -98,6 +98,7 @@ class ProductProvider extends ChangeNotifier {
         shelfLife: shelfLife,
         additionalInformation: additionalInformation,
         stock: stock,
+        offerPrice: offerPrice,
         taxAmount: taxAmount,
         cashOnDelivery: cashOnDelivery,
         brand: brand,
@@ -207,6 +208,15 @@ class ProductProvider extends ChangeNotifier {
     required double taxAmount,
     required String cashOnDelivery,
     required BrandModel brand,
+    required int offerPrice,
+    required String netVolume,
+    required String dosage,
+    required String composition,
+    required String storage,
+    required String manufacturedBy,
+    required String marketedBy,
+    required String shelfLife,
+    required String additionalInformation,
     required List<File> imageUrl,
     required List<File> videoUrl,
   }) async {
@@ -215,7 +225,7 @@ class ProductProvider extends ChangeNotifier {
       final collectionReference = FirebaseFirestore.instance.collection(
         'products',
       );
-      final storage = FirebaseStorage.instance;
+      final firebaseStorage = FirebaseStorage.instance;
 
       final querySnapshot = await collectionReference
           .where('sellerid', isEqualTo: currentUser)
@@ -239,7 +249,7 @@ class ProductProvider extends ChangeNotifier {
       for (File file in imageUrl) {
         final fileName =
             '${DateTime.now().millisecondsSinceEpoch}_${path.basename(file.path)}';
-        final ref = storage.ref().child('products/images/$fileName');
+        final ref = firebaseStorage.ref().child('products/images/$fileName');
         await ref.putFile(file);
         final downloadUrl = await ref.getDownloadURL();
         uploadedImageUrls.add(downloadUrl);
@@ -250,7 +260,7 @@ class ProductProvider extends ChangeNotifier {
       for (File file in videoUrl) {
         final fileName =
             '${DateTime.now().millisecondsSinceEpoch}_${path.basename(file.path)}';
-        final ref = storage.ref().child('products/videos/$fileName');
+        final ref = firebaseStorage.ref().child('products/videos/$fileName');
         await ref.putFile(file);
         final downloadUrl = await ref.getDownloadURL();
         uploadedVideoUrls.add(downloadUrl);
@@ -277,6 +287,15 @@ class ProductProvider extends ChangeNotifier {
         rating: data['rating'] ?? 0.0,
         imageUrl: finalImageUrls,
         videoUrl: finalVideoUrls,
+        additionalInformation: additionalInformation,
+        composition: composition,
+        dosage: dosage,
+        manufacturedBy: manufacturedBy,
+        marketedBy: marketedBy,
+        netVolume: netVolume,
+        shelfLife: shelfLife,
+        offerPrice: offerPrice,
+        storage: storage,
       );
 
       final int index = _allProducts.indexWhere(

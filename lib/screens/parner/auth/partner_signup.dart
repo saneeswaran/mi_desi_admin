@@ -151,14 +151,21 @@ class _PartnerSignupState extends State<PartnerSignup> {
                                     },
                                   ),
                                   const SizedBox(height: 10),
-                                  SizedBox(
-                                    height: size.height * 0.05,
-                                    width: size.width * 0.8,
-                                    child: CustomElevatedButton(
-                                      color: Colors.pink,
-                                      text: "Register",
-                                      onPressed: register,
-                                    ),
+                                  Consumer<PartnerProvider>(
+                                    builder: (context, provider, child) {
+                                      final value = provider.isLoading;
+                                      return SizedBox(
+                                        height: size.height * 0.05,
+                                        width: size.width * 0.8,
+                                        child: CustomElevatedButton(
+                                          color: Colors.pink,
+                                          text: value
+                                              ? "Registering..."
+                                              : "Register",
+                                          onPressed: register,
+                                        ),
+                                      );
+                                    },
                                   ),
                                   const SizedBox(height: 20),
                                   _rowButtons(context: context),
