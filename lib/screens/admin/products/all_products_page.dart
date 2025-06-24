@@ -17,7 +17,8 @@ class AllProductsPage extends StatelessWidget {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         shape: const CircleBorder(),
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.pink,
+        elevation: 0.0,
         child: const Icon(Icons.add, color: Colors.white),
         onPressed: () => moveToNextPageWithFadeAnimations(
           context: context,
@@ -74,7 +75,7 @@ class AllProductsPage extends StatelessWidget {
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                         colors: isSelected
-                            ? [Colors.lightBlue, Colors.blue]
+                            ? [Colors.pinkAccent, Colors.pink]
                             : [Colors.grey.shade300, Colors.white],
                       ),
                     ),
@@ -125,7 +126,7 @@ class AllProductsPage extends StatelessWidget {
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                       colors: isSelected
-                          ? [Colors.lightBlue, Colors.blue]
+                          ? [Colors.pinkAccent, Colors.pink]
                           : [Colors.grey.shade300, Colors.white],
                     ),
                   ),
@@ -179,7 +180,7 @@ class AllProductsPage extends StatelessWidget {
         ),
         IconButton(
           style: IconButton.styleFrom(
-            backgroundColor: Colors.lightBlue,
+            backgroundColor: Colors.pink,
             shape: const CircleBorder(),
           ),
           onPressed: () {

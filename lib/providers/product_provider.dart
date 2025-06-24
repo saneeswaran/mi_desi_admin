@@ -113,7 +113,9 @@ class ProductProvider extends ChangeNotifier {
           .update({'productsCount': FieldValue.increment(1)});
 
       await docRef.set(productData.toMap());
-
+      _allProducts.add(productData);
+      _filterProducts = _allProducts;
+      notifyListeners();
       return true;
     } catch (e) {
       if (context.mounted) {
@@ -137,7 +139,7 @@ class ProductProvider extends ChangeNotifier {
           .map((e) => ProductModel.fromMap(e.data()))
           .toList();
 
-      _filterProducts = List.from(_allProducts);
+      _filterProducts = _allProducts;
 
       notifyListeners();
     } catch (e) {
@@ -154,13 +156,11 @@ class ProductProvider extends ChangeNotifier {
     required String brandId,
   }) async {
     try {
-      final currentUser = FirebaseAuth.instance.currentUser!.uid;
       final collectionReference = FirebaseFirestore.instance.collection(
         'products',
       );
 
       final querySnapshot = await collectionReference
-          .where('sellerid', isEqualTo: currentUser)
           .where('id', isEqualTo: productId)
           .get();
 
@@ -187,6 +187,7 @@ class ProductProvider extends ChangeNotifier {
               .doc(brandId)
               .update({'productsCount': FieldValue.increment(-1)});
           _allProducts.removeWhere((element) => element.id == productId);
+          _filterProducts = _allProducts;
           notifyListeners();
           return true;
         }
@@ -228,7 +229,6 @@ class ProductProvider extends ChangeNotifier {
       final firebaseStorage = FirebaseStorage.instance;
 
       final querySnapshot = await collectionReference
-          .where('sellerid', isEqualTo: currentUser)
           .where('id', isEqualTo: productId)
           .get();
 
@@ -350,6 +350,7 @@ class ProductProvider extends ChangeNotifier {
           .doc(productId)
           .get();
       await documentSnapshot.reference.update({'offerPrice': offerPrice});
+      notifyListeners();
       return true;
     } on FirebaseException catch (e) {
       if (context.mounted) showSnackBar(context: context, e: e);

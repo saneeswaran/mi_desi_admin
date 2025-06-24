@@ -35,7 +35,7 @@ class _BannersPageState extends State<BannersPage> {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.pink,
         shape: const CircleBorder(),
         elevation: 0.0,
         onPressed: () => moveToNextPageWithFadeAnimations(

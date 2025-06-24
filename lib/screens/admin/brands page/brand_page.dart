@@ -36,7 +36,7 @@ class _BrandPageState extends State<BrandPage> {
           route: const AddBrands(),
         ),
         elevation: 0.0,
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: Colors.pink,
         child: const Icon(Icons.add, color: Colors.white),
       ),
       body: Column(

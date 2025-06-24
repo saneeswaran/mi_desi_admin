@@ -165,7 +165,7 @@ class _ViewProductsState extends State<ViewProducts> {
               context: context,
               route: UpdateProductScreen(product: widget.product),
             ),
-            color: Colors.blue,
+            color: Colors.pink,
           ),
         ),
       ],
@@ -178,8 +178,8 @@ class _ViewProductsState extends State<ViewProducts> {
   }) {
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
-        foregroundColor: Colors.blueAccent,
-        side: const BorderSide(color: Colors.blueAccent),
+        foregroundColor: Colors.pinkAccent,
+        side: const BorderSide(color: Colors.pink),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
@@ -332,7 +332,7 @@ class _ViewProductsState extends State<ViewProducts> {
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
                       color: imageIndex == index
-                          ? Colors.blue
+                          ? Colors.pink
                           : Colors.transparent,
                       width: 2,
                     ),
