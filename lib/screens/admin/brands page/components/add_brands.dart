@@ -20,6 +20,7 @@ class _AddBrandsState extends State<AddBrands> {
   final formKey = GlobalKey<FormState>();
   final brandController = TextEditingController();
   File? imageUrl;
+  File? backgroundImage;
   bool isLoading = false;
 
   // Image picker
@@ -29,6 +30,22 @@ class _AddBrandsState extends State<AddBrands> {
     if (picked != null) {
       setState(() {
         imageUrl = picked;
+      });
+    } else {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Image not selected')));
+      }
+    }
+  }
+
+  void pickBackgroundImage() async {
+    final picked = await pickBrandImage(context: context);
+
+    if (picked != null) {
+      setState(() {
+        backgroundImage = picked;
       });
     } else {
       if (mounted) {
@@ -51,7 +68,7 @@ class _AddBrandsState extends State<AddBrands> {
     if (!formKey.currentState!.validate()) return;
 
     setState(() {
-      isLoading = true; // <-- Start loading here BEFORE async call
+      isLoading = true;
     });
 
     try {
@@ -60,6 +77,7 @@ class _AddBrandsState extends State<AddBrands> {
             context: context,
             title: brandController.text.trim(),
             imageFile: imageUrl!,
+            backgroundImage: backgroundImage!,
           );
 
       if (isSuccess && mounted) {

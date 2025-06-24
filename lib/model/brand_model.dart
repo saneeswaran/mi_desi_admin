@@ -5,6 +5,7 @@ class BrandModel {
   final String sellerId;
   final String title;
   final String imageUrl;
+  final String? backGroundImage;
   int productsCount;
 
   BrandModel({
@@ -12,6 +13,7 @@ class BrandModel {
     required this.sellerId,
     required this.title,
     required this.imageUrl,
+    this.backGroundImage,
     this.productsCount = 0,
   });
 
@@ -21,6 +23,7 @@ class BrandModel {
       'sellerId': sellerId,
       'title': title,
       'imageUrl': imageUrl,
+      'backGroundImage': backGroundImage,
       'productsCount': productsCount,
     };
   }
@@ -30,6 +33,7 @@ class BrandModel {
       id: map['id'],
       sellerId: map['sellerId'],
       title: map['title'],
+      backGroundImage: map['backGroundImage'],
       imageUrl: map['imageUrl'],
       productsCount: map['productsCount'] ?? 0,
     );

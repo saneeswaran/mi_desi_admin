@@ -105,6 +105,7 @@ class ProductModel {
         sellerId: map['brand']['sellerId'],
         title: map['brand']['title'],
         imageUrl: map['brand']['imageUrl'],
+        backGroundImage: map['brand']['backGroundImage'],
         productsCount: map['brand']['productsCount'],
       ),
       imageUrl: List<String>.from(map['imageUrl']),
