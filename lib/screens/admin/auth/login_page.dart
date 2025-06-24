@@ -8,35 +8,49 @@ import 'package:desi_shopping_seller/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormState>();
-    final emailController = TextEditingController();
-    final passwordController = TextEditingController();
-    final Size size = MediaQuery.of(context).size;
+  State<LoginPage> createState() => _LoginPageState();
+}
 
-    void login() async {
-      final authProvider = Provider.of<AuthProviders>(context, listen: false);
-      final bool isSuccess = await authProvider.loginAdmin(
+class _LoginPageState extends State<LoginPage> {
+  final formKey = GlobalKey<FormState>();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  void login() async {
+    if (!formKey.currentState!.validate()) return;
+
+    final authProvider = Provider.of<AuthProviders>(context, listen: false);
+    final bool isSuccess = await authProvider.loginAdmin(
+      context: context,
+      email: emailController.text,
+      password: passwordController.text,
+    );
+
+    if (isSuccess && mounted) {
+      replaceCurrentPageWithFadeAnimations(
         context: context,
-        email: emailController.text,
-        password: passwordController.text,
+        route: const AdvanceDrawerPage(
+          body: DashBoardPage(),
+          title: "DashBoard",
+        ),
       );
-
-      if (formKey.currentState!.validate()) return;
-      if (isSuccess && context.mounted) {
-        replaceCurrentPageWithFadeAnimations(
-          context: context,
-          route: const AdvanceDrawerPage(
-            body: DashBoardPage(),
-            title: "DashBoard",
-          ),
-        );
-      }
     }
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
 
     return Scaffold(
       body: Stack(
@@ -62,15 +76,16 @@ class LoginPage extends StatelessWidget {
                         ),
                       ),
                       Align(
-                        alignment: Alignment.bottomCenter,
+                        alignment: Alignment.center,
                         child: Card(
                           elevation: 8,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),
                           ),
                           child: Container(
+                            alignment: Alignment.center,
                             padding: const EdgeInsets.all(20),
-                            height: size.height * 0.7,
+                            height: size.height * 0.5,
                             width: size.width * 0.9,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(16),
@@ -94,7 +109,7 @@ class LoginPage extends StatelessWidget {
                                   const SizedBox(height: 10),
                                   const Center(
                                     child: Text(
-                                      "Register",
+                                      "Login",
                                       style: TextStyle(
                                         color: Colors.pink,
                                         fontSize: 22,
@@ -117,19 +132,17 @@ class LoginPage extends StatelessWidget {
                                     color: AppColors.textFormFieldColor,
                                     isObscure: true,
                                   ),
-
                                   const SizedBox(height: 10),
                                   SizedBox(
                                     height: size.height * 0.05,
                                     width: size.width * 0.8,
                                     child: CustomElevatedButton(
                                       color: Colors.pink,
-                                      text: "Register",
+                                      text: "Login",
                                       onPressed: login,
                                     ),
                                   ),
                                   const SizedBox(height: 20),
-                                  _rowButtons(context: context),
                                 ],
                               ),
                             ),
@@ -158,22 +171,6 @@ class LoginPage extends StatelessWidget {
           fontWeight: FontWeight.bold,
         ),
       ),
-    );
-  }
-
-  Row _rowButtons({required BuildContext context}) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Text("Already have an account?"),
-        TextButton(
-          onPressed: () => moveToNextPageWithFadeAnimations(
-            context: context,
-            route: const LoginPage(),
-          ),
-          child: const Text("Login", style: TextStyle(color: Colors.pink)),
-        ),
-      ],
     );
   }
 }

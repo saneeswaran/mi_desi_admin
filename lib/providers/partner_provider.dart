@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:desi_shopping_seller/model/brand_model.dart';
@@ -23,6 +24,13 @@ class PartnerProvider extends ChangeNotifier {
   //partner products
   List<ProductModel> _partnerProducts = [];
   List<ProductModel> get partnerProducts => _partnerProducts;
+
+  // list of all partners
+  List<PartnerModel> _allPartners = [];
+  List<PartnerModel> get allPartners => _allPartners;
+
+  List<PartnerModel> _filterPartners = [];
+  List<PartnerModel> get filterPartners => _filterPartners;
 
   //loading
   bool _isLoading = false;
@@ -377,5 +385,31 @@ class PartnerProvider extends ChangeNotifier {
       if (context.mounted) showSnackBar(context: context, e: e);
       return false;
     }
+  }
+
+  Future<List<PartnerModel>> fetchAllPartners({
+    required BuildContext context,
+  }) async {
+    try {
+      final QuerySnapshot querySnapshot = await _collectionReference.get();
+      _allPartners = querySnapshot.docs
+          .map((e) => PartnerModel.fromMap(e.data() as Map<String, dynamic>))
+          .toList();
+      _filterPartners = _allPartners;
+      log(_allPartners.toString());
+      notifyListeners();
+    } catch (e) {
+      if (context.mounted) {
+        showSnackBar(context: context, e: e);
+      }
+    }
+    return _allPartners;
+  }
+
+  void filterByType({required String query}) {
+    _filterPartners = _allPartners
+        .where((e) => e.activeStatus.toLowerCase() == query.toLowerCase())
+        .toList();
+    notifyListeners();
   }
 }

@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:desi_shopping_seller/model/brand_model.dart';
@@ -83,7 +82,6 @@ class BrandProvider extends ChangeNotifier {
           .toList();
 
       _filteredBrands = _allBrands;
-      log(_allBrands.length.toString());
       notifyListeners();
     } catch (e) {
       debugPrint('Get Brands Error: $e');

@@ -1,4 +1,5 @@
 import 'package:desi_shopping_seller/constants/constants.dart';
+import 'package:desi_shopping_seller/screens/admin/auth/login_page.dart';
 import 'package:desi_shopping_seller/screens/admin/splash%20screen/components/auth_support.dart';
 import 'package:desi_shopping_seller/screens/parner/auth/partner_login.dart';
 import 'package:desi_shopping_seller/util/util.dart';
@@ -46,7 +47,10 @@ class AuthPage extends StatelessWidget {
       children: [
         CustomElevatedButton(
           text: "Admin",
-          onPressed: () {},
+          onPressed: () => moveToNextPageWithFadeAnimations(
+            context: context,
+            route: const LoginPage(),
+          ),
           color: Colors.pink,
           radius: 20,
         ),

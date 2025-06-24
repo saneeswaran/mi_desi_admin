@@ -31,7 +31,7 @@ class RechargeProvider extends ChangeNotifier {
         }).toList(),
       );
 
-      _filterRecharge = List.from(_allRecharge);
+      _filterRecharge = _allRecharge;
       notifyListeners();
     } catch (e) {
       if (context.mounted) {
@@ -153,5 +153,12 @@ class RechargeProvider extends ChangeNotifier {
       }
     }
     return false;
+  }
+
+  void filter({required String query}) {
+    _filterRecharge = _allRecharge
+        .where((e) => e.status.toLowerCase().contains(query.toLowerCase()))
+        .toList();
+    notifyListeners();
   }
 }

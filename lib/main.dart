@@ -7,6 +7,7 @@ import 'package:desi_shopping_seller/providers/order_provider.dart';
 import 'package:desi_shopping_seller/providers/partner_provider.dart';
 import 'package:desi_shopping_seller/providers/product_provider.dart';
 import 'package:desi_shopping_seller/providers/brand_provider.dart';
+import 'package:desi_shopping_seller/providers/reacharge_provider.dart';
 import 'package:desi_shopping_seller/providers/statemanagement_provider.dart';
 import 'package:desi_shopping_seller/providers/user_provider.dart';
 import 'package:desi_shopping_seller/screens/admin/dash%20board/dash_board_page.dart';
@@ -33,6 +34,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => AuthProviders()),
         ChangeNotifierProvider(create: (_) => StatemanagementProvider()),
         ChangeNotifierProvider(create: (_) => PartnerProvider()),
+        ChangeNotifierProvider(create: (_) => RechargeProvider()),
       ],
       child: const MyApp(),
     ),

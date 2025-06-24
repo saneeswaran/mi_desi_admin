@@ -37,8 +37,9 @@ class _ViewBrandsState extends State<ViewBrands> {
               child: Column(
                 spacing: size.height * 0.02,
                 children: [
+                  SizedBox(height: size.height * 0.05),
                   Container(
-                    height: size.height * 0.50,
+                    height: size.height * 0.30,
                     width: size.width * 1,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
@@ -46,7 +47,7 @@ class _ViewBrandsState extends State<ViewBrands> {
                         image: CachedNetworkImageProvider(
                           widget.brand.imageUrl,
                         ),
-                        fit: BoxFit.cover,
+                        fit: BoxFit.contain,
                       ),
                     ),
                   ),
