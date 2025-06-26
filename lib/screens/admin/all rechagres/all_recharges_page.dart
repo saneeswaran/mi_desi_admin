@@ -33,7 +33,12 @@ class _AllRechargesPageState extends State<AllRechargesPage> {
               itemBuilder: (context, index) {
                 final plans = provider.allRecharge[index];
                 return GridTile(
-                  child: Column(children: [Text(plans.price.toString())]),
+                  child: Column(
+                    children: [
+                      Text(plans.price.toString()),
+                      Text(plans.dataInfo),
+                    ],
+                  ),
                 );
               },
             );
