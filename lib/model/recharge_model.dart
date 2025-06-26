@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RechargeModel {
@@ -7,11 +9,9 @@ class RechargeModel {
   final double price;
   final String dataInfo;
   final String validity;
-  final String rechargeType;
+  final RechargeProvider rechargeProvider;
   String status;
-  final Timestamp createdAt;
-  final Timestamp updatedAt;
-
+  final Timestamp? createdAt = Timestamp.now();
   RechargeModel({
     this.id,
     this.sellerId,
@@ -19,40 +19,75 @@ class RechargeModel {
     required this.price,
     required this.dataInfo,
     required this.validity,
-    required this.rechargeType,
+    required this.rechargeProvider,
     required this.status,
-    Timestamp? createdAt,
-    required this.updatedAt,
-  }) : createdAt = createdAt ?? Timestamp.now();
+  });
 
-  /// Convert Firestore document to model
-  factory RechargeModel.fromMap(Map<String, dynamic> map, {String? id}) {
-    return RechargeModel(
-      id: id,
-      sellerId: map['sellerId'],
-      customerId: map['customerId'],
-      price: (map['price'] as num).toDouble(),
-      dataInfo: map['dataInfo'] ?? '',
-      validity: map['validity'] ?? '',
-      rechargeType: map['rechargeType'] ?? '',
-      status: map['status'] ?? '',
-      createdAt: map['createdAt'] ?? Timestamp.now(),
-      updatedAt: map['updatedAt'] ?? Timestamp.now(),
-    );
-  }
-
-  /// Convert model to Firestore map
   Map<String, dynamic> toMap() {
-    return {
+    return <String, dynamic>{
+      'id': id,
       'sellerId': sellerId,
       'customerId': customerId,
       'price': price,
       'dataInfo': dataInfo,
       'validity': validity,
-      'rechargeType': rechargeType,
+      'rechargeProvider': rechargeProvider.toMap(),
       'status': status,
       'createdAt': createdAt,
-      'updatedAt': updatedAt,
     };
   }
+
+  factory RechargeModel.fromMap(Map<String, dynamic> map) {
+    return RechargeModel(
+      id: map['id'] != null ? map['id'] as String : null,
+      sellerId: map['sellerId'] != null ? map['sellerId'] as String : null,
+      customerId: map['customerId'] != null
+          ? map['customerId'] as String
+          : null,
+      price: map['price'] as double,
+      dataInfo: map['dataInfo'] as String,
+      validity: map['validity'] as String,
+      rechargeProvider: RechargeProvider.fromMap(
+        map['rechargeProvider'] as Map<String, dynamic>,
+      ),
+      status: map['status'] as String,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory RechargeModel.fromJson(String source) =>
+      RechargeModel.fromMap(json.decode(source) as Map<String, dynamic>);
+}
+
+class RechargeProvider {
+  final String id;
+  final String image;
+  final String providerName;
+  RechargeProvider({
+    required this.id,
+    required this.image,
+    required this.providerName,
+  });
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'id': id,
+      'image': image,
+      'providerName': providerName,
+    };
+  }
+
+  factory RechargeProvider.fromMap(Map<String, dynamic> map) {
+    return RechargeProvider(
+      id: map['id'] as String,
+      image: map['image'] as String,
+      providerName: map['providerName'] as String,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory RechargeProvider.fromJson(String source) =>
+      RechargeProvider.fromMap(json.decode(source) as Map<String, dynamic>);
 }

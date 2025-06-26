@@ -45,6 +45,19 @@ class _ViewBrandsState extends State<ViewBrands> {
                       borderRadius: BorderRadius.circular(12),
                       image: DecorationImage(
                         image: CachedNetworkImageProvider(
+                          widget.brand.backGroundImage!,
+                        ),
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: size.height * 0.30,
+                    width: size.width * 1,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      image: DecorationImage(
+                        image: CachedNetworkImageProvider(
                           widget.brand.imageUrl,
                         ),
                         fit: BoxFit.contain,

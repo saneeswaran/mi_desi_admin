@@ -1,38 +1,43 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:desi_shopping_seller/model/recharge_model.dart';
 import 'package:desi_shopping_seller/util/util.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
-class RechargeProvider extends ChangeNotifier {
-  final List<RechargeModel> _allRecharge = [];
+class ReachargesProvider extends ChangeNotifier {
+  List<RechargeModel> _allRecharge = [];
   List<RechargeModel> get allRecharge => _allRecharge;
 
   List<RechargeModel> _filterRecharge = [];
   List<RechargeModel> get filterRecharge => _filterRecharge;
 
-  final CollectionReference _rechargeRef = FirebaseFirestore.instance
-      .collection('recharge');
-
-  String? getCurrentUser() {
-    return FirebaseAuth.instance.currentUser?.uid;
+  //loading
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+  void setLoading(bool value) {
+    _isLoading = value;
+    notifyListeners();
   }
 
-  Future<List<RechargeModel>> getAllRecharge({
+  //ref
+  final CollectionReference collectionReference = FirebaseFirestore.instance
+      .collection('recharge');
+
+  final FirebaseStorage firebaseStorage = FirebaseStorage.instance;
+
+  Future<List<RechargeModel>> getAllRechargeModel({
     required BuildContext context,
   }) async {
     try {
-      final snapshot = await _rechargeRef.get();
-      _allRecharge.clear();
-      _allRecharge.addAll(
-        snapshot.docs.map((doc) {
-          final data = doc.data() as Map<String, dynamic>;
-          return RechargeModel.fromMap(data, id: doc.id);
-        }).toList(),
-      );
-
+      final QuerySnapshot querySnapshot = await collectionReference.get();
+      _allRecharge = querySnapshot.docs
+          .map((e) => RechargeModel.fromMap(e.data() as Map<String, dynamic>))
+          .toList();
       _filterRecharge = _allRecharge;
       notifyListeners();
+      return _allRecharge;
     } catch (e) {
       if (context.mounted) {
         showSnackBar(context: context, e: e);
@@ -41,35 +46,33 @@ class RechargeProvider extends ChangeNotifier {
     return _allRecharge;
   }
 
-  Future<bool> addRechargePlan({
+  Future<bool> createRechargePlan({
     required BuildContext context,
     required double price,
     required String dataInfo,
     required String validity,
-    required String rechargeType,
+    required RechargeProvider rechargeProvider,
     required String status,
   }) async {
     try {
-      final docRef = _rechargeRef.doc();
+      setLoading(true);
+      final docRef = collectionReference.doc();
 
-      final RechargeModel model = RechargeModel(
-        id: docRef.id,
+      final RechargeModel rechargeModel = RechargeModel(
         price: price,
         dataInfo: dataInfo,
         validity: validity,
-        rechargeType: rechargeType,
+        rechargeProvider: rechargeProvider,
         status: status,
-        sellerId: getCurrentUser(),
-        createdAt: Timestamp.now(),
-        updatedAt: Timestamp.now(),
       );
-
-      await docRef.set(model.toMap());
-      _allRecharge.add(model);
-      _filterRecharge = List.from(_allRecharge);
+      await docRef.set(rechargeProvider.toMap());
+      _allRecharge.add(rechargeModel);
+      _filterRecharge = _allRecharge;
+      setLoading(false);
       notifyListeners();
       return true;
     } catch (e) {
+      setLoading(false);
       if (context.mounted) {
         showSnackBar(context: context, e: e);
       }
@@ -79,86 +82,181 @@ class RechargeProvider extends ChangeNotifier {
 
   Future<bool> updateRechargePlan({
     required BuildContext context,
-    required RechargeModel recharge,
+    required String id,
     required double price,
     required String dataInfo,
     required String validity,
-    required String rechargeType,
+    required RechargeProvider rechargeProvider,
     required String status,
   }) async {
     try {
-      final docRef = _rechargeRef.doc(recharge.id);
-
-      final updatedModel = RechargeModel(
-        id: recharge.id,
-        sellerId: recharge.sellerId,
-        customerId: recharge.customerId,
+      setLoading(true);
+      final docRef = await collectionReference.doc(id).get();
+      final RechargeModel rechargeModel = RechargeModel(
         price: price,
         dataInfo: dataInfo,
         validity: validity,
-        rechargeType: rechargeType,
+        rechargeProvider: rechargeProvider,
         status: status,
-        createdAt: recharge.createdAt,
-        updatedAt: Timestamp.now(),
       );
-
-      await docRef.update(updatedModel.toMap());
-
-      _allRecharge.removeWhere((e) => e.id == recharge.id);
-      _allRecharge.add(updatedModel);
-      _filterRecharge = _allRecharge;
-      notifyListeners();
-      return true;
+      await docRef.reference.set(rechargeModel.toMap());
+      final int index = _allRecharge.indexWhere((element) => element.id == id);
+      if (index != -1) {
+        _allRecharge[index] = rechargeModel;
+        _filterRecharge = _allRecharge;
+        setLoading(false);
+        notifyListeners();
+        return true;
+      }
     } catch (e) {
+      setLoading(false);
       if (context.mounted) {
         showSnackBar(context: context, e: e);
       }
     }
     return false;
   }
+}
 
-  Future<bool> deleteRechargePlan({
-    required BuildContext context,
-    required String rechargeId,
-  }) async {
-    try {
-      final docRef = _rechargeRef.doc(rechargeId);
-      await docRef.delete();
-      _allRecharge.removeWhere((e) => e.id == rechargeId);
-      _filterRecharge = _allRecharge;
-      notifyListeners();
-      return true;
-    } catch (e) {
-      if (context.mounted) {
-        showSnackBar(context: context, e: e);
-      }
-    }
-    return false;
-  }
+class RechargeSimProvider extends ChangeNotifier {
+  List<RechargeProvider> _allProvider = [];
+  List<RechargeProvider> get allProvider => _allProvider;
 
-  Future<bool> updateStatus({
-    required BuildContext context,
-    required String rechargeId,
-    required String status,
-  }) async {
-    try {
-      final docRef = _rechargeRef.doc(rechargeId);
-      await docRef.update({'status': status});
-      _allRecharge.firstWhere((e) => e.id == rechargeId).status = status;
-      notifyListeners();
-      return true;
-    } catch (e) {
-      if (context.mounted) {
-        showSnackBar(context: context, e: e);
-      }
-    }
-    return false;
-  }
+  List<RechargeProvider> _filterProvider = [];
+  List<RechargeProvider> get filterProvider => _filterProvider;
 
-  void filter({required String query}) {
-    _filterRecharge = _allRecharge
-        .where((e) => e.status.toLowerCase().contains(query.toLowerCase()))
-        .toList();
+  //ref
+  final CollectionReference collectionReference = FirebaseFirestore.instance
+      .collection('rechargeProvider');
+  final FirebaseStorage firebaseStorage = FirebaseStorage.instance;
+  //loading
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+  void setLoading(bool value) {
+    _isLoading = value;
     notifyListeners();
+  }
+
+  //update loading state
+  bool _isUpdateLoading = false;
+  bool get isUpdateLoading => _isUpdateLoading;
+  void updateLoading(bool value) {
+    _isUpdateLoading = value;
+    notifyListeners();
+  }
+
+  Future<bool> getAllProvider({required BuildContext context}) async {
+    try {
+      setLoading(true);
+      final QuerySnapshot querySnapshot = await collectionReference.get();
+      _allProvider = querySnapshot.docs
+          .map(
+            (e) => RechargeProvider.fromMap(e.data() as Map<String, dynamic>),
+          )
+          .toList();
+      _filterProvider = _allProvider;
+      setLoading(false);
+      notifyListeners();
+      return true;
+    } catch (e) {
+      setLoading(false);
+      if (context.mounted) {
+        showSnackBar(context: context, e: e);
+      }
+      return false;
+    }
+  }
+
+  Future<bool> createProvider({
+    required BuildContext context,
+    required File image,
+    required String providerName,
+  }) async {
+    try {
+      setLoading(true);
+      final docRef = collectionReference.doc();
+      final ref = firebaseStorage.ref().child('recharge/${docRef.id}');
+      await ref.putFile(image);
+      final imageUrl = await ref.getDownloadURL();
+      final RechargeProvider rechargeProvider = RechargeProvider(
+        id: docRef.id,
+        image: imageUrl,
+        providerName: providerName,
+      );
+      await docRef.set(rechargeProvider.toMap());
+      _allProvider.add(rechargeProvider);
+      _filterProvider = _allProvider;
+      setLoading(false);
+      notifyListeners();
+      return true;
+    } catch (e) {
+      setLoading(false);
+      if (context.mounted) {
+        showSnackBar(context: context, e: e);
+      }
+    }
+    return false;
+  }
+
+  Future<bool> deleteProvider({
+    required BuildContext context,
+    required String id,
+  }) async {
+    try {
+      setLoading(true);
+      final DocumentSnapshot documentSnapshot = await collectionReference
+          .doc(id)
+          .get();
+      firebaseStorage.ref().child('recharge/$id').delete();
+      await documentSnapshot.reference.delete();
+      _allProvider.removeWhere((e) => e.id == id);
+      _filterProvider = _allProvider;
+      setLoading(false);
+      notifyListeners();
+      return true;
+    } catch (e) {
+      setLoading(false);
+      if (context.mounted) {
+        showSnackBar(context: context, e: e);
+      }
+    }
+    return false;
+  }
+
+  Future<bool> updateRecharge({
+    required BuildContext context,
+    required String id,
+    required String providerName,
+    required File image,
+  }) async {
+    try {
+      updateLoading(true);
+      final DocumentSnapshot documentSnapshot = await collectionReference
+          .doc(id)
+          .get();
+      final ref = firebaseStorage.ref().child('recharge/$id');
+      await ref.putFile(image);
+      final imageUrl = await ref.getDownloadURL();
+      final RechargeProvider rechargeProvider = RechargeProvider(
+        id: id,
+        image: imageUrl,
+        providerName: providerName,
+      );
+      final int index = _allProvider.indexWhere((e) => e.id == id);
+      if (index != -1) {
+        _allProvider[index] = rechargeProvider;
+        _filterProvider = _allProvider;
+      }
+      await documentSnapshot.reference.update(rechargeProvider.toMap());
+      updateLoading(false);
+      notifyListeners();
+      return true;
+    } catch (e) {
+      updateLoading(false);
+      if (context.mounted) {
+        showSnackBar(context: context, e: e);
+      }
+    }
+    return false;
   }
 }

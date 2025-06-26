@@ -1,6 +1,7 @@
 import 'package:desi_shopping_seller/providers/brand_provider.dart';
 import 'package:desi_shopping_seller/providers/order_provider.dart';
 import 'package:desi_shopping_seller/providers/product_provider.dart';
+import 'package:desi_shopping_seller/providers/reacharge_provider.dart';
 import 'package:desi_shopping_seller/providers/user_provider.dart';
 import 'package:desi_shopping_seller/screens/admin/dash%20board/componenet/dash_board_support.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
         context,
         listen: false,
       );
+      context.read<RechargeSimProvider>().getAllProvider(context: context);
       //   final userProvider = Provider.of<UserProvider>(context, listen: false);
       final orderProvider = Provider.of<OrderProvider>(context, listen: false);
 

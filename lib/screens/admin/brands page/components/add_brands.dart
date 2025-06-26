@@ -56,7 +56,6 @@ class _AddBrandsState extends State<AddBrands> {
     }
   }
 
-  // Submit brand
   void addBrand() async {
     if (imageUrl == null) {
       ScaffoldMessenger.of(
@@ -127,7 +126,33 @@ class _AddBrandsState extends State<AddBrands> {
                   key: formKey,
                   child: Column(
                     children: [
-                      SizedBox(height: size.height * 0.15),
+                      SizedBox(height: size.height * 0.10),
+                      GestureDetector(
+                        onTap: pickBackgroundImage,
+                        child: Container(
+                          height: size.height * 0.30,
+                          width: size.width * 0.90,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.lightBlue),
+                            borderRadius: BorderRadius.circular(12),
+                            image: backgroundImage != null
+                                ? DecorationImage(
+                                    image: FileImage(backgroundImage!),
+                                    fit: BoxFit.fitWidth,
+                                  )
+                                : null,
+                          ),
+                          child: backgroundImage == null
+                              ? const Center(
+                                  child: Text(
+                                    'Add Background banner image',
+                                    style: TextStyle(fontSize: 18),
+                                  ),
+                                )
+                              : null,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
                       GestureDetector(
                         onTap: pickerImage,
                         child: Container(
@@ -139,7 +164,7 @@ class _AddBrandsState extends State<AddBrands> {
                             image: imageUrl != null
                                 ? DecorationImage(
                                     image: FileImage(imageUrl!),
-                                    fit: BoxFit.contain,
+                                    fit: BoxFit.fitWidth,
                                   )
                                 : null,
                           ),

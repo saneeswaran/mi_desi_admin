@@ -1,4 +1,5 @@
 import 'package:desi_shopping_seller/providers/auth_providers.dart';
+import 'package:desi_shopping_seller/screens/admin/all%20rechagres/all_recharges_page.dart';
 import 'package:desi_shopping_seller/screens/admin/banners/banners_page.dart';
 import 'package:desi_shopping_seller/screens/admin/brands%20page/brand_page.dart';
 import 'package:desi_shopping_seller/screens/admin/customers%20screen/all_customers_list.dart';
@@ -7,6 +8,7 @@ import 'package:desi_shopping_seller/screens/admin/drawer/advance_drawer_page.da
 import 'package:desi_shopping_seller/screens/admin/orders/orders_page.dart';
 import 'package:desi_shopping_seller/screens/admin/partner/list_of_partners.dart';
 import 'package:desi_shopping_seller/screens/admin/products/all_products_page.dart';
+import 'package:desi_shopping_seller/screens/admin/recharge%20provider/recharge_provider_page.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
@@ -21,6 +23,8 @@ List<String> drawerItems = [
   "Products",
   "Orders",
   'Partners',
+  "Recharge Provider",
+  "Recharges",
   "Customers",
 ];
 
@@ -31,6 +35,8 @@ List<IconData> drawerIcons = [
   Icons.production_quantity_limits,
   Icons.shopping_bag,
   Icons.person_2,
+  Icons.mobile_friendly,
+  Icons.mobile_friendly,
   Icons.person,
 ];
 
@@ -41,6 +47,11 @@ List<Widget> pages = [
   const AdvanceDrawerPage(body: AllProductsPage(), title: 'Products'),
   const AdvanceDrawerPage(body: OrdersPage(), title: 'Orders'),
   const AdvanceDrawerPage(body: ListOfPartners(), title: 'Partners'),
+  const AdvanceDrawerPage(
+    body: RechargeProviderPage(),
+    title: 'Recharge Provider',
+  ),
+  const AdvanceDrawerPage(body: AllRechargesPage(), title: 'Recharges'),
   const AdvanceDrawerPage(body: AllCustomersList(), title: 'Customers'),
 ];
 Widget draweFunctions({required BuildContext context}) {

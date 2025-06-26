@@ -28,6 +28,34 @@ class CustomElevatedButton extends StatelessWidget {
   }
 }
 
+class CustomElevatedButtonWithChild extends StatelessWidget {
+  final Widget child;
+  final VoidCallback onPressed;
+  final Color? color;
+  final double radius;
+  const CustomElevatedButtonWithChild({
+    super.key,
+    required this.child,
+    required this.onPressed,
+    this.color = Colors.pink,
+    this.radius = 12,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: color,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadiusGeometry.circular(radius),
+        ),
+      ),
+      onPressed: onPressed,
+      child: child,
+    );
+  }
+}
+
 class CustomElevatedOutlinedButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
