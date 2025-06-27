@@ -118,6 +118,14 @@ class ReachargesProvider extends ChangeNotifier {
     }
     return false;
   }
+
+  void filterByName({required String query}) {
+    _filterRecharge = _allRecharge
+        .where(
+          (e) => e.rechargeProvider.toLowerCase().contains(query.toLowerCase()),
+        )
+        .toList();
+  }
 }
 
 class RechargeSimProvider extends ChangeNotifier {
