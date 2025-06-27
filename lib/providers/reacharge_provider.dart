@@ -21,6 +21,15 @@ class ReachargesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  //del loading
+
+  bool _delLoading = false;
+  bool get delLoading => _delLoading;
+  void setDelLoading(bool value) {
+    _delLoading = value;
+    notifyListeners();
+  }
+
   //ref
   final CollectionReference collectionReference = FirebaseFirestore.instance
       .collection('recharge');
@@ -92,31 +101,61 @@ class ReachargesProvider extends ChangeNotifier {
   }) async {
     try {
       setLoading(true);
-      final docRef = await collectionReference.doc(id).get();
+
+      // Build updated model
       final RechargeModel rechargeModel = RechargeModel(
-        id: docRef.id,
+        id: id,
         price: price,
         dataInfo: dataInfo,
         validity: validity,
         rechargeProvider: rechargeProvider,
         status: status,
       );
-      await docRef.reference.set(rechargeModel.toMap());
+
+      // Update directly without fetching
+      await collectionReference.doc(id).update(rechargeModel.toMap());
+
+      // Update local list
       final int index = _allRecharge.indexWhere((element) => element.id == id);
       if (index != -1) {
         _allRecharge[index] = rechargeModel;
-        _filterRecharge = _allRecharge;
-        setLoading(false);
-        notifyListeners();
-        return true;
+        _filterRecharge = List.from(_allRecharge);
       }
+
+      setLoading(false);
+      notifyListeners();
+      return true;
     } catch (e) {
       setLoading(false);
       if (context.mounted) {
         showSnackBar(context: context, e: e);
       }
+      return false;
     }
-    return false;
+  }
+
+  Future<bool> removePlan({
+    required BuildContext context,
+    required String id,
+  }) async {
+    try {
+      setDelLoading(true);
+      final DocumentSnapshot documentSnapshot = await collectionReference
+          .doc(id)
+          .get();
+      await documentSnapshot.reference.delete();
+      _allRecharge.removeWhere((e) => e.id == id);
+      _filterRecharge = _allRecharge;
+      setDelLoading(false);
+      notifyListeners();
+      return true;
+    } catch (e) {
+      setDelLoading(false);
+      if (context.mounted) {
+        showSnackBar(context: context, e: e);
+      }
+      return false;
+    }
   }
 
   void filterByName({required String query}) {
