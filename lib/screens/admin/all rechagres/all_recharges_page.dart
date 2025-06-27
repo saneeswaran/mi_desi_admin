@@ -1,4 +1,6 @@
 import 'package:desi_shopping_seller/providers/reacharge_provider.dart';
+import 'package:desi_shopping_seller/screens/admin/all%20rechagres/components/add_recharge_page.dart';
+import 'package:desi_shopping_seller/util/util.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -23,7 +25,10 @@ class _AllRechargesPageState extends State<AllRechargesPage> {
         elevation: 0.0,
         backgroundColor: Colors.pink,
         shape: const CircleBorder(),
-        onPressed: () {},
+        onPressed: () => moveToNextPageWithFadeAnimations(
+          context: context,
+          route: const AddRechargePage(),
+        ),
         child: const Icon(Icons.add, color: Colors.white),
       ),
       body: Padding(

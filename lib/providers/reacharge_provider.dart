@@ -59,6 +59,7 @@ class ReachargesProvider extends ChangeNotifier {
       final docRef = collectionReference.doc();
 
       final RechargeModel rechargeModel = RechargeModel(
+        id: docRef.id,
         price: price,
         dataInfo: dataInfo,
         validity: validity,
@@ -93,6 +94,7 @@ class ReachargesProvider extends ChangeNotifier {
       setLoading(true);
       final docRef = await collectionReference.doc(id).get();
       final RechargeModel rechargeModel = RechargeModel(
+        id: docRef.id,
         price: price,
         dataInfo: dataInfo,
         validity: validity,

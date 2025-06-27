@@ -17,12 +17,6 @@ class _AddRechargePageState extends State<AddRechargePage> {
   final validityController = TextEditingController();
   String? simProviderName;
   @override
-  void initState() {
-    super.initState();
-    context.read<ReachargesProvider>().getAllRechargeModel(context: context);
-  }
-
-  @override
   void dispose() {
     priceController.dispose();
     dataInfoController.dispose();
@@ -34,59 +28,70 @@ class _AddRechargePageState extends State<AddRechargePage> {
   Widget build(BuildContext context) {
     final rechargeProvider = Provider.of<ReachargesProvider>(context);
     final Size size = MediaQuery.of(context).size;
-    return AbsorbPointer(
-      absorbing: rechargeProvider.isLoading,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            "Create Recharge Plan",
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          "Create Recharge Plan",
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Stack(
-            children: [
-              Column(
-                children: [
-                  _simProviderDropDown(),
-                  CustomTextFormField(
-                    hintText: "Price",
-                    controller: priceController,
-                  ),
-                  CustomTextFormField(
-                    hintText: "data info",
-                    controller: dataInfoController,
-                  ),
-                  CustomTextFormField(
-                    hintText: "validity",
-                    controller: validityController,
-                  ),
-                  SizedBox(
-                    height: size.height * 0.08,
-                    width: size.width * 1,
-                    child: CustomElevatedButton(
-                      text: "Add",
-                      onPressed: () async {
-                        final bool isSuccess = await rechargeProvider
-                            .createRechargePlan(
-                              context: context,
-                              price: double.parse(priceController.text),
-                              dataInfo: dataInfoController.text,
-                              validity: validityController.text,
-                              rechargeProvider: simProviderName!,
-                              status: "Active",
-                            );
-                        if (isSuccess && context.mounted) {
-                          Navigator.pop(context);
-                        }
-                      },
+      ),
+      body: AbsorbPointer(
+        absorbing: rechargeProvider.isLoading,
+        child: Stack(
+          children: [
+            SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  spacing: size.height * 0.02,
+                  children: [
+                    _simProviderDropDown(),
+                    CustomTextFormField(
+                      hintText: "Price",
+                      controller: priceController,
                     ),
-                  ),
-                ],
+                    CustomTextFormField(
+                      hintText: "data info",
+                      controller: dataInfoController,
+                    ),
+                    CustomTextFormField(
+                      hintText: "validity",
+                      controller: validityController,
+                    ),
+                    SizedBox(height: size.height * 0.4),
+                    SizedBox(
+                      height: size.height * 0.08,
+                      width: size.width * 1,
+                      child: CustomElevatedButton(
+                        text: "Add",
+                        onPressed: () async {
+                          final bool isSuccess = await rechargeProvider
+                              .createRechargePlan(
+                                context: context,
+                                price: double.parse(priceController.text),
+                                dataInfo: dataInfoController.text,
+                                validity: validityController.text,
+                                rechargeProvider: simProviderName!,
+                                status: "Active",
+                              );
+                          if (isSuccess && context.mounted) {
+                            Navigator.pop(context);
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ],
-          ),
+            ),
+            if (rechargeProvider.isLoading)
+              Container(
+                height: size.height * 1,
+                width: size.width * 1,
+                color: Colors.black26,
+                child: const Center(child: CircularProgressIndicator()),
+              ),
+          ],
         ),
       ),
     );
@@ -130,11 +135,3 @@ class _AddRechargePageState extends State<AddRechargePage> {
     );
   }
 }
-  // final String? id;
-  // final String? sellerId;
-  // final String? customerId;
-  // final double price;
-  // final String dataInfo;
-  // final String validity;
-  // final RechargeProvider rechargeProvider;
-  // String status;
