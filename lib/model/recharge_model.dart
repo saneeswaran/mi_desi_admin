@@ -9,8 +9,8 @@ class RechargeModel {
   final double price;
   final String dataInfo;
   final String validity;
-  final RechargeProvider rechargeProvider;
-  String status;
+  final String rechargeProvider;
+  String? status;
   final Timestamp? createdAt = Timestamp.now();
   RechargeModel({
     this.id,
@@ -31,7 +31,7 @@ class RechargeModel {
       'price': price,
       'dataInfo': dataInfo,
       'validity': validity,
-      'rechargeProvider': rechargeProvider.toMap(),
+      'rechargeProvider': rechargeProvider,
       'status': status,
       'createdAt': createdAt,
     };
@@ -47,9 +47,7 @@ class RechargeModel {
       price: map['price'] as double,
       dataInfo: map['dataInfo'] as String,
       validity: map['validity'] as String,
-      rechargeProvider: RechargeProvider.fromMap(
-        map['rechargeProvider'] as Map<String, dynamic>,
-      ),
+      rechargeProvider: map['rechargeProvider'] as String,
       status: map['status'] as String,
     );
   }

@@ -19,6 +19,13 @@ class _AllRechargesPageState extends State<AllRechargesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        elevation: 0.0,
+        backgroundColor: Colors.pink,
+        shape: const CircleBorder(),
+        onPressed: () {},
+        child: const Icon(Icons.add, color: Colors.white),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(18),
         child: Consumer<ReachargesProvider>(

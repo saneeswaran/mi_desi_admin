@@ -51,7 +51,7 @@ class ReachargesProvider extends ChangeNotifier {
     required double price,
     required String dataInfo,
     required String validity,
-    required RechargeProvider rechargeProvider,
+    required String rechargeProvider,
     required String status,
   }) async {
     try {
@@ -65,7 +65,7 @@ class ReachargesProvider extends ChangeNotifier {
         rechargeProvider: rechargeProvider,
         status: status,
       );
-      await docRef.set(rechargeProvider.toMap());
+      await docRef.set(rechargeModel.toMap());
       _allRecharge.add(rechargeModel);
       _filterRecharge = _allRecharge;
       setLoading(false);
@@ -86,7 +86,7 @@ class ReachargesProvider extends ChangeNotifier {
     required double price,
     required String dataInfo,
     required String validity,
-    required RechargeProvider rechargeProvider,
+    required String rechargeProvider,
     required String status,
   }) async {
     try {
