@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:desi_shopping_seller/model/order_model.dart';
 import 'package:desi_shopping_seller/providers/brand_provider.dart';
@@ -26,28 +28,28 @@ class OrderProvider extends ChangeNotifier {
           .where(
             (e) =>
                 e.createdAt.toDate().day == DateTime.now().day &&
-                e.status == 'pending',
+                e.orderStatus == 'pending',
           )
           .length,
       _allOrders
           .where(
             (e) =>
                 e.createdAt.toDate().day == DateTime.now().day &&
-                e.status == 'delivered',
+                e.orderStatus == 'delivered',
           )
           .length,
       _allOrders
           .where(
             (e) =>
                 e.createdAt.toDate().day == DateTime.now().day &&
-                e.status == 'cancelled',
+                e.orderStatus == 'cancelled',
           )
           .length,
 
       _allOrders.length,
-      _allOrders.where((e) => e.status == 'pending').length,
-      _allOrders.where((e) => e.status == 'delivered').length,
-      _allOrders.where((e) => e.status == 'cancelled').length,
+      _allOrders.where((e) => e.orderStatus == 'pending').length,
+      _allOrders.where((e) => e.orderStatus == 'delivered').length,
+      _allOrders.where((e) => e.orderStatus == 'cancelled').length,
 
       products,
       brands,
@@ -60,16 +62,15 @@ class OrderProvider extends ChangeNotifier {
 
   Future<List<OrderModel>> getAllOrders({required BuildContext context}) async {
     try {
-      final CollectionReference collectionReference = FirebaseFirestore.instance
-          .collection('customers')
-          .doc()
-          .collection('orders');
+      final collectionReference = FirebaseFirestore.instance.collectionGroup(
+        'orders',
+      );
       final QuerySnapshot querySnapshot = await collectionReference.get();
-
       final orders = querySnapshot.docs
           .map((e) => OrderModel.fromMap(e.data() as Map<String, dynamic>))
           .toList();
       _allOrders = orders;
+      log(_allOrders.toString());
       _filterOrders = _allOrders;
       notifyListeners();
     } on FirebaseException catch (e) {

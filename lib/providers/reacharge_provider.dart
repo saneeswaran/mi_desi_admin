@@ -102,7 +102,6 @@ class ReachargesProvider extends ChangeNotifier {
     try {
       setLoading(true);
 
-      // Build updated model
       final RechargeModel rechargeModel = RechargeModel(
         id: id,
         price: price,
@@ -111,11 +110,7 @@ class ReachargesProvider extends ChangeNotifier {
         rechargeProvider: rechargeProvider,
         status: status,
       );
-
-      // Update directly without fetching
       await collectionReference.doc(id).update(rechargeModel.toMap());
-
-      // Update local list
       final int index = _allRecharge.indexWhere((element) => element.id == id);
       if (index != -1) {
         _allRecharge[index] = rechargeModel;

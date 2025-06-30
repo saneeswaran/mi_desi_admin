@@ -30,32 +30,40 @@ class _OrdersPageState extends State<OrdersPage> {
               crossAxisCount: 2,
               mainAxisSpacing: 10,
               childAspectRatio: 0.8,
+              mainAxisExtent: 350,
             ),
             itemBuilder: (context, index) {
               final orders = order[index];
               return GridTile(
-                child: Column(
-                  children: [
-                    Container(
-                      height: size.height * 0.30,
-                      width: size.width * 1,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        image: DecorationImage(
-                          image: CachedNetworkImageProvider(
-                            orders.product[index].imageUrl[0],
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        height: size.height * 0.30,
+                        width: size.width * 1,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          image: DecorationImage(
+                            image: CachedNetworkImageProvider(
+                              orders.products[index]['imageUrl'],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    Text(
-                      orders.product[index].title,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                      Text(
+                        orders.products[index]['title'],
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               );
             },
