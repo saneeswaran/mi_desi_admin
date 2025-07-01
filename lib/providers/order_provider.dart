@@ -106,4 +106,40 @@ class OrderProvider extends ChangeNotifier {
     }
     return _allOrders;
   }
+
+  Future<bool> changeOrderStatuc({
+    required BuildContext context,
+    required String customerId,
+    required String orderId,
+    required String orderStatus,
+  }) async {
+    try {
+      final CollectionReference collectionReference = FirebaseFirestore.instance
+          .collection("customers")
+          .doc(customerId)
+          .collection("orders");
+      final QuerySnapshot querySnapshot = await collectionReference.get();
+
+      final data = querySnapshot.docs.where((e) => e.id == orderId).toList();
+      if (data.isNotEmpty) {
+        await data.first.reference.update({"orderStatus": orderStatus});
+      }
+      final int index = _allOrders.indexWhere((e) => e.orderId == orderId);
+      if (index != -1) {
+        _allOrders[index].orderStatus = orderStatus;
+      }
+
+      notifyListeners();
+      return true;
+    } on FirebaseException catch (e) {
+      if (context.mounted) {
+        showSnackBar(context: context, e: e);
+      }
+    } catch (e) {
+      if (context.mounted) {
+        showSnackBar(context: context, e: e);
+      }
+    }
+    return false;
+  }
 }

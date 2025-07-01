@@ -5,9 +5,11 @@ class OrderModel {
   final double totalAmount;
   final String address;
   final int phoneNumber;
+  final String email;
+  final String customerId;
   final double latitude;
   final double longitude;
-  final String orderStatus;
+  String orderStatus;
   final String orderDate;
   final String orderId;
   final Timestamp createdAt = Timestamp.now();
@@ -24,6 +26,8 @@ class OrderModel {
     required this.orderStatus,
     required this.orderDate,
     required this.orderId,
+    required this.email,
+    required this.customerId,
     required this.products,
   });
 
@@ -38,6 +42,9 @@ class OrderModel {
       'orderStatus': orderStatus,
       'orderDate': orderDate,
       'orderId': orderId,
+      'createdAt': createdAt,
+      'email': email,
+      'customerId': customerId,
       'products': products,
     };
   }
@@ -52,6 +59,8 @@ class OrderModel {
       longitude: map['longitude'],
       orderStatus: map['orderStatus'],
       orderDate: map['orderDate'],
+      email: map['email'],
+      customerId: map['customerId'],
       orderId: map['orderId'],
       products: List<Map<String, dynamic>>.from(map['products']),
     );

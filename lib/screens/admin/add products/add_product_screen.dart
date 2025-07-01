@@ -320,31 +320,42 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       CustomTextFormField(
                         hintText: 'Net Volume',
                         controller: netVolumeController,
+                        maxLines: 2,
                       ),
                       CustomTextFormField(
                         hintText: 'Dosage',
                         controller: dosageController,
+                        maxLines: 2,
                       ),
                       CustomTextFormField(
                         hintText: 'Composition',
                         controller: compositionController,
+                        maxLines: 2,
                       ),
                       CustomTextFormField(
                         hintText: 'Storage',
                         controller: storageController,
+                        maxLines: 2,
                       ),
                       CustomTextFormField(
                         hintText: 'Manufactured',
                         controller: manufacturedByController,
+                        maxLines: 3,
                       ),
                       CustomTextFormField(
                         hintText: 'Shelf Life',
                         controller: shelfLifeController,
+                        maxLines: 2,
                       ),
                       CustomTextFormField(
                         hintText: 'Additional Information',
                         maxLines: 5,
                         controller: additionalInformationController,
+                      ),
+                      CustomTextFormField(
+                        hintText: "Marked By",
+                        controller: marketedByController,
+                        maxLines: 3,
                       ),
                       CustomTextFormField(
                         hintText: 'Stock',
@@ -362,9 +373,16 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         keyboardType: TextInputType.number,
                       ),
                       const SizedBox(height: 20),
-                      CustomElevatedButton(
-                        onPressed: addProduct,
-                        child: Text(isAddingProduct ? 'Adding...' : 'Submit'),
+                      SizedBox(
+                        height: size.height * 0.07,
+                        width: size.width * 1,
+                        child: CustomElevatedButton(
+                          onPressed: addProduct,
+                          child: Text(
+                            isAddingProduct ? 'Adding...' : 'Submit',
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        ),
                       ),
                     ],
                   ),

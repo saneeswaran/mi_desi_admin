@@ -194,6 +194,16 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
     final Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            'Update Product',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
         body: Stack(
           children: [
             AbsorbPointer(
@@ -333,31 +343,42 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
                       CustomTextFormField(
                         hintText: 'Net Volume',
                         controller: netVolumeController,
+                        maxLines: 2,
                       ),
                       CustomTextFormField(
                         hintText: 'Dosage',
                         controller: dosageController,
+                        maxLines: 2,
                       ),
                       CustomTextFormField(
                         hintText: 'Composition',
                         controller: compositionController,
+                        maxLines: 2,
                       ),
                       CustomTextFormField(
                         hintText: 'Storage',
                         controller: storageController,
+                        maxLines: 2,
                       ),
                       CustomTextFormField(
                         hintText: 'Manufactured',
                         controller: manufacturedByController,
+                        maxLines: 3,
                       ),
                       CustomTextFormField(
                         hintText: 'Shelf Life',
                         controller: shelfLifeController,
+                        maxLines: 2,
                       ),
                       CustomTextFormField(
                         hintText: 'Additional Information',
                         maxLines: 5,
                         controller: additionalInformationController,
+                      ),
+                      CustomTextFormField(
+                        hintText: "Marked By",
+                        controller: marketedByController,
+                        maxLines: 3,
                       ),
                       CustomTextFormField(
                         hintText: 'Stock',

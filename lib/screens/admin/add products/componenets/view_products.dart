@@ -81,134 +81,140 @@ class _ViewProductDetailsState extends State<ViewProductDetails> {
         )
         .toList();
 
-    return Scaffold(
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  height: size.height * 0.40,
-                  width: size.width * 1,
-                  color: Colors.grey.shade200,
-                  child: Column(
+    return SafeArea(
+      child: Scaffold(
+        body: Stack(
+          children: [
+            SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: size.height * 0.40,
+                    width: size.width * 1,
+                    color: Colors.grey.shade200,
+                    child: Column(
+                      children: [
+                        SizedBox(height: size.height * 0.05),
+                        CarouselSlider(
+                          items: carouselImage(),
+                          options: CarouselOptions(
+                            aspectRatio: 16 / 9,
+                            viewportFraction: 1,
+                            autoPlay: true,
+                            onPageChanged: (index, reason) {
+                              setState(() {
+                                _selectedImageIndex = index;
+                              });
+                            },
+                          ),
+                        ),
+                        DotsIndicator(
+                          dotsCount: carouselImage().length,
+                          position: _selectedImageIndex.toDouble(),
+                          decorator: const DotsDecorator(
+                            activeColor: Colors.pink,
+                          ),
+                          animate: true,
+                        ),
+                      ],
+                    ),
+                  ),
+                  ProductDetailsWithCart(product: widget.product),
+                  Row(
                     children: [
-                      SizedBox(height: size.height * 0.05),
-                      CarouselSlider(
-                        items: carouselImage(),
-                        options: CarouselOptions(
-                          aspectRatio: 16 / 9,
-                          viewportFraction: 1,
-                          autoPlay: true,
-                          onPageChanged: (index, reason) {
-                            setState(() {
-                              _selectedImageIndex = index;
-                            });
-                          },
-                        ),
-                      ),
-                      DotsIndicator(
-                        dotsCount: carouselImage().length,
-                        position: _selectedImageIndex.toDouble(),
-                        decorator: const DotsDecorator(
-                          activeColor: Colors.pink,
-                        ),
-                        animate: true,
+                      const Spacer(),
+                      Consumer<ProductProvider>(
+                        builder: (context, value, child) {
+                          final isAvailable = value.filterProduct.any(
+                            (product) => product.stock > 0,
+                          );
+                          return Column(
+                            children: [
+                              Container(
+                                height: size.height * 0.05,
+                                width: size.width * 0.4,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: isAvailable
+                                      ? Colors.green
+                                      : Colors.red,
+                                ),
+                                child: Center(
+                                  child: Icon(
+                                    isAvailable ? Icons.check : Icons.remove,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              Text(
+                                isAvailable ? "Available" : "Not Available",
+                                style: TextStyle(
+                                  color: isAvailable
+                                      ? Colors.green
+                                      : Colors.red,
+                                ),
+                              ),
+                            ],
+                          );
+                        },
                       ),
                     ],
                   ),
-                ),
-                ProductDetailsWithCart(product: widget.product),
-                Row(
-                  children: [
-                    const Spacer(),
-                    Consumer<ProductProvider>(
-                      builder: (context, value, child) {
-                        final isAvailable = value.filterProduct.any(
-                          (product) => product.stock > 0,
-                        );
-                        return Column(
-                          children: [
-                            Container(
-                              height: size.height * 0.05,
-                              width: size.width * 0.4,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: isAvailable ? Colors.green : Colors.red,
-                              ),
-                              child: Center(
-                                child: Icon(
-                                  isAvailable ? Icons.check : Icons.remove,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                            Text(
-                              isAvailable ? "Available" : "Not Available",
-                              style: TextStyle(
-                                color: isAvailable ? Colors.green : Colors.red,
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                  ],
-                ),
-                const Divider(
-                  color: Color.fromRGBO(237, 244, 242, 1),
-                  thickness: 1.2,
-                ),
-                ProductDetailsDropdown(product: widget.product),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    SizedBox(
-                      height: size.height * 0.07,
-                      width: size.width * 0.4,
-                      child: CustomElevatedButton(
-                        child: const Text(
-                          "Delete",
-                          style: TextStyle(color: Colors.white),
+                  const Divider(
+                    color: Color.fromRGBO(237, 244, 242, 1),
+                    thickness: 1.2,
+                  ),
+                  ProductDetailsDropdown(product: widget.product),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      SizedBox(
+                        height: size.height * 0.07,
+                        width: size.width * 0.4,
+                        child: CustomElevatedButton(
+                          child: const Text(
+                            "Delete",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          onPressed: () async {
+                            final provider = Provider.of<ProductProvider>(
+                              context,
+                              listen: false,
+                            );
+                            final bool isSuccess = await provider.deleteProduct(
+                              context: context,
+                              productId: widget.product.id.toString(),
+                              brandId: widget.product.brand.id.toString(),
+                            );
+                            if (isSuccess && context.mounted) {
+                              Navigator.pop(context);
+                            }
+                          },
                         ),
-                        onPressed: () async {
-                          final provider = Provider.of<ProductProvider>(
-                            context,
-                            listen: false,
-                          );
-                          final bool isSuccess = await provider.deleteProduct(
+                      ),
+                      SizedBox(
+                        height: size.height * 0.07,
+                        width: size.width * 0.4,
+                        child: CustomElevatedButton(
+                          child: const Text(
+                            "Update",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          onPressed: () => moveToNextPageWithFadeAnimations(
                             context: context,
-                            productId: widget.product.id.toString(),
-                            brandId: widget.product.brand.id.toString(),
-                          );
-                          if (isSuccess && context.mounted) {
-                            Navigator.pop(context);
-                          }
-                        },
-                      ),
-                    ),
-                    SizedBox(
-                      height: size.height * 0.07,
-                      width: size.width * 0.4,
-                      child: CustomElevatedButton(
-                        child: const Text(
-                          "Update",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        onPressed: () => moveToNextPageWithFadeAnimations(
-                          context: context,
-                          route: UpdateProductScreen(product: widget.product),
+                            route: UpdateProductScreen(product: widget.product),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-              ],
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
