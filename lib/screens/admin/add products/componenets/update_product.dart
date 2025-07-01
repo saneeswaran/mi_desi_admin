@@ -375,10 +375,15 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
                         keyboardType: TextInputType.number,
                       ),
                       const SizedBox(height: 20),
-                      CustomElevatedButton(
-                        onPressed: updateProduct,
-                        child: Text(
-                          isUpdatingProduct ? 'Updating...' : 'Update',
+                      SizedBox(
+                        height: size.height * 0.07,
+                        width: size.width * 1,
+                        child: CustomElevatedButton(
+                          onPressed: updateProduct,
+                          child: Text(
+                            isUpdatingProduct ? 'Updating...' : 'Update',
+                            style: const TextStyle(color: Colors.white),
+                          ),
                         ),
                       ),
                     ],

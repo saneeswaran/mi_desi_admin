@@ -3,9 +3,12 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:desi_shopping_seller/model/product_model.dart';
 import 'package:desi_shopping_seller/providers/product_provider.dart';
 import 'package:desi_shopping_seller/screens/admin/add%20products/componenets/photo_view/photo_view_page.dart';
+import 'package:desi_shopping_seller/screens/admin/add%20products/componenets/product_details_with_cart.dart';
+import 'package:desi_shopping_seller/screens/admin/add%20products/componenets/update_product.dart';
 import 'package:desi_shopping_seller/screens/admin/products/product_details_dropdown.dart';
 import 'package:desi_shopping_seller/screens/admin/products/video%20player/video_list_screen.dart';
 import 'package:desi_shopping_seller/util/util.dart';
+import 'package:desi_shopping_seller/widgets/custom_elevated_button.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -116,6 +119,7 @@ class _ViewProductDetailsState extends State<ViewProductDetails> {
                     ],
                   ),
                 ),
+                ProductDetailsWithCart(product: widget.product),
                 Row(
                   children: [
                     const Spacer(),
@@ -157,6 +161,50 @@ class _ViewProductDetailsState extends State<ViewProductDetails> {
                   thickness: 1.2,
                 ),
                 ProductDetailsDropdown(product: widget.product),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    SizedBox(
+                      height: size.height * 0.07,
+                      width: size.width * 0.4,
+                      child: CustomElevatedButton(
+                        child: const Text(
+                          "Delete",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        onPressed: () async {
+                          final provider = Provider.of<ProductProvider>(
+                            context,
+                            listen: false,
+                          );
+                          final bool isSuccess = await provider.deleteProduct(
+                            context: context,
+                            productId: widget.product.id.toString(),
+                            brandId: widget.product.brand.id.toString(),
+                          );
+                          if (isSuccess && context.mounted) {
+                            Navigator.pop(context);
+                          }
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      height: size.height * 0.07,
+                      width: size.width * 0.4,
+                      child: CustomElevatedButton(
+                        child: const Text(
+                          "Update",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        onPressed: () => moveToNextPageWithFadeAnimations(
+                          context: context,
+                          route: UpdateProductScreen(product: widget.product),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
               ],
             ),
           ),
