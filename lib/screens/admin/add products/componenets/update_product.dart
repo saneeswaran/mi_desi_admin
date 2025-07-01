@@ -376,8 +376,10 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
                       ),
                       const SizedBox(height: 20),
                       CustomElevatedButton(
-                        text: isUpdatingProduct ? 'Updating...' : 'Update',
                         onPressed: updateProduct,
+                        child: Text(
+                          isUpdatingProduct ? 'Updating...' : 'Update',
+                        ),
                       ),
                     ],
                   ),

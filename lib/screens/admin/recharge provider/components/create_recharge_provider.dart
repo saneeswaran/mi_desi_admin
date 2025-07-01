@@ -90,7 +90,13 @@ class _CreateRechargeProviderState extends State<CreateRechargeProvider> {
                       height: size.height * 0.08,
                       width: size.width * 0.8,
                       child: CustomElevatedButton(
-                        text: "Create",
+                        child: const Text(
+                          "Create",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
                         onPressed: () async {
                           setState(() {
                             isLoading = true;

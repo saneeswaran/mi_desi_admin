@@ -148,15 +148,15 @@ class _BannerUpdateState extends State<BannerUpdate> {
                     const SizedBox(height: 20),
 
                     CustomElevatedButton(
-                      text: "Change Image",
                       onPressed: pickImage,
+                      child: const Text("Change Image"),
                     ),
 
                     const SizedBox(height: 20),
 
                     CustomElevatedButton(
-                      text: "Update",
                       onPressed: updateBanner,
+                      child: const Text("Update"),
                     ),
                   ],
                 ),

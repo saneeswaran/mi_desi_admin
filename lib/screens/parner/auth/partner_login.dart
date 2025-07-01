@@ -154,9 +154,9 @@ class _PartnerLoginState extends State<PartnerLogin> {
                                           width: double.infinity,
                                           child: CustomElevatedButton(
                                             color: Colors.pink,
-                                            text: value
-                                                ? "Loading..."
-                                                : "Login",
+                                            child: Text(
+                                              value ? "Loading..." : "Login",
+                                            ),
                                             onPressed: () => login(context),
                                           ),
                                         );

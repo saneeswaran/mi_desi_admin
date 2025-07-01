@@ -188,8 +188,8 @@ class _AddBrandsState extends State<AddBrands> {
                         height: size.height * 0.07,
                         width: size.width,
                         child: CustomElevatedButton(
-                          text: isLoading ? 'Adding...' : 'Add',
                           onPressed: addBrand,
+                          child: Text(isLoading ? 'Adding...' : 'Add'),
                         ),
                       ),
                     ],

@@ -215,3 +215,70 @@ showSnackBar({required BuildContext context, required Object e}) {
     context,
   ).showSnackBar(SnackBar(content: Text(e.toString())));
 }
+
+void dialog({
+  required BuildContext context,
+  required String text,
+  required Size size,
+  required Widget ratingWidget,
+  required Widget textFormField,
+  required Widget elevatedButton,
+}) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        backgroundColor: Colors.white,
+        title: Text(
+          text,
+          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        content: Container(
+          height: size.height * 0.4,
+          width: size.width * 0.8,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            color: Colors.white,
+          ),
+          child: Column(
+            spacing: size.height * 0.01,
+            children: [ratingWidget, textFormField, elevatedButton],
+          ),
+        ),
+      );
+    },
+  );
+}
+
+void normalDialog({
+  required BuildContext context,
+  required String title,
+  required Size size,
+  Widget? widget,
+  required double height,
+  required double width,
+  List<Widget>? actions,
+}) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        backgroundColor: Colors.white,
+        title: Text(
+          title,
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        content: Container(
+          height: height,
+          width: width,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            color: Colors.white,
+          ),
+          child: widget,
+        ),
+        actions: actions,
+      );
+    },
+  );
+}

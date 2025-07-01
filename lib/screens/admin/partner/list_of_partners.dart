@@ -1,3 +1,4 @@
+import 'package:desi_shopping_seller/constants/constants.dart';
 import 'package:desi_shopping_seller/providers/partner_provider.dart';
 import 'package:desi_shopping_seller/widgets/custom_elevated_button.dart';
 import 'package:flutter/material.dart';
@@ -18,14 +19,23 @@ class _ListOfPartnersState extends State<ListOfPartners> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(title: const Text("Partners")),
-      body: Column(
-        children: [
-          const SizedBox(height: 16),
-          _filterButtons(size: size),
-          const SizedBox(height: 10),
-          Expanded(child: _listOfPartners(size: size)),
-        ],
+      body: Container(
+        height: size.height * 1,
+        width: size.width * 1,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(AppImages.backgroundImages),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Column(
+          children: [
+            const SizedBox(height: 16),
+            _filterButtons(size: size),
+            const SizedBox(height: 10),
+            Expanded(child: _listOfPartners(size: size)),
+          ],
+        ),
       ),
     );
   }
@@ -41,11 +51,11 @@ class _ListOfPartnersState extends State<ListOfPartners> {
             height: size.height * 0.06,
             width: size.width * 0.35,
             child: CustomElevatedButton(
-              text: filterTypes[index],
               color: isSelected ? Colors.pink : Colors.grey,
               onPressed: () {
                 setState(() => currentIndex = index);
               },
+              child: Text(filterTypes[index]),
             ),
           ),
         );
@@ -72,13 +82,6 @@ class _ListOfPartnersState extends State<ListOfPartners> {
               child: ListTile(
                 title: Text(partner.name),
                 subtitle: Text(partner.email),
-                // trailing: Text(
-                //   partner.activeStatus ? "Active" : "Inactive",
-                //   style: TextStyle(
-                //     color: partner.activeStatus ? Colors.green : Colors.red,
-                //     fontWeight: FontWeight.bold,
-                //   ),
-                // ),
               ),
             );
           },

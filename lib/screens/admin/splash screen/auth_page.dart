@@ -46,13 +46,13 @@ class AuthPage extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         CustomElevatedButton(
-          text: "Admin",
           onPressed: () => moveToNextPageWithFadeAnimations(
             context: context,
             route: const LoginPage(),
           ),
           color: Colors.pink,
           radius: 20,
+          child: const Text("Admin", style: TextStyle(color: Colors.white)),
         ),
         CustomElevatedOutlinedButton(
           text: "Partner",

@@ -1,3 +1,4 @@
+import 'package:desi_shopping_seller/constants/constants.dart';
 import 'package:desi_shopping_seller/screens/admin/banners/components/product_details_for_banners.dart';
 import 'package:flutter/material.dart';
 
@@ -28,6 +29,12 @@ class _AddBannersState extends State<AddBanners> {
           padding: EdgeInsets.all(size.width * 0.03),
           height: size.height * 1,
           width: size.width * 1,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(AppImages.backgroundImages),
+              fit: BoxFit.cover,
+            ),
+          ),
           child: const Column(
             children: [Expanded(child: ProductDetailsForBanners())],
           ),

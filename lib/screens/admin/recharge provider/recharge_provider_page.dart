@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:desi_shopping_seller/constants/constants.dart';
 import 'package:desi_shopping_seller/providers/reacharge_provider.dart';
 import 'package:desi_shopping_seller/screens/admin/recharge%20provider/components/create_recharge_provider.dart';
 import 'package:desi_shopping_seller/screens/admin/recharge%20provider/components/view_recharge_plan.dart';
@@ -11,6 +12,7 @@ class RechargeProviderPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         elevation: 0.0,
@@ -23,8 +25,16 @@ class RechargeProviderPage extends StatelessWidget {
         tooltip: "Add Recharge Provider",
         child: const Icon(Icons.add, color: Colors.white),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: Container(
+        padding: const EdgeInsets.all(16),
+        height: size.height * 1,
+        width: size.width * 1,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(AppImages.backgroundImages),
+            fit: BoxFit.cover,
+          ),
+        ),
         child: Consumer<RechargeSimProvider>(
           builder: (context, provider, child) {
             return GridView.builder(

@@ -73,7 +73,6 @@ class _ViewBrandsState extends State<ViewBrands> {
                     height: size.height * 0.07,
                     width: size.width * 1,
                     child: CustomElevatedButton(
-                      text: "Delete",
                       color: Colors.red,
                       onPressed: () async {
                         setState(() => isLoading = true);
@@ -88,13 +87,14 @@ class _ViewBrandsState extends State<ViewBrands> {
                           Navigator.pop(context);
                         }
                       },
+                      child: const Text("Delete"),
                     ),
                   ),
                   SizedBox(
                     height: size.height * 0.07,
                     width: size.width * 1,
                     child: CustomElevatedButton(
-                      text: "Update",
+                      child: const Text("Update"),
                       onPressed: () async {
                         final bool isSuccess = await context
                             .read<BrandProvider>()

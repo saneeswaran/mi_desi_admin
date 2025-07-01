@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:desi_shopping_seller/constants/constants.dart';
 import 'package:desi_shopping_seller/providers/order_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -21,54 +22,64 @@ class _OrdersPageState extends State<OrdersPage> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
-      body: Consumer<OrderProvider>(
-        builder: (context, value, child) {
-          final order = value.filterOrders;
-          return GridView.builder(
-            itemCount: order.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              mainAxisSpacing: 10,
-              childAspectRatio: 0.8,
-              mainAxisExtent: 350,
-            ),
-            itemBuilder: (context, index) {
-              final orders = order[index];
-              return GridTile(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        height: size.height * 0.30,
-                        width: size.width * 1,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          image: DecorationImage(
-                            image: CachedNetworkImageProvider(
-                              orders.products[index]['imageUrl'],
+      body: Container(
+        height: size.height * 1,
+        width: size.width * 1,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(AppImages.backgroundImages),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Consumer<OrderProvider>(
+          builder: (context, value, child) {
+            final order = value.filterOrders;
+            return GridView.builder(
+              itemCount: order.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 10,
+                childAspectRatio: 0.8,
+                mainAxisExtent: 350,
+              ),
+              itemBuilder: (context, index) {
+                final orders = order[index];
+                return GridTile(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          height: size.height * 0.30,
+                          width: size.width * 1,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            image: DecorationImage(
+                              image: CachedNetworkImageProvider(
+                                orders.products[index]['imageUrl'],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      Text(
-                        orders.products[index]['title'],
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                        Text(
+                          orders.products[index]['title'],
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              );
-            },
-          );
-        },
+                );
+              },
+            );
+          },
+        ),
       ),
     );
   }

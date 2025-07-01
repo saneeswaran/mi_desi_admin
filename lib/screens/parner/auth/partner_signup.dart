@@ -159,10 +159,15 @@ class _PartnerSignupState extends State<PartnerSignup> {
                                         width: size.width * 0.8,
                                         child: CustomElevatedButton(
                                           color: Colors.pink,
-                                          text: value
-                                              ? "Registering..."
-                                              : "Register",
                                           onPressed: register,
+                                          child: Text(
+                                            value
+                                                ? "Registering..."
+                                                : "Register",
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
                                         ),
                                       );
                                     },

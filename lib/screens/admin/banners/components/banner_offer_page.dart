@@ -110,7 +110,7 @@ class _BannerOfferPageState extends State<BannerOfferPage> {
                         height: size.height * 0.06,
                         width: size.width * 0.70,
                         child: CustomElevatedButton(
-                          text: "Submit",
+                          child: const Text("Submit"),
                           onPressed: () async {
                             if (formKey.currentState!.validate()) {
                               final productProvider =

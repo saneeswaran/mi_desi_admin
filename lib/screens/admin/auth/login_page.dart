@@ -138,8 +138,8 @@ class _LoginPageState extends State<LoginPage> {
                                     width: size.width * 0.8,
                                     child: CustomElevatedButton(
                                       color: Colors.pink,
-                                      text: "Login",
                                       onPressed: login,
+                                      child: const Text("Login"),
                                     ),
                                   ),
                                   const SizedBox(height: 20),

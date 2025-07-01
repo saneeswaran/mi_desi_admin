@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:desi_shopping_seller/constants/constants.dart';
 import 'package:desi_shopping_seller/providers/brand_provider.dart';
 import 'package:desi_shopping_seller/screens/admin/brands%20page/components/add_brands.dart';
 import 'package:desi_shopping_seller/screens/admin/brands%20page/components/view_brands.dart';
@@ -39,70 +40,81 @@ class _BrandPageState extends State<BrandPage> {
         backgroundColor: Colors.pink,
         child: const Icon(Icons.add, color: Colors.white),
       ),
-      body: Column(
-        spacing: size.height * 0.02,
-        children: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: size.width * 0.04),
-            child: CustomTextFormField(
-              hintText: 'Search',
-              controller: searchController,
-            ),
+      body: Container(
+        height: size.height * 1,
+        width: size.width * 1,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(AppImages.backgroundImages),
+            fit: BoxFit.cover,
           ),
-          Expanded(
-            child: Consumer<BrandProvider>(
-              builder: (context, value, index) {
-                final brand = value.filteredBrands;
-                return GridView.builder(
-                  itemCount: brand.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 10,
-                    childAspectRatio: 0.8,
-                  ),
-                  itemBuilder: (context, index) {
-                    final brands = brand[index];
-                    return GestureDetector(
-                      onTap: () => moveToNextPageWithFadeAnimations(
-                        context: context,
-                        route: ViewBrands(brand: brands),
-                      ),
-                      child: GridTile(
-                        child: Card(
-                          child: Column(
-                            spacing: size.height * 0.02,
-                            children: [
-                              Container(
-                                height: size.height * 0.20,
-                                width: size.width * 0.40,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12),
-                                  image: DecorationImage(
-                                    image: CachedNetworkImageProvider(
-                                      brands.imageUrl,
+        ),
+        child: Column(
+          spacing: size.height * 0.02,
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: size.width * 0.04),
+              child: CustomTextFormField(
+                hintText: 'Search',
+                controller: searchController,
+              ),
+            ),
+            Expanded(
+              child: Consumer<BrandProvider>(
+                builder: (context, value, index) {
+                  final brand = value.filteredBrands;
+                  return GridView.builder(
+                    itemCount: brand.length,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 10,
+                          childAspectRatio: 0.8,
+                        ),
+                    itemBuilder: (context, index) {
+                      final brands = brand[index];
+                      return GestureDetector(
+                        onTap: () => moveToNextPageWithFadeAnimations(
+                          context: context,
+                          route: ViewBrands(brand: brands),
+                        ),
+                        child: GridTile(
+                          child: Card(
+                            child: Column(
+                              spacing: size.height * 0.02,
+                              children: [
+                                Container(
+                                  height: size.height * 0.20,
+                                  width: size.width * 0.40,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                    image: DecorationImage(
+                                      image: CachedNetworkImageProvider(
+                                        brands.imageUrl,
+                                      ),
+                                      fit: BoxFit.contain,
                                     ),
-                                    fit: BoxFit.contain,
                                   ),
                                 ),
-                              ),
-                              Text(
-                                brands.title,
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
+                                Text(
+                                  brands.title,
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  },
-                );
-              },
+                      );
+                    },
+                  );
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

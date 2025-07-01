@@ -1,11 +1,14 @@
+import 'package:desi_shopping_seller/constants/constants.dart';
+import 'package:desi_shopping_seller/screens/admin/dash%20board/componenet/dash_board_items.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import 'package:desi_shopping_seller/providers/brand_provider.dart';
 import 'package:desi_shopping_seller/providers/order_provider.dart';
 import 'package:desi_shopping_seller/providers/product_provider.dart';
 import 'package:desi_shopping_seller/providers/reacharge_provider.dart';
 import 'package:desi_shopping_seller/providers/user_provider.dart';
-import 'package:desi_shopping_seller/screens/admin/dash%20board/componenet/dash_board_support.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:desi_shopping_seller/screens/admin/dash board/componenet/dash_board_support.dart';
 
 class DashBoardPage extends StatefulWidget {
   const DashBoardPage({super.key});
@@ -15,31 +18,27 @@ class DashBoardPage extends StatefulWidget {
 }
 
 class _DashBoardPageState extends State<DashBoardPage> {
+  List<int> dashboardData = [];
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final brandProvider = Provider.of<BrandProvider>(context, listen: false);
-      final productProvider = Provider.of<ProductProvider>(
-        context,
-        listen: false,
-      );
-      context.read<RechargeSimProvider>().getAllProvider(context: context);
-      //   final userProvider = Provider.of<UserProvider>(context, listen: false);
-      final orderProvider = Provider.of<OrderProvider>(context, listen: false);
+      final brandProvider = context.read<BrandProvider>();
+      final productProvider = context.read<ProductProvider>();
+      final orderProvider = context.read<OrderProvider>();
+      final rechargeProvider = context.read<RechargeSimProvider>();
 
       await Future.wait([
         brandProvider.fetchIfNeeded(context: context),
         productProvider.fetchIfNeeded(context: context),
-        //    userProvider.getAllUsers(context: context),
         orderProvider.fetchIfNeeded(context: context),
+        rechargeProvider.getAllProvider(context: context),
       ]);
 
       _loadDashboardData();
     });
   }
-
-  List<int> dashboardData = [];
 
   void _loadDashboardData() {
     final productProvider = context.read<ProductProvider>();
@@ -48,16 +47,13 @@ class _DashBoardPageState extends State<DashBoardPage> {
     final orderProvider = context.read<OrderProvider>();
 
     final allOrders = orderProvider.allOrders;
-
     final today = DateTime.now();
-    final todayOrders = allOrders
-        .where(
-          (e) =>
-              e.createdAt.toDate().day == today.day &&
-              e.createdAt.toDate().month == today.month &&
-              e.createdAt.toDate().year == today.year,
-        )
-        .toList();
+    final todayOrders = allOrders.where((e) {
+      final date = e.createdAt.toDate();
+      return date.day == today.day &&
+          date.month == today.month &&
+          date.year == today.year;
+    }).toList();
 
     setState(() {
       dashboardData = [
@@ -78,71 +74,56 @@ class _DashBoardPageState extends State<DashBoardPage> {
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
+    final size = MediaQuery.of(context).size;
     return Scaffold(
+      backgroundColor: const Color(0xFFF4F6F8),
       body: Container(
-        padding: EdgeInsets.all(size.width * 0.03),
-        child: Consumer<ProductProvider>(
-          builder: (context, value, child) {
-            return GridView.builder(
-              itemCount: dashBoardItems.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: size.height * 0.02,
-                mainAxisExtent: size.height * 0.24,
-              ),
-              itemBuilder: (context, index) {
-                return Card(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      color: generateColors(dashBoardItems.length)[index],
-                      border: Border(
-                        left: BorderSide(
-                          color: generateColors(dashBoardItems.length)[index],
-                        ),
-                        right: BorderSide(
-                          color: generateColors(dashBoardItems.length)[index],
-                        ),
-                        top: BorderSide(
-                          color: generateColors(dashBoardItems.length)[index],
-                        ),
-                      ),
-                    ),
-                    child: Column(
-                      spacing: size.height * 0.04,
-                      children: [
-                        SizedBox(height: size.height * 0.02),
-                        Text(
-                          dashBoardItems[index],
-                          maxLines: 2,
-                          textAlign: TextAlign.center,
-                          overflow: TextOverflow.clip,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          dashboardData.length > index
-                              ? dashboardData[index].toString()
-                              : '0',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            );
-          },
+        height: size.height * 1,
+        width: size.width * 1,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(AppImages.backgroundImages),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(size.width * 0.03),
+          child: GridView.builder(
+            itemCount: dashBoardItems.length,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              mainAxisSpacing: size.height * 0.02,
+              crossAxisSpacing: size.width * 0.04,
+              mainAxisExtent: size.height * 0.22,
+            ),
+            itemBuilder: (context, index) {
+              return DashBoardItem(
+                title: dashBoardItems[index],
+                count: dashboardData.length > index ? dashboardData[index] : 0,
+
+                icon: _getIcon(index),
+              );
+            },
+          ),
         ),
       ),
     );
+  }
+
+  IconData _getIcon(int index) {
+    const icons = [
+      Icons.today,
+      Icons.hourglass_bottom,
+      Icons.check_circle,
+      Icons.cancel,
+      Icons.list_alt,
+      Icons.pending_actions,
+      Icons.delivery_dining,
+      Icons.remove_circle,
+      Icons.shopping_bag,
+      Icons.branding_watermark,
+      Icons.people,
+    ];
+    return icons[index % icons.length];
   }
 }

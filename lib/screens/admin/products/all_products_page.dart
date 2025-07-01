@@ -1,8 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:desi_shopping_seller/constants/constants.dart';
 import 'package:desi_shopping_seller/providers/brand_provider.dart';
 import 'package:desi_shopping_seller/providers/product_provider.dart';
 import 'package:desi_shopping_seller/screens/admin/add%20products/add_product_screen.dart';
-import 'package:desi_shopping_seller/screens/admin/add%20products/componenets/view_products.dart';
+import 'package:desi_shopping_seller/screens/admin/add%20products/componenets/product_details.dart';
 import 'package:desi_shopping_seller/util/util.dart';
 import 'package:desi_shopping_seller/widgets/custom_elevated_button.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +30,12 @@ class AllProductsPage extends StatelessWidget {
         padding: EdgeInsets.all(size.width * 0.03),
         height: size.height * 0.9,
         width: size.width * 1,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(AppImages.backgroundImages),
+            fit: BoxFit.cover,
+          ),
+        ),
         child: Column(
           spacing: size.height * 0.02,
           children: [
@@ -164,7 +171,10 @@ class AllProductsPage extends StatelessWidget {
       children: [
         Expanded(
           child: CustomElevatedButton(
-            text: "Start Date",
+            child: const Text(
+              "Start Date",
+              style: TextStyle(color: Colors.white),
+            ),
             onPressed: () {
               provider.pickStartDate(context);
             },
@@ -172,7 +182,10 @@ class AllProductsPage extends StatelessWidget {
         ),
         Expanded(
           child: CustomElevatedButton(
-            text: "End Date",
+            child: const Text(
+              "End Date",
+              style: TextStyle(color: Colors.white),
+            ),
             onPressed: () {
               provider.pickEndDate(context);
             },
@@ -208,7 +221,7 @@ class AllProductsPage extends StatelessWidget {
                 return GestureDetector(
                   onTap: () => moveToNextPageWithFadeAnimations(
                     context: context,
-                    route: ViewProducts(product: products),
+                    route: ProductDetails(product: products),
                   ),
                   child: Container(
                     margin: EdgeInsets.all(size.width * 0.02),

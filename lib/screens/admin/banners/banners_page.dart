@@ -3,9 +3,10 @@
 import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:desi_shopping_seller/constants/constants.dart';
 import 'package:desi_shopping_seller/providers/banners_provider.dart';
 import 'package:desi_shopping_seller/providers/product_provider.dart';
-import 'package:desi_shopping_seller/screens/admin/add%20products/componenets/view_products.dart';
+import 'package:desi_shopping_seller/screens/admin/add%20products/componenets/product_details.dart';
 import 'package:desi_shopping_seller/screens/admin/banners/components/add_banners.dart';
 import 'package:desi_shopping_seller/screens/admin/banners/components/banner_update.dart';
 import 'package:desi_shopping_seller/util/util.dart';
@@ -49,6 +50,11 @@ class _BannersPageState extends State<BannersPage> {
           padding: EdgeInsets.all(size.width * 0.03),
           height: size.height * 1,
           width: size.width * 1,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(AppImages.backgroundImages),
+            ),
+          ),
           child: Column(
             children: [
               const Padding(
@@ -95,7 +101,9 @@ class _BannersPageState extends State<BannersPage> {
                         onTap: () {
                           moveToNextPageWithFadeAnimations(
                             context: context,
-                            route: ViewProducts(product: selectedProduct.first),
+                            route: ProductDetails(
+                              product: selectedProduct.first,
+                            ),
                           );
                         },
                         child: Slidable(
