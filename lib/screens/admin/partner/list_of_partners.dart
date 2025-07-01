@@ -55,7 +55,10 @@ class _ListOfPartnersState extends State<ListOfPartners> {
               onPressed: () {
                 setState(() => currentIndex = index);
               },
-              child: Text(filterTypes[index]),
+              child: Text(
+                filterTypes[index],
+                style: const TextStyle(color: Colors.white),
+              ),
             ),
           ),
         );

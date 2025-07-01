@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:desi_shopping_seller/providers/partner_provider.dart';
 import 'package:desi_shopping_seller/screens/admin/add%20products/add_product_screen.dart';
-import 'package:desi_shopping_seller/screens/admin/add%20products/componenets/product_details.dart';
+import 'package:desi_shopping_seller/screens/admin/add%20products/componenets/view_products.dart';
 import 'package:desi_shopping_seller/util/util.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -60,7 +60,7 @@ class _PartnerProductsPageState extends State<PartnerProductsPage> {
               return GestureDetector(
                 onTap: () => moveToNextPageWithFadeAnimations(
                   context: context,
-                  route: ProductDetails(product: products),
+                  route: ViewProductDetails(product: products),
                 ),
                 child: Container(
                   margin: EdgeInsets.all(size.width * 0.02),

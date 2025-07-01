@@ -1,8 +1,8 @@
 import 'package:desi_shopping_seller/model/product_model.dart';
 import 'package:desi_shopping_seller/providers/brand_provider.dart';
 import 'package:desi_shopping_seller/providers/product_provider.dart';
-import 'package:desi_shopping_seller/screens/admin/add%20products/componenets/product_details.dart';
 import 'package:desi_shopping_seller/screens/admin/add%20products/componenets/update_product.dart';
+import 'package:desi_shopping_seller/screens/admin/add%20products/componenets/view_products.dart';
 import 'package:desi_shopping_seller/util/util.dart';
 import 'package:desi_shopping_seller/widgets/custom_elevated_button.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +30,7 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
             padding: const EdgeInsets.all(16),
             child: ListView(
               children: [
-                ProductDetails(product: product),
+                ViewProductDetails(product: product),
                 const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
