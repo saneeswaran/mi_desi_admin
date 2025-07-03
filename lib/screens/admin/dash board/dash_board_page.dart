@@ -1,6 +1,11 @@
+import 'dart:developer';
+
 import 'package:desi_shopping_seller/constants/constants.dart';
 import 'package:desi_shopping_seller/screens/admin/dash%20board/componenet/dash_board_items.dart';
+import 'package:desi_shopping_seller/screens/admin/helper/notification_helper.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 import 'package:desi_shopping_seller/providers/brand_provider.dart';
@@ -23,6 +28,8 @@ class _DashBoardPageState extends State<DashBoardPage> {
   @override
   void initState() {
     super.initState();
+    NotificationHelper.setupFCM();
+    NotificationHelper.setupFirebaseForegroundNotifications(context);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final brandProvider = context.read<BrandProvider>();
       final productProvider = context.read<ProductProvider>();
@@ -69,6 +76,24 @@ class _DashBoardPageState extends State<DashBoardPage> {
         brandProvider.allBrands.length,
         userProvider.allUsers.length,
       ];
+    });
+  }
+
+  void setupFirebaseForegroundNotifications(BuildContext context) {
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      if (message.notification != null) {
+        final title = message.notification!.title ?? 'Notification';
+        final body = message.notification!.body ?? 'You have a new message';
+
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('$title\n$body'),
+              duration: const Duration(seconds: 5),
+            ),
+          );
+        }
+      }
     });
   }
 

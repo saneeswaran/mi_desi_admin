@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:desi_shopping_seller/enum/app_enum.dart';
 import 'package:desi_shopping_seller/firebase_options.dart';
@@ -17,12 +19,24 @@ import 'package:desi_shopping_seller/screens/admin/splash%20screen/splash_page.d
 import 'package:desi_shopping_seller/screens/parner/bottom_nav/partner_bottom_nav.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+//get fcm token
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  log(
+    "Handling a background message: ${message.messageId}, background message ${message.notification?.title}",
+  );
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  //get fcm token
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   runApp(
     MultiProvider(
       providers: [

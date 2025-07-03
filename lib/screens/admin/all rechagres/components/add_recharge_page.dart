@@ -63,7 +63,10 @@ class _AddRechargePageState extends State<AddRechargePage> {
                       height: size.height * 0.08,
                       width: size.width * 1,
                       child: CustomElevatedButton(
-                        child: const Text("Add"),
+                        child: const Text(
+                          "Add",
+                          style: TextStyle(color: Colors.white),
+                        ),
                         onPressed: () async {
                           final bool isSuccess = await rechargeProvider
                               .createRechargePlan(
