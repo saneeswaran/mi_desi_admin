@@ -35,6 +35,9 @@ class NotificationHelper {
     );
 
     NotificationSettings settings = await messaging.requestPermission();
+    if (settings.authorizationStatus == AuthorizationStatus.denied) {
+      await messaging.requestPermission();
+    }
     final Permission status = Permission.notification;
     if (await status.isDenied) {
       await status.request();
