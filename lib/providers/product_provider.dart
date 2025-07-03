@@ -452,17 +452,51 @@ class ProductProvider extends ChangeNotifier {
     required String productId,
   }) async {
     try {
-      final CollectionReference collectionReference = FirebaseFirestore.instance
-          .collection("products");
-      final DocumentSnapshot documentSnapshot = await collectionReference
-          .doc(productId)
-          .get();
-      if (documentSnapshot.exists) {
-        await documentSnapshot.reference.update({'isBestSelling': true});
+      final docRef = FirebaseFirestore.instance
+          .collection('products')
+          .doc(productId);
+      await docRef.update({'isBestSelling': true});
+
+      final index = _allProducts.indexWhere((p) => p.id == productId);
+      if (index != -1) {
+        _allProducts[index].isBestSelling = true;
+        notifyListeners();
       }
+
       return true;
     } catch (e) {
       if (context.mounted) showSnackBar(context: context, e: e);
+      return false;
+    }
+  }
+
+  Future<bool> removeBestSelling({
+    required BuildContext context,
+    required String productId,
+  }) async {
+    try {
+      final docRef = FirebaseFirestore.instance
+          .collection('products')
+          .doc(productId);
+      await docRef.update({'isBestSelling': false});
+
+      final index = _allProducts.indexWhere((p) => p.id == productId);
+      if (index != -1) {
+        _allProducts[index].isBestSelling = false;
+        notifyListeners();
+      }
+
+      return true;
+    } catch (e) {
+      if (context.mounted) showSnackBar(context: context, e: e);
+      return false;
+    }
+  }
+
+  bool checkAlreadyBestSelling(String productId) {
+    final index = _allProducts.indexWhere((p) => p.id == productId);
+    if (index != -1) {
+      return _allProducts[index].isBestSelling == true;
     }
     return false;
   }
