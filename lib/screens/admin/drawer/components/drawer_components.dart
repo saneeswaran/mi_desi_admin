@@ -78,7 +78,7 @@ Widget draweFunctions({required BuildContext context}) {
       ),
       ListTile(
         leading: const Icon(Icons.logout),
-        title: const Text("Logout", style: TextStyle(color: Colors.white)),
+        title: const Text("Logout", style: TextStyle(color: Colors.black)),
         onTap: () {
           Provider.of<AuthProviders>(context, listen: false).logout();
         },

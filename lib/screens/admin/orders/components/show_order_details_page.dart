@@ -224,10 +224,10 @@ class _ShowOrderDetailsPageState extends State<ShowOrderDetailsPage> {
 
   Widget _changeOrderStatus() {
     final items = [
-      "Pending",
-      "Processing",
-      "Delivered",
-      "Cancelled",
+      "pending",
+      "processing",
+      "delivered",
+      "cancelled",
     ].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList();
     return Consumer<OrderProvider>(
       builder: (context, provider, child) {

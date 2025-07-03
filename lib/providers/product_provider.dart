@@ -446,4 +446,24 @@ class ProductProvider extends ChangeNotifier {
     final date = timestamp.toDate();
     return DateFormat('dd/MM/yyyy, hh:mm a').format(date);
   }
+
+  Future<bool> makeBestSelling({
+    required BuildContext context,
+    required String productId,
+  }) async {
+    try {
+      final CollectionReference collectionReference = FirebaseFirestore.instance
+          .collection("products");
+      final DocumentSnapshot documentSnapshot = await collectionReference
+          .doc(productId)
+          .get();
+      if (documentSnapshot.exists) {
+        await documentSnapshot.reference.update({'isBestSelling': true});
+      }
+      return true;
+    } catch (e) {
+      if (context.mounted) showSnackBar(context: context, e: e);
+    }
+    return false;
+  }
 }

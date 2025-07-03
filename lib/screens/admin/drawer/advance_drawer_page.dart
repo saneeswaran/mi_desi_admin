@@ -1,4 +1,5 @@
 // ignore_for_file: deprecated_member_use
+import 'package:desi_shopping_seller/constants/constants.dart';
 import 'package:desi_shopping_seller/screens/admin/drawer/components/drawer_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
@@ -20,12 +21,8 @@ class AdvanceDrawerPage extends StatelessWidget {
       backdrop: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Colors.pink, Colors.pinkAccent.withOpacity(0.2)],
-          ),
+        decoration: const BoxDecoration(
+          image: DecorationImage(image: AssetImage(AppImages.backgroundImages)),
         ),
       ),
       controller: advancedDrawerController,
@@ -39,8 +36,8 @@ class AdvanceDrawerPage extends StatelessWidget {
       ),
       drawer: SafeArea(
         child: ListTileTheme(
-          textColor: Colors.white,
-          iconColor: Colors.white,
+          textColor: Colors.black,
+          iconColor: Colors.black,
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [

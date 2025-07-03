@@ -32,12 +32,14 @@ class _DashBoardPageState extends State<DashBoardPage> {
       final productProvider = context.read<ProductProvider>();
       final orderProvider = context.read<OrderProvider>();
       final rechargeProvider = context.read<RechargeSimProvider>();
+      final customer = context.read<UserProvider>();
 
       await Future.wait([
         brandProvider.fetchIfNeeded(context: context),
         productProvider.fetchIfNeeded(context: context),
         orderProvider.fetchIfNeeded(context: context),
         rechargeProvider.getAllProvider(context: context),
+        customer.getAllUsers(context: context),
       ]);
 
       _loadDashboardData();
@@ -98,7 +100,6 @@ class _DashBoardPageState extends State<DashBoardPage> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: const Color(0xFFF4F6F8),
       body: Container(
         height: size.height * 1,
         width: size.width * 1,

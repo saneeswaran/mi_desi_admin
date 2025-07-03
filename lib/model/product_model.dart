@@ -22,6 +22,7 @@ class ProductModel {
   final List<String> imageUrl;
   final List<String> videoUrl;
   final int? offerPrice;
+  bool? isBestSelling = false;
   final Timestamp createdAt = Timestamp.now();
   double rating;
 
@@ -46,6 +47,7 @@ class ProductModel {
     required this.imageUrl,
     required this.videoUrl,
     this.offerPrice,
+    this.isBestSelling,
     double? rating,
   }) : rating = rating ?? 0.0;
 
@@ -65,6 +67,7 @@ class ProductModel {
       'shelfLife': shelfLife,
       'additionalInformation': additionalInformation,
       'stock': stock,
+      'isBestSelling': isBestSelling,
       'taxAmount': taxAmount,
       'cashOnDelivery': cashOnDelivery,
       'brand': {
@@ -97,6 +100,7 @@ class ProductModel {
       marketedBy: map['marketedBy'] as String,
       shelfLife: map['shelfLife'] as String,
       additionalInformation: map['additionalInformation'],
+      isBestSelling: map['isBestSelling'],
       stock: map['stock'],
       taxAmount: (map['taxAmount'] as num).toDouble(),
       cashOnDelivery: map['cashOnDelivery'],
@@ -113,60 +117,5 @@ class ProductModel {
       offerPrice: map['offerPrice'] as int?,
       rating: (map['rating'] ?? 0.0).toDouble(),
     );
-  }
-
-  ProductModel copyWith({
-    String? id,
-    String? sellerid,
-    String? title,
-    String? description,
-    double? price,
-    String? netVolume,
-    String? dosage,
-    String? composition,
-    String? storage,
-    String? manufacturedBy,
-    String? marketedBy,
-    String? shelfLife,
-    String? additionalInformation,
-    int? stock,
-    double? taxAmount,
-    String? cashOnDelivery,
-    BrandModel? brand,
-    List<String>? imageUrl,
-    List<String>? videoUrl,
-    Timestamp? createdAt,
-    int? offerPrice,
-    double? rating,
-  }) {
-    return ProductModel(
-      id: id ?? this.id,
-      sellerid: sellerid ?? this.sellerid,
-      title: title ?? this.title,
-      description: description ?? this.description,
-      price: price ?? this.price,
-      netVolume: netVolume ?? this.netVolume,
-      dosage: dosage ?? this.dosage,
-      composition: composition ?? this.composition,
-      storage: storage ?? this.storage,
-      manufacturedBy: manufacturedBy ?? this.manufacturedBy,
-      marketedBy: marketedBy ?? this.marketedBy,
-      shelfLife: shelfLife ?? this.shelfLife,
-      additionalInformation:
-          additionalInformation ?? this.additionalInformation,
-      stock: stock ?? this.stock,
-      taxAmount: taxAmount ?? this.taxAmount,
-      cashOnDelivery: cashOnDelivery ?? this.cashOnDelivery,
-      brand: brand ?? this.brand,
-      imageUrl: imageUrl ?? this.imageUrl,
-      videoUrl: videoUrl ?? this.videoUrl,
-      offerPrice: offerPrice ?? this.offerPrice,
-      rating: rating ?? this.rating,
-    );
-  }
-
-  @override
-  String toString() {
-    return 'ProductModel(id: $id, title: $title)';
   }
 }

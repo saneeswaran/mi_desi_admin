@@ -7,12 +7,18 @@ class CustomerModel {
   final String? uid;
   final String name;
   final String email;
-  final String imageUrl;
+  final String? imageUrl;
+  final String? customerReferalCode;
+  final String? usedReferralCode;
+  final String? fcmToken;
   CustomerModel({
     this.uid,
     required this.name,
     required this.email,
     required this.imageUrl,
+    this.customerReferalCode,
+    this.usedReferralCode,
+    this.fcmToken,
   });
   final Timestamp lastLogin = Timestamp.now();
 
@@ -22,15 +28,25 @@ class CustomerModel {
       'name': name,
       'email': email,
       'imageUrl': imageUrl,
+      'customerReferalCode': customerReferalCode,
+      'usedReferralCode': usedReferralCode,
+      'fcmToken': fcmToken,
     };
   }
 
   factory CustomerModel.fromMap(Map<String, dynamic> map) {
     return CustomerModel(
-      uid: map['uid'] != null ? map['uid'] as String : null,
+      uid: map['uid'] as String,
       name: map['name'] as String,
       email: map['email'] as String,
-      imageUrl: map['imageUrl'] as String,
+      imageUrl: map['imageUrl'] != null ? map['imageUrl'] as String : null,
+      customerReferalCode: map['customerReferalCode'] != null
+          ? map['customerReferalCode'] as String
+          : null,
+      usedReferralCode: map['usedReferralCode'] != null
+          ? map['usedReferralCode'] as String
+          : null,
+      fcmToken: map['fcmToken'] != null ? map['fcmToken'] as String : null,
     );
   }
 
