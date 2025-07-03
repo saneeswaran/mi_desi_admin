@@ -55,7 +55,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
     final allOrders = orderProvider.allOrders;
     final today = DateTime.now();
     final todayOrders = allOrders.where((e) {
-      final date = e.createdAt.toDate();
+      final date = e.createdAt!.toDate();
       return date.day == today.day &&
           date.month == today.month &&
           date.year == today.year;

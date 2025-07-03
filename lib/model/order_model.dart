@@ -5,15 +5,12 @@ class OrderModel {
   final double totalAmount;
   final String address;
   final int phoneNumber;
-  final String email;
-  final String customerId;
   final double latitude;
   final double longitude;
   String orderStatus;
   final String orderDate;
   final String orderId;
-  final Timestamp createdAt = Timestamp.now();
-
+  final Timestamp? createdAt;
   final List<Map<String, dynamic>> products;
 
   OrderModel({
@@ -26,9 +23,8 @@ class OrderModel {
     required this.orderStatus,
     required this.orderDate,
     required this.orderId,
-    required this.email,
-    required this.customerId,
     required this.products,
+    this.createdAt,
   });
 
   Map<String, dynamic> toMap() {
@@ -42,10 +38,8 @@ class OrderModel {
       'orderStatus': orderStatus,
       'orderDate': orderDate,
       'orderId': orderId,
-      'createdAt': createdAt,
-      'email': email,
-      'customerId': customerId,
       'products': products,
+      'createdAt': createdAt,
     };
   }
 
@@ -59,9 +53,8 @@ class OrderModel {
       longitude: map['longitude'],
       orderStatus: map['orderStatus'],
       orderDate: map['orderDate'],
-      email: map['email'],
-      customerId: map['customerId'],
       orderId: map['orderId'],
+      createdAt: map['createdAt'],
       products: List<Map<String, dynamic>>.from(map['products']),
     );
   }

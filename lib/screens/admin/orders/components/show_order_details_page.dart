@@ -159,7 +159,7 @@ class _ShowOrderDetailsPageState extends State<ShowOrderDetailsPage> {
                           final bool isSuccess = await provider
                               .changeOrderStatuc(
                                 context: context,
-                                customerId: widget.order.customerId,
+                                customerId: widget.order.userId,
                                 orderId: widget.order.orderId,
                                 orderStatus: status,
                               );
