@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:desi_shopping_seller/model/order_model.dart';
 import 'package:desi_shopping_seller/providers/brand_provider.dart';
@@ -70,7 +68,6 @@ class OrderProvider extends ChangeNotifier {
           .map((e) => OrderModel.fromMap(e.data() as Map<String, dynamic>))
           .toList();
       _allOrders = orders;
-      log(_allOrders.toString());
       _filterOrders = _allOrders;
       notifyListeners();
     } on FirebaseException catch (e) {

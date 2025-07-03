@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:desi_shopping_seller/constants/constants.dart';
 import 'package:desi_shopping_seller/model/order_model.dart';
 import 'package:desi_shopping_seller/providers/order_provider.dart';
+import 'package:desi_shopping_seller/screens/admin/helper/notification_helper.dart';
 import 'package:desi_shopping_seller/util/util.dart';
 import 'package:desi_shopping_seller/widgets/custom_elevated_button.dart';
 import 'package:flutter/material.dart';
@@ -252,6 +253,42 @@ class _ShowOrderDetailsPageState extends State<ShowOrderDetailsPage> {
             setState(() {
               status = value.toString();
             });
+            switch (status) {
+              case "pending":
+                NotificationHelper.sendNotification(
+                  title: "Order Pending",
+                  message: "Your order is pending",
+                  screen: "order",
+                  userId: widget.order.userId,
+                );
+                break;
+              case "processing":
+                NotificationHelper.sendNotification(
+                  title: "Order Processing",
+                  message: "Your order is processing",
+                  screen: "order",
+                  userId: widget.order.userId,
+                );
+                break;
+              case "delivered":
+                NotificationHelper.sendNotification(
+                  title: "Order Delivered",
+                  message: "Your order is delivered",
+                  screen: "order",
+                  userId: widget.order.userId,
+                );
+                break;
+              case "cancelled":
+                NotificationHelper.sendNotification(
+                  title: "Order Cancelled",
+                  message: "Your order is cancelled",
+                  screen: "order",
+                  userId: widget.order.userId,
+                );
+                break;
+              default:
+                break;
+            }
           },
         );
       },

@@ -46,6 +46,12 @@ class _OrdersPageState extends State<OrdersPage> {
               ),
               itemBuilder: (context, index) {
                 final orders = order[index];
+
+                // Safely get first product
+                final product = orders.products.isNotEmpty
+                    ? orders.products[0]
+                    : null;
+
                 return GestureDetector(
                   onTap: () => moveToNextPageWithFadeAnimations(
                     context: context,
@@ -58,20 +64,23 @@ class _OrdersPageState extends State<OrdersPage> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Container(
-                            height: size.height * 0.30,
-                            width: size.width * 1,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              image: DecorationImage(
-                                image: CachedNetworkImageProvider(
-                                  orders.products[index]['imageUrl'],
+                          if (product != null)
+                            Container(
+                              height: size.height * 0.30,
+                              width: size.width * 1,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                image: DecorationImage(
+                                  image: CachedNetworkImageProvider(
+                                    product['imageUrl'],
+                                  ),
+                                  fit: BoxFit.cover,
                                 ),
                               ),
                             ),
-                          ),
+                          const SizedBox(height: 8),
                           Text(
-                            orders.products[index]['title'],
+                            product?['title'] ?? 'No product',
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(

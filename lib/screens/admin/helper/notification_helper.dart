@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -58,15 +58,16 @@ class NotificationHelper {
     required String title,
     required String message,
     required String screen,
+    required String userId,
   }) async {
-    final adminTokenDoc = await FirebaseFirestore.instance
-        .collection("admin")
-        .doc("fcm")
+    final CollectionReference collectionReference = FirebaseFirestore.instance
+        .collection("customers");
+    final DocumentSnapshot documentSnapshot = await collectionReference
+        .doc(userId)
         .get();
-
-    final adminToken = adminTokenDoc.data()?["token"];
-
-    if (adminToken != null) {
+    final token = documentSnapshot.get('fcmToken');
+    log(token.toString());
+    if (token != null) {
       await http.post(
         Uri.parse(
           "https://mi-desi-notification-service.vercel.app/api/sendNotification",
@@ -75,7 +76,7 @@ class NotificationHelper {
         body: jsonEncode({
           "title": title,
           "body": message,
-          "fcmToken": adminToken,
+          "fcmToken": token,
           "screen": screen,
         }),
       );

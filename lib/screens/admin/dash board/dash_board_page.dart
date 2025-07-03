@@ -51,7 +51,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
     final brandProvider = context.read<BrandProvider>();
     final userProvider = context.read<UserProvider>();
     final orderProvider = context.read<OrderProvider>();
-
+    orderProvider.getAllOrders(context: context);
     final allOrders = orderProvider.allOrders;
     final today = DateTime.now();
     final todayOrders = allOrders.where((e) {
