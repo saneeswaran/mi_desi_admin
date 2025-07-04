@@ -6,11 +6,13 @@ class AdminModel {
   final String email;
   final String? photoURL;
   final String password;
+  final String? fcmToken;
   AdminModel({
     required this.uid,
     required this.name,
     required this.email,
     this.photoURL,
+    this.fcmToken,
     required this.password,
   });
 
@@ -21,6 +23,7 @@ class AdminModel {
       'email': email,
       'photoURL': photoURL,
       'password': password,
+      'fcmToken': fcmToken,
     };
   }
 
@@ -31,6 +34,7 @@ class AdminModel {
       email: map['email'] as String,
       photoURL: map['photoURL'] ?? '',
       password: map['password'] as String,
+      fcmToken: map['fcmToken'] ?? '',
     );
   }
 

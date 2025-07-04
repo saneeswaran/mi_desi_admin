@@ -19,19 +19,51 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 
-//get fcm token
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
+// Background handler
+@pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
+}
+
+// Foreground/local click handler
+@pragma('vm:entry-point')
+void onNotificationClick(NotificationResponse response) {
+  final payload = response.payload;
+  if (payload != null && navigatorKey.currentContext != null) {
+    Navigator.pushNamed(navigatorKey.currentContext!, payload);
+  }
 }
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  //get fcm token
+  // Request permissions
+  await FirebaseMessaging.instance.requestPermission();
+
+  // Background notification handler
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+  // Local Notification settings
+  const AndroidInitializationSettings androidSettings =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
+
+  const InitializationSettings initSettings = InitializationSettings(
+    android: androidSettings,
+  );
+
+  await flutterLocalNotificationsPlugin.initialize(
+    initSettings,
+    onDidReceiveNotificationResponse: onNotificationClick,
+  );
+
   runApp(
     MultiProvider(
       providers: [
@@ -56,9 +88,42 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Foreground Notification Handler
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      final notification = message.notification;
+      final android = notification?.android;
+
+      if (notification != null && android != null) {
+        flutterLocalNotificationsPlugin.show(
+          notification.hashCode,
+          notification.title,
+          notification.body,
+          const NotificationDetails(
+            android: AndroidNotificationDetails(
+              'channel_id',
+              'Seller Notifications',
+              importance: Importance.max,
+              priority: Priority.high,
+              playSound: true,
+            ),
+          ),
+          payload: message.data['screen'], // Example: "/recharge"
+        );
+      }
+    });
+
+    // Background Notification Tap Handler
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      final screen = message.data['screen'];
+      if (screen != null && navigatorKey.currentContext != null) {
+        Navigator.pushNamed(navigatorKey.currentContext!, screen);
+      }
+    });
+
     return MaterialApp(
-      title: 'My Desi Seller',
+      navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
+      title: 'My Desi Seller',
       home: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, asyncSnapshot) {
