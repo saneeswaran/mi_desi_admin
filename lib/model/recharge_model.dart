@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -56,6 +57,11 @@ class RechargeModel {
 
   factory RechargeModel.fromJson(String source) =>
       RechargeModel.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() {
+    return 'RechargeModel(id: $id, sellerId: $sellerId, customerId: $customerId, price: $price, dataInfo: $dataInfo, validity: $validity, rechargeProvider: $rechargeProvider, status: $status)';
+  }
 }
 
 class RechargeProvider {

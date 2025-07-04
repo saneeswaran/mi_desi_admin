@@ -30,14 +30,12 @@ class _DashBoardPageState extends State<DashBoardPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final brandProvider = context.read<BrandProvider>();
       final productProvider = context.read<ProductProvider>();
-      final orderProvider = context.read<OrderProvider>();
       final rechargeProvider = context.read<RechargeSimProvider>();
       final customer = context.read<UserProvider>();
 
       await Future.wait([
         brandProvider.fetchIfNeeded(context: context),
         productProvider.fetchIfNeeded(context: context),
-        orderProvider.fetchIfNeeded(context: context),
         rechargeProvider.getAllProvider(context: context),
         customer.getAllUsers(context: context),
       ]);
@@ -64,13 +62,13 @@ class _DashBoardPageState extends State<DashBoardPage> {
     setState(() {
       dashboardData = [
         todayOrders.length,
-        todayOrders.where((e) => e.orderStatus == 'pending').length,
-        todayOrders.where((e) => e.orderStatus == 'delivered').length,
-        todayOrders.where((e) => e.orderStatus == 'cancelled').length,
+        todayOrders.where((e) => e.orderStatus == 'Pending').length,
+        todayOrders.where((e) => e.orderStatus == 'Delivered').length,
+        todayOrders.where((e) => e.orderStatus == 'Cancelled').length,
         allOrders.length,
-        allOrders.where((e) => e.orderStatus == 'pending').length,
-        allOrders.where((e) => e.orderStatus == 'delivered').length,
-        allOrders.where((e) => e.orderStatus == 'cancelled').length,
+        allOrders.where((e) => e.orderStatus == 'Pending').length,
+        allOrders.where((e) => e.orderStatus == 'Delivered').length,
+        allOrders.where((e) => e.orderStatus == 'Cancelled').length,
         productProvider.allProduct.length,
         brandProvider.allBrands.length,
         userProvider.allUsers.length,

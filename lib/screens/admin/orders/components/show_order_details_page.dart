@@ -258,7 +258,7 @@ class _ShowOrderDetailsPageState extends State<ShowOrderDetailsPage> {
                 NotificationHelper.sendNotification(
                   title: "Order Pending",
                   message: "Your order is pending",
-                  screen: "order",
+                  screen: "/order",
                   userId: widget.order.userId,
                 );
                 break;
@@ -266,7 +266,7 @@ class _ShowOrderDetailsPageState extends State<ShowOrderDetailsPage> {
                 NotificationHelper.sendNotification(
                   title: "Order Processing",
                   message: "Your order is processing",
-                  screen: "order",
+                  screen: "/order",
                   userId: widget.order.userId,
                 );
                 break;
@@ -274,7 +274,7 @@ class _ShowOrderDetailsPageState extends State<ShowOrderDetailsPage> {
                 NotificationHelper.sendNotification(
                   title: "Order Delivered",
                   message: "Your order is delivered",
-                  screen: "order",
+                  screen: "/order",
                   userId: widget.order.userId,
                 );
                 break;
@@ -282,7 +282,7 @@ class _ShowOrderDetailsPageState extends State<ShowOrderDetailsPage> {
                 NotificationHelper.sendNotification(
                   title: "Order Cancelled",
                   message: "Your order is cancelled",
-                  screen: "order",
+                  screen: "/order",
                   userId: widget.order.userId,
                 );
                 break;

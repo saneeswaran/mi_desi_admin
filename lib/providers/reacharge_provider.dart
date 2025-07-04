@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,7 +9,11 @@ import 'package:flutter/material.dart';
 
 class ReachargesProvider extends ChangeNotifier {
   List<RechargeModel> _allRecharge = [];
+  List<RechargeModel> _allRechargeRequest = [];
+  List<RechargeModel> _filterRechargeRequest = [];
+  List<RechargeModel> get allRechargeRequest => _allRechargeRequest;
   List<RechargeModel> get allRecharge => _allRecharge;
+  List<RechargeModel> get filterRechargeRequest => _filterRechargeRequest;
 
   List<RechargeModel> _filterRecharge = [];
   List<RechargeModel> get filterRecharge => _filterRecharge;
@@ -159,6 +164,65 @@ class ReachargesProvider extends ChangeNotifier {
           (e) => e.rechargeProvider.toLowerCase().contains(query.toLowerCase()),
         )
         .toList();
+  }
+
+  Future<List<RechargeModel>> getAllRechageRechargeRequest({
+    required BuildContext context,
+  }) async {
+    try {
+      final collectionReference = FirebaseFirestore.instance.collectionGroup(
+        'rechargeRequest',
+      );
+      final QuerySnapshot querySnapshot = await collectionReference.get();
+      _allRechargeRequest = querySnapshot.docs
+          .map((e) => RechargeModel.fromMap(e.data() as Map<String, dynamic>))
+          .toList();
+      log(_allRechargeRequest.toString());
+      _filterRechargeRequest = _allRechargeRequest;
+      notifyListeners();
+      return _allRechargeRequest;
+    } catch (e) {
+      if (context.mounted) {
+        showSnackBar(context: context, e: e);
+      }
+    }
+    return _allRechargeRequest;
+  }
+
+  Future<bool> updateRechargeStatus({
+    required BuildContext context,
+    required String customerId,
+    required String rechargeId,
+    required String status,
+  }) async {
+    try {
+      final CollectionReference collectionReference = FirebaseFirestore.instance
+          .collection("customers");
+      final DocumentSnapshot documentSnapshot = await collectionReference
+          .doc(customerId)
+          .collection("rechargeRequest")
+          .doc(rechargeId)
+          .get();
+
+      if (documentSnapshot.exists) {
+        await documentSnapshot.reference.update({"status": status});
+      }
+      final int index = _allRechargeRequest.indexWhere(
+        (e) => e.id.toString() == rechargeId,
+      );
+
+      if (index != -1) {
+        _allRechargeRequest[index].status = status;
+      }
+      _filterRechargeRequest = _allRechargeRequest;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      if (context.mounted) {
+        showSnackBar(context: context, e: e);
+      }
+    }
+    return false;
   }
 }
 
