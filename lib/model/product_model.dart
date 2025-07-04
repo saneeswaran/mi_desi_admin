@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'brand_model.dart';
+import 'package:desi_shopping_seller/model/brand_model.dart';
 
 class ProductModel {
   final String? id;
@@ -22,17 +22,15 @@ class ProductModel {
   final int stock;
   final double taxAmount;
   final String cashOnDelivery;
+  final int? offerPrice;
+  bool? isBestSelling;
+  final Timestamp createdAt = Timestamp.now();
+  double rating;
   final BrandModel categoryBrand;
   final BrandModel realBrand;
   final List<String> imageUrl;
   final List<String> videoUrl;
-  final int? offerPrice;
-  bool? isBestSelling = false;
-  final Timestamp createdAt = Timestamp.now();
-  double rating;
-
   ProductModel({
-    double? rating,
     this.id,
     required this.sellerid,
     required this.title,
@@ -49,13 +47,14 @@ class ProductModel {
     required this.stock,
     required this.taxAmount,
     required this.cashOnDelivery,
+    this.offerPrice,
+    this.isBestSelling,
+    required this.rating,
     required this.categoryBrand,
     required this.realBrand,
     required this.imageUrl,
     required this.videoUrl,
-    this.offerPrice,
-    this.isBestSelling,
-  }) : rating = rating ?? 0.0;
+  });
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -75,53 +74,43 @@ class ProductModel {
       'stock': stock,
       'taxAmount': taxAmount,
       'cashOnDelivery': cashOnDelivery,
+      'offerPrice': offerPrice,
+      'isBestSelling': isBestSelling,
+      'rating': rating,
       'categoryBrand': categoryBrand.toMap(),
       'realBrand': realBrand.toMap(),
       'imageUrl': imageUrl,
       'videoUrl': videoUrl,
-      'offerPrice': offerPrice,
-      'isBestSelling': isBestSelling,
-      'rating': rating,
     };
   }
 
   factory ProductModel.fromMap(Map<String, dynamic> map) {
     return ProductModel(
-      id: map['id'] != null ? map['id'] as String : null,
-      sellerid: map['sellerid'] as String,
-      title: map['title'] as String,
-      description: map['description'] as String,
-      price: map['price'] as double,
-      netVolume: map['netVolume'] != null ? map['netVolume'] as String : null,
-      dosage: map['dosage'] != null ? map['dosage'] as String : null,
-      composition: map['composition'] != null
-          ? map['composition'] as String
-          : null,
-      storage: map['storage'] != null ? map['storage'] as String : null,
-      manufacturedBy: map['manufacturedBy'] != null
-          ? map['manufacturedBy'] as String
-          : null,
-      marketedBy: map['marketedBy'] != null
-          ? map['marketedBy'] as String
-          : null,
-      shelfLife: map['shelfLife'] != null ? map['shelfLife'] as String : null,
-      additionalInformation: map['additionalInformation'] != null
-          ? map['additionalInformation'] as String
-          : null,
-      stock: map['stock'] as int,
-      taxAmount: map['taxAmount'] as double,
-      cashOnDelivery: map['cashOnDelivery'] as String,
-      categoryBrand: BrandModel.fromMap(
-        map['categoryBrand'] as Map<String, dynamic>,
-      ),
-      realBrand: BrandModel.fromMap(map['realBrand'] as Map<String, dynamic>),
-      imageUrl: List<String>.from((map['imageUrl'] as List<String>)),
-      videoUrl: List<String>.from((map['videoUrl'] as List<String>)),
-      offerPrice: map['offerPrice'] != null ? map['offerPrice'] as int : null,
-      isBestSelling: map['isBestSelling'] != null
-          ? map['isBestSelling'] as bool
-          : null,
-      rating: map['rating'] as double,
+      id: map['id'],
+      sellerid: map['sellerid'] ?? '',
+      title: map['title'] ?? '',
+      description: map['description'] ?? '',
+      price: (map['price'] ?? 0).toDouble(),
+      netVolume: map['netVolume'],
+      dosage: map['dosage'],
+      composition: map['composition'],
+      storage: map['storage'],
+      manufacturedBy: map['manufacturedBy'],
+      marketedBy: map['marketedBy'],
+      shelfLife: map['shelfLife'],
+      additionalInformation: map['additionalInformation'],
+      stock: map['stock'] ?? 0,
+      taxAmount: (map['taxAmount'] ?? 0).toDouble(),
+      cashOnDelivery: map['cashOnDelivery'] ?? 'No',
+      offerPrice: map['offerPrice'],
+      isBestSelling: map['isBestSelling'] ?? false,
+      rating: (map['rating'] ?? 0).toDouble(),
+
+      categoryBrand: BrandModel.fromMap(map['categoryBrand']),
+      realBrand: BrandModel.fromMap(map['realBrand']),
+
+      imageUrl: (map['imageUrl'] as List<dynamic>).cast<String>(),
+      videoUrl: (map['videoUrl'] as List<dynamic>).cast<String>(),
     );
   }
 
@@ -132,6 +121,6 @@ class ProductModel {
 
   @override
   String toString() {
-    return 'ProductModel(id: $id, sellerid: $sellerid, title: $title, description: $description, price: $price, netVolume: $netVolume, dosage: $dosage, composition: $composition, storage: $storage, manufacturedBy: $manufacturedBy, marketedBy: $marketedBy, shelfLife: $shelfLife, additionalInformation: $additionalInformation, stock: $stock, taxAmount: $taxAmount, cashOnDelivery: $cashOnDelivery, categoryBrand: $categoryBrand, realBrand: $realBrand, imageUrl: $imageUrl, videoUrl: $videoUrl, offerPrice: $offerPrice, isBestSelling: $isBestSelling, rating: $rating)';
+    return 'ProductModel(id: $id, sellerid: $sellerid, title: $title, description: $description, price: $price, netVolume: $netVolume, dosage: $dosage, composition: $composition, storage: $storage, manufacturedBy: $manufacturedBy, marketedBy: $marketedBy, shelfLife: $shelfLife, additionalInformation: $additionalInformation, stock: $stock, taxAmount: $taxAmount, cashOnDelivery: $cashOnDelivery, offerPrice: $offerPrice, isBestSelling: $isBestSelling, rating: $rating, categoryBrand: $categoryBrand, realBrand: $realBrand, imageUrl: $imageUrl, videoUrl: $videoUrl)';
   }
 }

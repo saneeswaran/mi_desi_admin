@@ -57,11 +57,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
       Provider.of<BrandProvider>(
         context,
         listen: false,
-      ).getBrands(context: context).then((_) {
-        setState(() {
-          isBrandLoading = false;
-          isRealbrandLoading = false;
-        });
+      ).getBrands(context: context);
+      context.read<BrandProvider>().getRealbrands(context: context);
+      setState(() {
+        isBrandLoading = false;
+        isRealbrandLoading = false;
       });
     });
   }

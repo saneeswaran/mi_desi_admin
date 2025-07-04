@@ -33,7 +33,7 @@ class BrandModel {
       id: map['id'],
       sellerId: map['sellerId'],
       title: map['title'],
-      backGroundImage: map['backGroundImage'],
+      backGroundImage: map['backGroundImage'] ?? '',
       imageUrl: map['imageUrl'],
       productsCount: map['productsCount'] ?? 0,
     );
