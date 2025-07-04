@@ -120,7 +120,7 @@ class _PartnerProductsPageState extends State<PartnerProductsPage> {
                               ),
                             ),
                             Text(
-                              products.brand.title,
+                              products.categoryBrand.title,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(

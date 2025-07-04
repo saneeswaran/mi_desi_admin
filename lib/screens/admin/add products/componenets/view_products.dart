@@ -185,7 +185,8 @@ class _ViewProductDetailsState extends State<ViewProductDetails> {
                             final bool isSuccess = await provider.deleteProduct(
                               context: context,
                               productId: widget.product.id.toString(),
-                              brandId: widget.product.brand.id.toString(),
+                              brandId: widget.product.categoryBrand.id
+                                  .toString(),
                             );
                             if (isSuccess && context.mounted) {
                               Navigator.pop(context);

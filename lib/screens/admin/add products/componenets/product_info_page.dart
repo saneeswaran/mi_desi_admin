@@ -42,13 +42,15 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
                         Provider.of<BrandProvider>(
                           context,
                           listen: false,
-                        ).decrementProductCountForBrand(product.brand.id!);
+                        ).decrementProductCountForBrand(
+                          product.categoryBrand.id!,
+                        );
                         final success = await context
                             .read<ProductProvider>()
                             .deleteProduct(
                               context: context,
                               productId: product.id!,
-                              brandId: product.brand.id!,
+                              brandId: product.categoryBrand.id!,
                             );
                         if (success && context.mounted) {
                           setState(() => isDeleting = false);

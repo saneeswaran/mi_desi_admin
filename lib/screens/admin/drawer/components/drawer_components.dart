@@ -20,7 +20,7 @@ final drawerGradient = [Colors.lightBlue, Colors.lightBlueAccent];
 
 List<String> drawerItems = [
   "DashBoard",
-  "Brands",
+  "Category Brands",
   "Original Brands",
   "Banners",
   "Products",
@@ -48,7 +48,7 @@ List<IconData> drawerIcons = [
 
 List<Widget> pages = [
   const AdvanceDrawerPage(body: DashBoardPage(), title: 'DashBoard'),
-  const AdvanceDrawerPage(body: BrandPage(), title: 'Brands'),
+  const AdvanceDrawerPage(body: BrandPage(), title: 'Category Brands'),
   const AdvanceDrawerPage(body: RealBrandPage(), title: "Original Brands"),
   const AdvanceDrawerPage(body: BannersPage(), title: 'Banners'),
   const AdvanceDrawerPage(body: AllProductsPage(), title: 'Products'),

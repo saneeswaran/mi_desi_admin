@@ -44,8 +44,10 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
   List<VideoPlayerController> videoControllers = [];
 
   bool isBrandLoading = true;
+  bool isRealBrandLoading = true;
   bool isUpdatingProduct = false;
-  BrandModel? selectedBrand;
+  BrandModel? selectedCategoryBrand;
+  BrandModel? selectedRealBrand;
   String? cashOnDelivery;
 
   @override
@@ -88,11 +90,18 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final provider = Provider.of<BrandProvider>(context, listen: false);
       await provider.getBrands(context: context);
-      selectedBrand = provider.allBrands.firstWhere(
+      selectedCategoryBrand = provider.allBrands.firstWhere(
         (b) => b.id == widget.product.id,
         orElse: () => provider.allBrands.first,
       );
-      setState(() => isBrandLoading = false);
+      selectedRealBrand = provider.realBrands.firstWhere(
+        (b) => b.id == widget.product.id,
+        orElse: () => provider.realBrands.first,
+      );
+      setState(() {
+        isBrandLoading = false;
+        isRealBrandLoading = false;
+      });
     });
   }
 
@@ -150,8 +159,13 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
   void updateProduct() async {
     if (!formKey.currentState!.validate()) return;
 
-    if (selectedBrand == null) {
+    if (selectedCategoryBrand == null) {
       showSnackBar(context: context, e: 'Please select a brand');
+      return;
+    }
+
+    if (selectedRealBrand == null) {
+      showSnackBar(context: context, e: 'Please select a real brand');
       return;
     }
 
@@ -167,7 +181,8 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
       stock: int.parse(stockController.text),
       taxAmount: double.parse(taxAmountController.text),
       cashOnDelivery: cashOnDelivery!,
-      brand: selectedBrand!,
+      categoryBrand: selectedCategoryBrand!,
+      realBrand: selectedRealBrand!,
       imageUrl: newImages,
       videoUrl: newVideos,
       additionalInformation: additionalInformationController.text,
@@ -388,6 +403,9 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
                       isBrandLoading
                           ? const CircularProgressIndicator()
                           : _brandDropDown(),
+                      isRealBrandLoading
+                          ? const CircularProgressIndicator()
+                          : _realBrandDropDown(),
 
                       _cashOnDeliveryDropDown(),
                       CustomTextFormField(
@@ -446,10 +464,44 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
             ),
           ),
           items: items,
-          value: selectedBrand,
+          value: selectedCategoryBrand,
           onChanged: (value) {
             setState(() {
-              selectedBrand = value;
+              selectedCategoryBrand = value;
+            });
+          },
+        );
+      },
+    );
+  }
+
+  Widget _realBrandDropDown() {
+    return Consumer<BrandProvider>(
+      builder: (context, provider, child) {
+        final items = provider.filterRealBrands
+            .map((e) => DropdownMenuItem(value: e, child: Text(e.title)))
+            .toList();
+        return DropdownButtonFormField(
+          decoration: InputDecoration(
+            labelText: "Select Brand",
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.blue),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.blue),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.blue),
+            ),
+          ),
+          items: items,
+          value: selectedRealBrand,
+          onChanged: (value) {
+            setState(() {
+              selectedRealBrand = value;
             });
           },
         );

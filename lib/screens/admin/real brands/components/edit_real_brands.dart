@@ -66,7 +66,7 @@ class _EditRealBrandsState extends State<EditRealBrands> {
                         setState(() => isLoading = true);
                         final bool isSuccess = await context
                             .read<BrandProvider>()
-                            .deleteBrand(
+                            .deleteRealbrand(
                               context: context,
                               brandId: '${widget.brand.id}',
                             );
@@ -75,18 +75,24 @@ class _EditRealBrandsState extends State<EditRealBrands> {
                           Navigator.pop(context);
                         }
                       },
-                      child: const Text("Delete"),
+                      child: const Text(
+                        "Delete",
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   ),
                   SizedBox(
                     height: size.height * 0.07,
                     width: size.width * 1,
                     child: CustomElevatedButton(
-                      child: const Text("Update"),
+                      child: const Text(
+                        "Update",
+                        style: TextStyle(color: Colors.white),
+                      ),
                       onPressed: () async {
                         final bool isSuccess = await context
                             .read<BrandProvider>()
-                            .updateBrand(
+                            .updateRealbrand(
                               context: context,
                               brandId: widget.brand.id.toString(),
                               title: nameController.text,

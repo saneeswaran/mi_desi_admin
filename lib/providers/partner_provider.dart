@@ -136,7 +136,8 @@ class PartnerProvider extends ChangeNotifier {
     required int stock,
     required double taxAmount,
     required String cashOnDelivery,
-    required BrandModel brand,
+    required BrandModel categoryBrand,
+    required BrandModel realBrand,
     required String quantity,
     required List<File> imageFiles,
     required List<File> videoFiles,
@@ -186,7 +187,8 @@ class PartnerProvider extends ChangeNotifier {
         stock: stock,
         taxAmount: taxAmount,
         cashOnDelivery: cashOnDelivery,
-        brand: brand,
+        categoryBrand: categoryBrand,
+        realBrand: realBrand,
         imageUrl: imageUrls,
         videoUrl: videoUrls,
         rating: 0.0,
@@ -194,7 +196,7 @@ class PartnerProvider extends ChangeNotifier {
 
       await FirebaseFirestore.instance
           .collection('brands')
-          .doc(brand.id)
+          .doc(categoryBrand.id)
           .update({'productsCount': FieldValue.increment(1)});
 
       await docRef.set(productData.toMap());
@@ -282,7 +284,8 @@ class PartnerProvider extends ChangeNotifier {
     required int stock,
     required double taxAmount,
     required String cashOnDelivery,
-    required BrandModel brand,
+    required BrandModel categoryBrand,
+    required BrandModel realBrand,
     required List<File> imageUrl,
     required List<File> videoUrl,
     required String netVolume,
@@ -354,7 +357,8 @@ class PartnerProvider extends ChangeNotifier {
         stock: stock,
         taxAmount: taxAmount,
         cashOnDelivery: cashOnDelivery,
-        brand: brand,
+        categoryBrand: categoryBrand,
+        realBrand: realBrand,
         rating: data['rating'] ?? 0.0,
         imageUrl: finalImageUrls,
         videoUrl: finalVideoUrls,

@@ -28,7 +28,7 @@ class ProductDetailsWithCart extends StatelessWidget {
             ),
           ),
           Text(
-            product.brand.title,
+            product.categoryBrand.title,
             style: const TextStyle(
               color: Colors.pink,
               fontSize: 16,

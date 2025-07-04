@@ -48,8 +48,9 @@ class ProductProvider extends ChangeNotifier {
     required int stock,
     required double taxAmount,
     required String cashOnDelivery,
-    required BrandModel brand,
+    required BrandModel category,
     required int offerPrice,
+    required BrandModel realBrand,
     required List<File> imageFiles,
     required List<File> videoFiles,
   }) async {
@@ -101,7 +102,8 @@ class ProductProvider extends ChangeNotifier {
         offerPrice: offerPrice,
         taxAmount: taxAmount,
         cashOnDelivery: cashOnDelivery,
-        brand: brand,
+        categoryBrand: category,
+        realBrand: realBrand,
         imageUrl: imageUrls,
         videoUrl: videoUrls,
         rating: 0.0,
@@ -109,7 +111,7 @@ class ProductProvider extends ChangeNotifier {
 
       await FirebaseFirestore.instance
           .collection('brands')
-          .doc(brand.id)
+          .doc(category.id)
           .update({'productsCount': FieldValue.increment(1)});
 
       await docRef.set(productData.toMap());
@@ -208,7 +210,8 @@ class ProductProvider extends ChangeNotifier {
     required int stock,
     required double taxAmount,
     required String cashOnDelivery,
-    required BrandModel brand,
+    required BrandModel categoryBrand,
+    required BrandModel realBrand,
     required int offerPrice,
     required String netVolume,
     required String dosage,
@@ -283,7 +286,8 @@ class ProductProvider extends ChangeNotifier {
         stock: stock,
         taxAmount: taxAmount,
         cashOnDelivery: cashOnDelivery,
-        brand: brand,
+        categoryBrand: categoryBrand,
+        realBrand: realBrand,
         rating: data['rating'] ?? 0.0,
         imageUrl: finalImageUrls,
         videoUrl: finalVideoUrls,
@@ -388,7 +392,7 @@ class ProductProvider extends ChangeNotifier {
       _filterProducts = List.from(_allProducts);
     } else {
       _filterProducts = _allProducts
-          .where((product) => product.brand.id == brandId)
+          .where((product) => product.categoryBrand.id == brandId)
           .toList();
     }
 

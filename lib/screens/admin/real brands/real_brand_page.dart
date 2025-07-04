@@ -1,8 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:desi_shopping_seller/constants/constants.dart';
 import 'package:desi_shopping_seller/providers/brand_provider.dart';
-import 'package:desi_shopping_seller/screens/admin/brands%20page/components/add_brands.dart';
-import 'package:desi_shopping_seller/screens/admin/brands%20page/components/view_brands.dart';
 import 'package:desi_shopping_seller/screens/admin/real%20brands/components/add_real_brands.dart';
 import 'package:desi_shopping_seller/screens/admin/real%20brands/components/edit_real_brands.dart';
 import 'package:desi_shopping_seller/util/util.dart';

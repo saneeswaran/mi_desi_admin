@@ -93,7 +93,7 @@ class ProductDetailsForBanners extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              products.brand.title,
+                              products.categoryBrand.title,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
