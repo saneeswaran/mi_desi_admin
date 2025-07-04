@@ -16,6 +16,12 @@ class BrandProvider extends ChangeNotifier {
   int _currentIndex = 0;
   int get currentIndex => _currentIndex;
 
+  List<BrandModel> _realBrands = [];
+  List<BrandModel> _filterRealBrands = [];
+  List<BrandModel> get realBrands => _realBrands;
+
+  List<BrandModel> get filterRealBrands => _filterRealBrands;
+
   //brand
   BrandModel? _selectedBrand;
   BrandModel? get selectedBrand => _selectedBrand;
@@ -256,5 +262,187 @@ class BrandProvider extends ChangeNotifier {
         context,
       ).showSnackBar(SnackBar(content: Text(error.toString())));
     }
+  }
+
+  Future<bool> addRealbrands({
+    required BuildContext context,
+    required String title,
+    required File imageFile,
+    required File backgroundImage,
+  }) async {
+    try {
+      final currentUser = FirebaseAuth.instance.currentUser;
+      if (currentUser == null) throw 'User not authenticated';
+
+      final docRef = FirebaseFirestore.instance.collection('realbrands').doc();
+      final fileName =
+          '${DateTime.now().millisecondsSinceEpoch}_${path.basename(imageFile.path)}';
+      final ref = FirebaseStorage.instance.ref().child('realbrands/$fileName');
+
+      await ref.putFile(imageFile);
+      final downloadUrl = await ref.getDownloadURL();
+
+      final backgroundImageRef = FirebaseStorage.instance.ref().child(
+        'background/$fileName',
+      );
+      await backgroundImageRef.putFile(backgroundImage);
+      final backgroundImageUrl = await backgroundImageRef.getDownloadURL();
+
+      final brandModel = BrandModel(
+        id: docRef.id,
+        sellerId: currentUser.uid,
+        title: title,
+        imageUrl: downloadUrl,
+        backGroundImage: backgroundImageUrl,
+        productsCount: 0,
+      );
+
+      await docRef.set(brandModel.toMap());
+
+      _realBrands.add(brandModel);
+      _filterRealBrands = _realBrands;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      if (context.mounted) _showError(context, e);
+      return false;
+    }
+  }
+
+  Future<List<BrandModel>> getRealbrands({
+    required BuildContext context,
+  }) async {
+    try {
+      final currentUser = FirebaseAuth.instance.currentUser;
+      if (currentUser == null) throw 'User not authenticated';
+
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('realbrands')
+          .get();
+
+      _realBrands = querySnapshot.docs
+          .map((e) => BrandModel.fromMap(e.data()))
+          .toList();
+
+      _filterRealBrands = _realBrands;
+      notifyListeners();
+    } catch (e) {
+      debugPrint('Get Brands Error: $e');
+      if (context.mounted) _showError(context, e);
+    }
+    return _realBrands;
+  }
+
+  Future<bool> deleteRealbrand({
+    required BuildContext context,
+    required String brandId,
+  }) async {
+    try {
+      final hasProducts = await FirebaseFirestore.instance
+          .collection('products')
+          .where('brand.id', isEqualTo: brandId)
+          .get();
+
+      if (hasProducts.docs.isNotEmpty) {
+        if (context.mounted) {
+          _showMessage(
+            context,
+            'Cannot delete brand — it is used in some products.',
+          );
+        }
+        return false;
+      }
+
+      final imageUrl = _allBrands
+          .firstWhere((element) => element.id == brandId)
+          .imageUrl;
+
+      await FirebaseFirestore.instance
+          .collection('realbrands')
+          .doc(brandId)
+          .delete();
+      await FirebaseStorage.instance.refFromURL(imageUrl).delete();
+
+      _realBrands.removeWhere((element) => element.id == brandId);
+      _filterRealBrands.removeWhere((element) => element.id == brandId);
+
+      notifyListeners();
+
+      if (context.mounted) {
+        _showMessage(context, 'Brand deleted successfully');
+      }
+      return true;
+    } catch (e) {
+      debugPrint('Delete Brand Error: $e');
+      if (context.mounted) _showError(context, e);
+      return false;
+    }
+  }
+
+  Future<bool> updateRealbrand({
+    required BuildContext context,
+    required String brandId,
+    required String title,
+    required String imageUrl,
+  }) async {
+    try {
+      final currentUser = FirebaseAuth.instance.currentUser;
+      if (currentUser == null) throw 'User not authenticated';
+
+      String finalImageUrl = imageUrl;
+
+      final isLocalImage = !imageUrl.startsWith('http');
+
+      if (isLocalImage) {
+        final file = File(imageUrl);
+        if (file.existsSync()) {
+          final fileName =
+              '${DateTime.now().millisecondsSinceEpoch}_${path.basename(file.path)}';
+          final ref = FirebaseStorage.instance.ref().child(
+            'realbrands/$fileName',
+          );
+          await ref.putFile(file);
+          finalImageUrl = await ref.getDownloadURL();
+        } else {
+          throw 'Selected image file does not exist';
+        }
+      }
+
+      final brandModel = BrandModel(
+        id: brandId,
+        sellerId: currentUser.uid,
+        title: title,
+        imageUrl: finalImageUrl,
+        productsCount: _realBrands
+            .firstWhere((element) => element.id == brandId)
+            .productsCount,
+      );
+
+      await FirebaseFirestore.instance
+          .collection('realbrands')
+          .doc(brandId)
+          .update(brandModel.toMap());
+
+      final index = _realBrands.indexWhere((element) => element.id == brandId);
+      if (index != -1) _realBrands[index] = brandModel;
+
+      _filterRealBrands = _realBrands;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      debugPrint('Update Brand Error: $e');
+      if (context.mounted) _showError(context, e);
+      return false;
+    }
+  }
+
+  void filterRealBrandByQuery(String query) {
+    _filterRealBrands = _realBrands
+        .where(
+          (element) =>
+              element.title.toLowerCase().contains(query.toLowerCase()),
+        )
+        .toList();
+    notifyListeners();
   }
 }

@@ -38,17 +38,19 @@ class AdvanceDrawerPage extends StatelessWidget {
         child: ListTileTheme(
           textColor: Colors.black,
           iconColor: Colors.black,
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Container(
-                height: size.height * 0.20,
-                width: size.width * 0.70,
-                decoration: const BoxDecoration(shape: BoxShape.circle),
-                child: const Icon(Icons.person, size: 32),
-              ),
-              draweFunctions(context: context),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Container(
+                  height: size.height * 0.20,
+                  width: size.width * 0.70,
+                  decoration: const BoxDecoration(shape: BoxShape.circle),
+                  child: const Icon(Icons.person, size: 32),
+                ),
+                draweFunctions(context: context),
+              ],
+            ),
           ),
         ),
       ),

@@ -8,6 +8,7 @@ import 'package:desi_shopping_seller/screens/admin/drawer/advance_drawer_page.da
 import 'package:desi_shopping_seller/screens/admin/orders/orders_page.dart';
 import 'package:desi_shopping_seller/screens/admin/partner/list_of_partners.dart';
 import 'package:desi_shopping_seller/screens/admin/products/all_products_page.dart';
+import 'package:desi_shopping_seller/screens/admin/real%20brands/real_brand_page.dart';
 import 'package:desi_shopping_seller/screens/admin/recharge%20provider/recharge_provider_page.dart';
 import 'package:desi_shopping_seller/screens/admin/recharge%20request/recharge_request_page.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,7 @@ final drawerGradient = [Colors.lightBlue, Colors.lightBlueAccent];
 List<String> drawerItems = [
   "DashBoard",
   "Brands",
+  "Original Brands",
   "Banners",
   "Products",
   "Orders",
@@ -33,6 +35,7 @@ List<String> drawerItems = [
 List<IconData> drawerIcons = [
   Icons.dashboard,
   Icons.branding_watermark_sharp,
+  Icons.branding_watermark_outlined,
   Icons.image,
   Icons.production_quantity_limits,
   Icons.shopping_bag,
@@ -46,6 +49,7 @@ List<IconData> drawerIcons = [
 List<Widget> pages = [
   const AdvanceDrawerPage(body: DashBoardPage(), title: 'DashBoard'),
   const AdvanceDrawerPage(body: BrandPage(), title: 'Brands'),
+  const AdvanceDrawerPage(body: RealBrandPage(), title: "Original Brands"),
   const AdvanceDrawerPage(body: BannersPage(), title: 'Banners'),
   const AdvanceDrawerPage(body: AllProductsPage(), title: 'Products'),
   const AdvanceDrawerPage(body: OrdersPage(), title: 'Orders'),
