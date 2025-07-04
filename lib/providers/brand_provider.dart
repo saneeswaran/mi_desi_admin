@@ -268,7 +268,6 @@ class BrandProvider extends ChangeNotifier {
     required BuildContext context,
     required String title,
     required File imageFile,
-    required File backgroundImage,
   }) async {
     try {
       final currentUser = FirebaseAuth.instance.currentUser;
@@ -282,18 +281,11 @@ class BrandProvider extends ChangeNotifier {
       await ref.putFile(imageFile);
       final downloadUrl = await ref.getDownloadURL();
 
-      final backgroundImageRef = FirebaseStorage.instance.ref().child(
-        'background/$fileName',
-      );
-      await backgroundImageRef.putFile(backgroundImage);
-      final backgroundImageUrl = await backgroundImageRef.getDownloadURL();
-
       final brandModel = BrandModel(
         id: docRef.id,
         sellerId: currentUser.uid,
         title: title,
         imageUrl: downloadUrl,
-        backGroundImage: backgroundImageUrl,
         productsCount: 0,
       );
 

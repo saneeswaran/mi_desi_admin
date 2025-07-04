@@ -87,14 +87,20 @@ class _ViewBrandsState extends State<ViewBrands> {
                           Navigator.pop(context);
                         }
                       },
-                      child: const Text("Delete"),
+                      child: const Text(
+                        "Delete",
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   ),
                   SizedBox(
                     height: size.height * 0.07,
                     width: size.width * 1,
                     child: CustomElevatedButton(
-                      child: const Text("Update"),
+                      child: const Text(
+                        "Update",
+                        style: TextStyle(color: Colors.white),
+                      ),
                       onPressed: () async {
                         final bool isSuccess = await context
                             .read<BrandProvider>()

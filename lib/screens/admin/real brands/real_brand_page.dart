@@ -3,6 +3,8 @@ import 'package:desi_shopping_seller/constants/constants.dart';
 import 'package:desi_shopping_seller/providers/brand_provider.dart';
 import 'package:desi_shopping_seller/screens/admin/brands%20page/components/add_brands.dart';
 import 'package:desi_shopping_seller/screens/admin/brands%20page/components/view_brands.dart';
+import 'package:desi_shopping_seller/screens/admin/real%20brands/components/add_real_brands.dart';
+import 'package:desi_shopping_seller/screens/admin/real%20brands/components/edit_real_brands.dart';
 import 'package:desi_shopping_seller/util/util.dart';
 import 'package:desi_shopping_seller/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
@@ -20,9 +22,13 @@ class _RealBrandPageState extends State<RealBrandPage> {
   @override
   void initState() {
     super.initState();
-    Future.wait([context.read<BrandProvider>().getBrands(context: context)]);
+    Future.wait([
+      context.read<BrandProvider>().getRealbrands(context: context),
+    ]);
     searchController.addListener(() {
-      context.read<BrandProvider>().filterBrandsByQuery(searchController.text);
+      context.read<BrandProvider>().filterRealBrandByQuery(
+        searchController.text,
+      );
     });
   }
 
@@ -34,7 +40,7 @@ class _RealBrandPageState extends State<RealBrandPage> {
         shape: const CircleBorder(),
         onPressed: () => moveToNextPageWithFadeAnimations(
           context: context,
-          route: const AddBrands(),
+          route: const AddRealBrands(),
         ),
         elevation: 0.0,
         backgroundColor: Colors.pink,
@@ -62,7 +68,7 @@ class _RealBrandPageState extends State<RealBrandPage> {
             Expanded(
               child: Consumer<BrandProvider>(
                 builder: (context, value, index) {
-                  final brand = value.filteredBrands;
+                  final brand = value.filterRealBrands;
                   return GridView.builder(
                     itemCount: brand.length,
                     gridDelegate:
@@ -76,7 +82,7 @@ class _RealBrandPageState extends State<RealBrandPage> {
                       return GestureDetector(
                         onTap: () => moveToNextPageWithFadeAnimations(
                           context: context,
-                          route: ViewBrands(brand: brands),
+                          route: EditRealBrands(brand: brands),
                         ),
                         child: GridTile(
                           child: Card(
