@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:desi_shopping_seller/model/order_model.dart';
 import 'package:desi_shopping_seller/providers/brand_provider.dart';
@@ -59,7 +61,6 @@ class OrderProvider extends ChangeNotifier {
   int get totalOrders => _allOrders.length;
 
   List<String> allOrderStatus = [
-    'All',
     'Pending',
     'Processing',
     'Delivered',
@@ -119,31 +120,73 @@ class OrderProvider extends ChangeNotifier {
     required String orderStatus,
   }) async {
     try {
-      final CollectionReference collectionReference = FirebaseFirestore.instance
+      final ordersCollection = FirebaseFirestore.instance
           .collection("customers")
           .doc(customerId)
           .collection("orders");
-      final QuerySnapshot querySnapshot = await collectionReference.get();
 
-      final data = querySnapshot.docs.where((e) => e.id == orderId).toList();
-      if (data.isNotEmpty) {
-        await data.first.reference.update({"orderStatus": orderStatus});
-      }
-      final int index = _allOrders.indexWhere((e) => e.orderId == orderId);
-      if (index != -1) {
-        _allOrders[index].orderStatus = orderStatus;
+      final snapshot = await ordersCollection.get();
+      final orderDoc = snapshot.docs.firstWhere(
+        (doc) => doc.id == orderId,
+        orElse: () => throw Exception("Order not found"),
+      );
+
+      final orderData = orderDoc.data();
+      final List<dynamic> products = orderData['products'] ?? [];
+      log(
+        "🚀 changeOrderStatus called for order: $orderId, newStatus: $orderStatus",
+      );
+      log("Products in order: $products");
+
+      if (orderStatus.toLowerCase() == 'processing') {
+        for (final prod in products) {
+          final String? productId = prod['productId'] as String?;
+          final int? orderedQty = prod['quantity'] as int?;
+
+          if (productId == null || orderedQty == null) {
+            log("⚠️ Missing productId or quantity: $prod");
+            continue;
+          }
+
+          final prodRef = FirebaseFirestore.instance
+              .collection('products')
+              .doc(productId);
+
+          await FirebaseFirestore.instance.runTransaction((txn) async {
+            final prodSnap = await txn.get(prodRef);
+            if (!prodSnap.exists) {
+              throw Exception("Product $productId not found");
+            }
+
+            final currentStock = (prodSnap.get('stock') as int?) ?? 0;
+            final newStock = currentStock - orderedQty;
+            if (newStock < 0) {
+              throw Exception("Insufficient stock for $productId");
+            }
+            txn.update(prodRef, {'stock': newStock});
+            log(
+              "✅ Deducted $orderedQty from product $productId, newStock = $newStock",
+            );
+          });
+        }
       }
 
+      await orderDoc.reference.update({'orderStatus': orderStatus});
+      log("✅ Order $orderId status updated to $orderStatus in Firestore");
+
+      final idx = _allOrders.indexWhere((e) => e.orderId == orderId);
+      if (idx != -1) {
+        _allOrders[idx].orderStatus = orderStatus;
+      }
       notifyListeners();
       return true;
     } on FirebaseException catch (e) {
-      if (context.mounted) {
-        showSnackBar(context: context, e: e);
-      }
+      if (context.mounted) showSnackBar(context: context, e: e);
     } catch (e) {
       if (context.mounted) {
-        showSnackBar(context: context, e: e);
+        showSnackBar(context: context, e: e.toString());
       }
+      log("❌ changeOrderStatus error: $e");
     }
     return false;
   }

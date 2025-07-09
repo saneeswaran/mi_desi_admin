@@ -57,7 +57,7 @@ class _ShowOrderDetailsPageState extends State<ShowOrderDetailsPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // 👤 Customer Info
+                    //  Customer Info
                     Row(
                       children: [
                         CircleAvatar(
@@ -286,14 +286,11 @@ class _ShowOrderDetailsPageState extends State<ShowOrderDetailsPage> {
   }
 
   Widget _changeOrderStatus() {
-    final items = [
-      "pending",
-      "processing",
-      "delivered",
-      "cancelled",
-    ].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList();
     return Consumer<OrderProvider>(
       builder: (context, provider, child) {
+        final items = provider.allOrderStatus
+            .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+            .toList();
         return DropdownButtonFormField<String>(
           decoration: InputDecoration(
             hintText: "Change Status",
