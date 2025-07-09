@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:desi_shopping_seller/constants/constants.dart';
+import 'package:desi_shopping_seller/model/customer_model.dart';
 import 'package:desi_shopping_seller/model/order_model.dart';
 import 'package:desi_shopping_seller/providers/order_provider.dart';
 import 'package:desi_shopping_seller/screens/admin/helper/notification_helper.dart';
@@ -10,7 +11,12 @@ import 'package:provider/provider.dart';
 
 class ShowOrderDetailsPage extends StatefulWidget {
   final OrderModel order;
-  const ShowOrderDetailsPage({super.key, required this.order});
+  final CustomerModel customer;
+  const ShowOrderDetailsPage({
+    super.key,
+    required this.order,
+    required this.customer,
+  });
 
   @override
   State<ShowOrderDetailsPage> createState() => _ShowOrderDetailsPageState();

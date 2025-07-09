@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:desi_shopping_seller/constants/constants.dart';
 import 'package:desi_shopping_seller/providers/order_provider.dart';
+import 'package:desi_shopping_seller/providers/user_provider.dart';
 import 'package:desi_shopping_seller/screens/admin/orders/components/show_order_details_page.dart';
 import 'package:desi_shopping_seller/util/util.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,7 @@ class _OrdersPageState extends State<OrdersPage> {
   void initState() {
     super.initState();
     context.read<OrderProvider>().getAllOrders(context: context);
+    context.read<UserProvider>().getAllUsers(context: context);
   }
 
   @override
@@ -33,8 +35,8 @@ class _OrdersPageState extends State<OrdersPage> {
             fit: BoxFit.cover,
           ),
         ),
-        child: Consumer<OrderProvider>(
-          builder: (context, value, child) {
+        child: Consumer2<OrderProvider, UserProvider>(
+          builder: (context, value, customer, child) {
             final order = value.filterOrders;
             return GridView.builder(
               itemCount: order.length,
@@ -45,8 +47,11 @@ class _OrdersPageState extends State<OrdersPage> {
                 mainAxisExtent: 350,
               ),
               itemBuilder: (context, index) {
+                final userId = customer.filterUsers
+                    .indexWhere((e) => e.uid == order[index].userId)
+                    .toString();
                 final orders = order[index];
-
+                final user = customer.filterUsers[int.parse(userId)];
                 // Safely get first product
                 final product = orders.products.isNotEmpty
                     ? orders.products[0]
@@ -55,7 +60,7 @@ class _OrdersPageState extends State<OrdersPage> {
                 return GestureDetector(
                   onTap: () => moveToNextPageWithFadeAnimations(
                     context: context,
-                    route: ShowOrderDetailsPage(order: orders),
+                    route: ShowOrderDetailsPage(order: orders, customer: user),
                   ),
                   child: GridTile(
                     child: Padding(
