@@ -11,6 +11,7 @@ import 'package:desi_shopping_seller/screens/admin/products/all_products_page.da
 import 'package:desi_shopping_seller/screens/admin/real%20brands/real_brand_page.dart';
 import 'package:desi_shopping_seller/screens/admin/recharge%20provider/recharge_provider_page.dart';
 import 'package:desi_shopping_seller/screens/admin/recharge%20request/recharge_request_page.dart';
+import 'package:desi_shopping_seller/screens/admin/youtube%20video/youtube_videos_list.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
@@ -23,6 +24,7 @@ List<String> drawerItems = [
   "Category Brands",
   "Original Brands",
   "Banners",
+  "Youtube Videos",
   "Products",
   "Orders",
   'Partners',
@@ -37,6 +39,7 @@ List<IconData> drawerIcons = [
   Icons.branding_watermark_sharp,
   Icons.branding_watermark_outlined,
   Icons.image,
+  Icons.video_collection,
   Icons.production_quantity_limits,
   Icons.shopping_bag,
   Icons.person_2,
@@ -51,6 +54,7 @@ List<Widget> pages = [
   const AdvanceDrawerPage(body: BrandPage(), title: 'Category Brands'),
   const AdvanceDrawerPage(body: RealBrandPage(), title: "Original Brands"),
   const AdvanceDrawerPage(body: BannersPage(), title: 'Banners'),
+  const AdvanceDrawerPage(body: YoutubeVideosList(), title: "Youtube Videos"),
   const AdvanceDrawerPage(body: AllProductsPage(), title: 'Products'),
   const AdvanceDrawerPage(body: OrdersPage(), title: 'Orders'),
   const AdvanceDrawerPage(body: ListOfPartners(), title: 'Partners'),
