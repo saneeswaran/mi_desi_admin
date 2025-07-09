@@ -20,26 +20,26 @@ class OrderProvider extends ChangeNotifier {
 
     return [
       _allOrders
-          .where((e) => e.createdAt!.toDate().day == DateTime.now().day)
+          .where((e) => e.createdAt.toDate().day == DateTime.now().day)
           .length,
       _allOrders
           .where(
             (e) =>
-                e.createdAt!.toDate().day == DateTime.now().day &&
+                e.createdAt.toDate().day == DateTime.now().day &&
                 e.orderStatus == 'pending',
           )
           .length,
       _allOrders
           .where(
             (e) =>
-                e.createdAt!.toDate().day == DateTime.now().day &&
+                e.createdAt.toDate().day == DateTime.now().day &&
                 e.orderStatus == 'delivered',
           )
           .length,
       _allOrders
           .where(
             (e) =>
-                e.createdAt!.toDate().day == DateTime.now().day &&
+                e.createdAt.toDate().day == DateTime.now().day &&
                 e.orderStatus == 'cancelled',
           )
           .length,

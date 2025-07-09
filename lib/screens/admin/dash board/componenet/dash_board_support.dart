@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
 final List<String> dashBoardItems = [
-  'Today Orders',
-  'Today Pending Orders',
-  'Today Delivery',
-  'Today Cancelled',
+  'Today\'s Orders',
+  'Today\'s Pending Orders',
+  'Today\'s Delivered Orders',
+  'Today\'s Cancelled Orders',
   'Total Orders',
-  "Total Pending",
-  "Total Delivery",
-  "Total Cancelled",
-  "Total Products",
-  "Total Brands",
-  "Total Customers",
+  'Total Pending Orders',
+  'Total Delivered Orders',
+  'Total Cancelled Orders',
+  'Total Products',
+  'Total Brands',
+  'Total Customers',
 ];
 
 List<Color> generateColors(int count) {

@@ -25,6 +25,7 @@ class ShowOrderDetailsPage extends StatefulWidget {
 class _ShowOrderDetailsPageState extends State<ShowOrderDetailsPage> {
   String status = "Pending";
   bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -56,6 +57,56 @@ class _ShowOrderDetailsPageState extends State<ShowOrderDetailsPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // 👤 Customer Info
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 30,
+                          backgroundImage:
+                              widget.customer.imageUrl != null &&
+                                  widget.customer.imageUrl!.isNotEmpty
+                              ? CachedNetworkImageProvider(
+                                  widget.customer.imageUrl!,
+                                )
+                              : null,
+                          backgroundColor: Colors.grey[300],
+                          child:
+                              widget.customer.imageUrl == null ||
+                                  widget.customer.imageUrl!.isEmpty
+                              ? const Icon(
+                                  Icons.person,
+                                  size: 30,
+                                  color: Colors.white,
+                                )
+                              : null,
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                widget.customer.name,
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                widget.customer.email,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black54,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+
                     const Text(
                       "Order Summary",
                       style: TextStyle(
@@ -79,9 +130,11 @@ class _ShowOrderDetailsPageState extends State<ShowOrderDetailsPage> {
                       "Total Amount",
                       "$currency ${widget.order.totalAmount}",
                     ),
+
                     const SizedBox(height: 20),
                     const Divider(),
                     const SizedBox(height: 10),
+
                     const Text(
                       "Products Ordered",
                       style: TextStyle(
@@ -90,6 +143,7 @@ class _ShowOrderDetailsPageState extends State<ShowOrderDetailsPage> {
                       ),
                     ),
                     const SizedBox(height: 10),
+
                     ListView.builder(
                       itemCount: widget.order.products.length,
                       shrinkWrap: true,
@@ -146,12 +200,14 @@ class _ShowOrderDetailsPageState extends State<ShowOrderDetailsPage> {
                         );
                       },
                     ),
-                    const SizedBox(height: 5),
+
+                    const SizedBox(height: 10),
                     _changeOrderStatus(),
                     const SizedBox(height: 20),
+
                     SizedBox(
                       height: size.height * 0.07,
-                      width: size.width * 1,
+                      width: size.width,
                       child: CustomElevatedButton(
                         child: const Text(
                           "Update Status",
@@ -186,8 +242,8 @@ class _ShowOrderDetailsPageState extends State<ShowOrderDetailsPage> {
         ),
         if (isLoading)
           Container(
-            height: size.height * 1,
-            width: size.width * 1,
+            height: size.height,
+            width: size.width,
             color: Colors.black12,
             child: const Center(
               child: CircularProgressIndicator(
@@ -259,42 +315,14 @@ class _ShowOrderDetailsPageState extends State<ShowOrderDetailsPage> {
             setState(() {
               status = value.toString();
             });
-            switch (status) {
-              case "pending":
-                NotificationHelper.sendNotification(
-                  title: "Order Pending",
-                  message: "Your order is pending",
-                  screen: "/order",
-                  userId: widget.order.userId,
-                );
-                break;
-              case "processing":
-                NotificationHelper.sendNotification(
-                  title: "Order Processing",
-                  message: "Your order is processing",
-                  screen: "/order",
-                  userId: widget.order.userId,
-                );
-                break;
-              case "delivered":
-                NotificationHelper.sendNotification(
-                  title: "Order Delivered",
-                  message: "Your order is delivered",
-                  screen: "/order",
-                  userId: widget.order.userId,
-                );
-                break;
-              case "cancelled":
-                NotificationHelper.sendNotification(
-                  title: "Order Cancelled",
-                  message: "Your order is cancelled",
-                  screen: "/order",
-                  userId: widget.order.userId,
-                );
-                break;
-              default:
-                break;
-            }
+
+            String message = "Your order is $status";
+            NotificationHelper.sendNotification(
+              title: "Order $status".toUpperCase(),
+              message: message,
+              screen: "/order",
+              userId: widget.order.userId,
+            );
           },
         );
       },

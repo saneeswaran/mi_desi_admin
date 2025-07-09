@@ -1,10 +1,14 @@
+import 'dart:developer';
+
 import 'package:desi_shopping_seller/constants/constants.dart';
 import 'package:desi_shopping_seller/providers/auth_providers.dart';
+import 'package:desi_shopping_seller/screens/admin/auth/register_page.dart';
 import 'package:desi_shopping_seller/screens/admin/dash%20board/dash_board_page.dart';
 import 'package:desi_shopping_seller/screens/admin/drawer/advance_drawer_page.dart';
 import 'package:desi_shopping_seller/util/util.dart';
 import 'package:desi_shopping_seller/widgets/custom_elevated_button.dart';
 import 'package:desi_shopping_seller/widgets/custom_text_form_field.dart';
+import 'package:desi_shopping_seller/widgets/loader.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,7 +24,11 @@ class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
+  bool isLoading = false;
+
   void login() async {
+    setState(() => isLoading = true);
+
     if (!formKey.currentState!.validate()) return;
 
     final authProvider = Provider.of<AuthProviders>(context, listen: false);
@@ -38,6 +46,7 @@ class _LoginPageState extends State<LoginPage> {
           title: "DashBoard",
         ),
       );
+      setState(() => isLoading = false);
     }
   }
 
@@ -52,113 +61,150 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
 
-    return Scaffold(
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: Image.asset(AppImages.backgroundImages, fit: BoxFit.cover),
-          ),
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                const SizedBox(height: 70),
-                SizedBox(
-                  height: size.height * 0.85,
-                  child: Stack(
-                    children: [
-                      Positioned(
-                        top: size.height * -0.06,
-                        left: size.width * 0.12,
-                        child: Image.asset(
-                          AppImages.ayurvedicThayoli,
-                          height: size.height * 0.3,
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.center,
-                        child: Card(
-                          elevation: 8,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
+    return AbsorbPointer(
+      absorbing: isLoading,
+      child: Scaffold(
+        body: Stack(
+          children: [
+            Positioned.fill(
+              child: Image.asset(AppImages.backgroundImages, fit: BoxFit.cover),
+            ),
+            SingleChildScrollView(
+              child: Column(
+                children: [
+                  const SizedBox(height: 70),
+                  SizedBox(
+                    height: size.height * 0.85,
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          top: size.height * -0.06,
+                          left: size.width * 0.12,
+                          child: Image.asset(
+                            AppImages.ayurvedicThayoli,
+                            height: size.height * 0.3,
+                            fit: BoxFit.contain,
                           ),
-                          child: Container(
-                            alignment: Alignment.center,
-                            padding: const EdgeInsets.all(20),
-                            height: size.height * 0.5,
-                            width: size.width * 0.9,
-                            decoration: BoxDecoration(
+                        ),
+                        Align(
+                          alignment: Alignment.center,
+                          child: Card(
+                            elevation: 8,
+                            shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(16),
-                              color: Colors.white,
                             ),
-                            child: Form(
-                              key: formKey,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Center(
-                                    child: Container(
-                                      height: size.height * 0.005,
-                                      width: size.width * 0.1,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(12),
-                                        color: AppColors.textFormFieldColor,
+                            child: Container(
+                              alignment: Alignment.center,
+                              padding: const EdgeInsets.all(20),
+                              height: size.height * 0.5,
+                              width: size.width * 0.9,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(16),
+                                color: Colors.white,
+                              ),
+                              child: Form(
+                                key: formKey,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Center(
+                                      child: Container(
+                                        height: size.height * 0.005,
+                                        width: size.width * 0.1,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
+                                          color: AppColors.textFormFieldColor,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  const Center(
-                                    child: Text(
-                                      "Login",
-                                      style: TextStyle(
-                                        color: Colors.pink,
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 20),
-                                  _customText(text: "Email"),
-                                  CustomTextFormField(
-                                    hintText: "Email",
-                                    controller: emailController,
-                                    color: AppColors.textFormFieldColor,
-                                  ),
-                                  const SizedBox(height: 12),
-                                  _customText(text: "Password"),
-                                  CustomTextFormField(
-                                    hintText: "Password",
-                                    controller: passwordController,
-                                    color: AppColors.textFormFieldColor,
-                                    isObscure: true,
-                                  ),
-                                  const SizedBox(height: 10),
-                                  SizedBox(
-                                    height: size.height * 0.05,
-                                    width: size.width * 0.8,
-                                    child: CustomElevatedButton(
-                                      color: Colors.pink,
-                                      onPressed: login,
-                                      child: const Text(
+                                    const SizedBox(height: 10),
+                                    const Center(
+                                      child: Text(
                                         "Login",
-                                        style: TextStyle(color: Colors.white),
+                                        style: TextStyle(
+                                          color: Colors.pink,
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  const SizedBox(height: 20),
-                                ],
+                                    const SizedBox(height: 20),
+                                    _customText(text: "Email"),
+                                    CustomTextFormField(
+                                      hintText: "Email",
+                                      controller: emailController,
+                                      color: AppColors.textFormFieldColor,
+                                    ),
+                                    const SizedBox(height: 12),
+                                    _customText(text: "Password"),
+                                    CustomTextFormField(
+                                      hintText: "Password",
+                                      controller: passwordController,
+                                      color: AppColors.textFormFieldColor,
+                                      isObscure: true,
+                                    ),
+                                    const SizedBox(height: 10),
+                                    SizedBox(
+                                      height: size.height * 0.05,
+                                      width: size.width * 0.8,
+                                      child: CustomElevatedButton(
+                                        color: Colors.pink,
+                                        onPressed: login,
+                                        child: const Text(
+                                          "Login",
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 20),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        const Text("Don't have an account? "),
+                                        TextButton(
+                                          onPressed: () {
+                                            log("Register");
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const RegisterPage(),
+                                              ),
+                                            );
+                                          },
+                                          child: const Text(
+                                            "Register",
+                                            style: TextStyle(
+                                              color: Colors.pink,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+            if (isLoading)
+              Container(
+                height: size.height * 1,
+                width: size.width * 1,
+                color: Colors.black38,
+                child: const Center(child: Loader()),
+              ),
+          ],
+        ),
       ),
     );
   }

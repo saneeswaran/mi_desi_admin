@@ -156,6 +156,9 @@ class _PartnerLoginState extends State<PartnerLogin> {
                                             color: Colors.pink,
                                             child: Text(
                                               value ? "Loading..." : "Login",
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                              ),
                                             ),
                                             onPressed: () => login(context),
                                           ),
