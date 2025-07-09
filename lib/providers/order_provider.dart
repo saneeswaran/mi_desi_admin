@@ -58,6 +58,14 @@ class OrderProvider extends ChangeNotifier {
   //total orders
   int get totalOrders => _allOrders.length;
 
+  List<String> allOrderStatus = [
+    'All',
+    'Pending',
+    'Processing',
+    'Delivered',
+    'Cancelled',
+  ];
+
   Future<List<OrderModel>> getAllOrders({required BuildContext context}) async {
     try {
       final collectionReference = FirebaseFirestore.instance.collectionGroup(
@@ -138,5 +146,31 @@ class OrderProvider extends ChangeNotifier {
       }
     }
     return false;
+  }
+
+  //filter order by status
+  String _selectedStatus = 'All';
+  String get selectedStatus => _selectedStatus;
+
+  List<String> get allOrderStatusForFilter => [
+    'All',
+    'Pending',
+    'Processing',
+    'Delivered',
+    'Cancelled',
+  ];
+
+  void filterOrdersByStatus({required String orderStatus}) {
+    _selectedStatus = orderStatus;
+    if (orderStatus == 'All') {
+      _filterOrders = _allOrders;
+    } else {
+      _filterOrders = _allOrders
+          .where(
+            (e) => e.orderStatus.toLowerCase() == orderStatus.toLowerCase(),
+          )
+          .toList();
+    }
+    notifyListeners();
   }
 }

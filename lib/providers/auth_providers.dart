@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 class AuthProviders extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final CollectionReference _userCollection = FirebaseFirestore.instance
-      .collection('admin');
+      .collection('admins');
 
   User? _user;
   AdminModel? _userModel;
