@@ -1,8 +1,5 @@
-import 'dart:developer';
-
 import 'package:desi_shopping_seller/constants/constants.dart';
 import 'package:desi_shopping_seller/providers/auth_providers.dart';
-import 'package:desi_shopping_seller/screens/admin/auth/register_page.dart';
 import 'package:desi_shopping_seller/screens/admin/dash%20board/dash_board_page.dart';
 import 'package:desi_shopping_seller/screens/admin/drawer/advance_drawer_page.dart';
 import 'package:desi_shopping_seller/util/util.dart';
@@ -159,31 +156,31 @@ class _LoginPageState extends State<LoginPage> {
                                       ),
                                     ),
                                     const SizedBox(height: 20),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        const Text("Don't have an account? "),
-                                        TextButton(
-                                          onPressed: () {
-                                            log("Register");
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const RegisterPage(),
-                                              ),
-                                            );
-                                          },
-                                          child: const Text(
-                                            "Register",
-                                            style: TextStyle(
-                                              color: Colors.pink,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                    // Row(
+                                    //   mainAxisAlignment:
+                                    //       MainAxisAlignment.center,
+                                    //   children: [
+                                    //     const Text("Don't have an account? "),
+                                    //     TextButton(
+                                    //       onPressed: () {
+
+                                    //         Navigator.push(
+                                    //           context,
+                                    //           MaterialPageRoute(
+                                    //             builder: (context) =>
+                                    //                 const RegisterPage(),
+                                    //           ),
+                                    //         );
+                                    //       },
+                                    //       child: const Text(
+                                    //         "Register",
+                                    //         style: TextStyle(
+                                    //           color: Colors.pink,
+                                    //         ),
+                                    //       ),
+                                    //     ),
+                                    //   ],
+                                    // ),
                                   ],
                                 ),
                               ),
