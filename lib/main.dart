@@ -10,6 +10,7 @@ import 'package:desi_shopping_seller/providers/brand_provider.dart';
 import 'package:desi_shopping_seller/providers/reacharge_provider.dart';
 import 'package:desi_shopping_seller/providers/statemanagement_provider.dart';
 import 'package:desi_shopping_seller/providers/user_provider.dart';
+import 'package:desi_shopping_seller/providers/youtube_video_player_provider.dart';
 import 'package:desi_shopping_seller/screens/admin/dash%20board/dash_board_page.dart';
 import 'package:desi_shopping_seller/screens/admin/drawer/advance_drawer_page.dart';
 import 'package:desi_shopping_seller/screens/admin/splash%20screen/auth_page.dart';
@@ -77,6 +78,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => PartnerProvider()),
         ChangeNotifierProvider(create: (_) => RechargeSimProvider()),
         ChangeNotifierProvider(create: (_) => ReachargesProvider()),
+        ChangeNotifierProvider(create: (_) => YoutubeVideoPlayerProvider()),
       ],
       child: const MyApp(),
     ),
