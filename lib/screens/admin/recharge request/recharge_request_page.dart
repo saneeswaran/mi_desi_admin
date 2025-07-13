@@ -1,8 +1,11 @@
+import 'dart:developer';
+
 import 'package:desi_shopping_seller/providers/reacharge_provider.dart';
 import 'package:desi_shopping_seller/providers/user_provider.dart';
 import 'package:desi_shopping_seller/screens/admin/helper/notification_helper.dart';
 import 'package:desi_shopping_seller/util/util.dart';
 import 'package:desi_shopping_seller/widgets/custom_elevated_button.dart';
+import 'package:desi_shopping_seller/widgets/loader.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -19,11 +22,8 @@ class _RechargeRequestPageState extends State<RechargeRequestPage> {
   @override
   void initState() {
     super.initState();
-    Future.wait([
-      context.read<ReachargesProvider>().getAllRechageRechargeRequest(
-        context: context,
-      ),
-    ]);
+    final provider = context.read<ReachargesProvider>();
+    provider.getAllRechageRechargeRequest(context: context);
   }
 
   @override
@@ -31,64 +31,76 @@ class _RechargeRequestPageState extends State<RechargeRequestPage> {
     final size = MediaQuery.of(context).size;
     final rechargeProvider = context.watch<ReachargesProvider>();
     final rechargeRequests = rechargeProvider.filterRechargeRequest;
+    final userProvider = context.read<UserProvider>().getAllUsers(
+      context: context,
+    );
+
+    final isLoading = rechargeProvider.isUpdateLoading;
 
     return Scaffold(
-      body: rechargeProvider.isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : rechargeRequests.isEmpty
-          ? const Center(child: Text("No recharge requests found."))
-          : Column(
-              children: [
-                SizedBox(
-                  height: size.height * 0.02,
-                  width: size.width * 1,
-                  child: Consumer2<ReachargesProvider, UserProvider>(
-                    builder: (context, provider, userProvider, child) {
-                      return ListView.builder(
-                        itemCount: allFilterMethods.length,
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            child: Container(
-                              height: size.height * 0.1,
-                              width: size.width * 0.3,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                color: Colors.pink,
-                              ),
-                              child: Center(
-                                child: Text(
-                                  allFilterMethods[index],
-                                  style: const TextStyle(color: Colors.white),
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    },
+      body: Column(
+        children: [
+          SizedBox(
+            height: size.height * 0.2,
+            width: size.width * 1,
+            child: ListView.builder(
+              itemCount: rechargeProvider.allFilterMethods.length,
+              scrollDirection: Axis.horizontal,
+              physics: const ClampingScrollPhysics(),
+              itemBuilder: (context, index) {
+                final isSelected = rechargeProvider.currentIndex == index;
+                return GestureDetector(
+                  onTap: () {
+                    rechargeProvider.changeIndex(index);
+                    rechargeProvider.filterRechargeByStatus(
+                      status: rechargeProvider.allFilterMethods[index],
+                    );
+                    log(rechargeProvider.allFilterMethods[index]);
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.all(12),
+                    height: size.height * 0.2,
+                    width: size.width * 0.4,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: isSelected ? Colors.pink : Colors.white,
+                    ),
+                    child: Center(
+                      child: Text(
+                        rechargeProvider.allFilterMethods[index],
+                        style: TextStyle(
+                          color: isSelected ? Colors.white : Colors.black,
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-                Expanded(
-                  child: ListView.builder(
-                    padding: const EdgeInsets.all(12),
-                    itemCount: rechargeRequests.length,
-                    itemBuilder: (context, index) {
-                      final recharge = rechargeRequests[index];
-                      return GestureDetector(
-                        onTap: () {
-                          normalDialog(
-                            context: context,
-                            title: "Updated Recharge Status",
-                            size: size,
-                            height: size.height * 0.2,
-                            width: size.width * 0.8,
-                            widget: Column(
-                              spacing: size.height * 0.02,
-                              children: [
-                                _statusDropDown(),
-                                const SizedBox(height: 10),
-                                CustomElevatedButton(
-                                  child: const Text(
+                );
+              },
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              padding: const EdgeInsets.all(12),
+              itemCount: rechargeRequests.length,
+              itemBuilder: (context, index) {
+                final recharge = rechargeRequests[index];
+                return GestureDetector(
+                  onTap: () {
+                    normalDialog(
+                      context: context,
+                      title: "Updated Recharge Status",
+                      size: size,
+                      height: size.height * 0.2,
+                      width: size.width * 0.8,
+                      widget: Column(
+                        spacing: size.height * 0.02,
+                        children: [
+                          _statusDropDown(),
+                          const SizedBox(height: 10),
+                          CustomElevatedButton(
+                            child: isLoading
+                                ? const Loader()
+                                : const Text(
                                     "Update",
                                     style: TextStyle(
                                       color: Colors.white,
@@ -96,102 +108,75 @@ class _RechargeRequestPageState extends State<RechargeRequestPage> {
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  onPressed: () async {
-                                    final bool isSuccess =
-                                        await rechargeProvider
-                                            .updateRechargeStatus(
-                                              context: context,
-                                              customerId: recharge.customerId
-                                                  .toString(),
-                                              rechargeId: recharge.id
-                                                  .toString(),
-                                              status: rechargeStatus!,
-                                            );
-                                    switch (rechargeStatus) {
-                                      case "Success":
-                                        NotificationHelper.sendNotification(
-                                          title: "Recharge Success",
-                                          message:
-                                              "Your ${recharge.price} has been recharged successfully",
-                                          screen: "/recharge",
-                                          userId: recharge.customerId
-                                              .toString(),
-                                        );
-                                        break;
-                                      case "Failed":
-                                        NotificationHelper.sendNotification(
-                                          title: "Recharge Failed",
-                                          message:
-                                              "Your ${recharge.price} has been failed",
-                                          screen: "/recharge",
-                                          userId: recharge.customerId
-                                              .toString(),
-                                        );
-                                        break;
-                                      case "Pending":
-                                        NotificationHelper.sendNotification(
-                                          title: "Recharge Pending",
-                                          message:
-                                              "Your ${recharge.price} has been pending",
-                                          screen: "/recharge",
-                                          userId: recharge.customerId
-                                              .toString(),
-                                        );
-                                        break;
-                                      default:
-                                        break;
-                                    }
+                            onPressed: () async {
+                              final bool isSuccess = await rechargeProvider
+                                  .updateRechargeStatus(
+                                    context: context,
+                                    customerId: recharge.customerId.toString(),
+                                    rechargeId: recharge.id.toString(),
+                                    status: rechargeStatus!,
+                                  );
+                              if (context.mounted) {
+                                NotificationHelper.sendNotification(
+                                  title: 'Recharge $rechargeStatus',
+                                  message:
+                                      'Your ₹${recharge.price.toStringAsFixed(2)} is $rechargeStatus.',
+                                  screen: '/recharge',
+                                  userId: recharge.customerId!,
+                                );
+                                Navigator.pop(context);
+                              }
 
-                                    if (isSuccess && context.mounted) {
-                                      Navigator.pop(context);
-                                    }
-                                  },
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                              if (isSuccess && context.mounted) {
+                                Navigator.pop(context);
+                              }
+                            },
                           ),
-                          margin: const EdgeInsets.symmetric(vertical: 8),
-                          elevation: 4,
-                          child: Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                _infoRow("Provider", recharge.rechargeProvider),
-                                _infoRow("Data Info", recharge.dataInfo),
-                                _infoRow("Validity", recharge.validity),
-                                _infoRow(
-                                  "Price",
-                                  "₹${recharge.price.toStringAsFixed(2)}",
-                                ),
-                                _infoRow(
-                                  "Status",
-                                  recharge.status ?? "Pending",
-                                  color: _getStatusColor(recharge.status),
-                                ),
-                                _infoRow(
-                                  "Requested At",
-                                  recharge.createdAt != null
-                                      ? DateFormat(
-                                          'dd MMM yyyy, hh:mm a',
-                                        ).format(recharge.createdAt!.toDate())
-                                      : "N/A",
-                                ),
-                              ],
-                            ),
+                        ],
+                      ),
+                    );
+                  },
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    margin: const EdgeInsets.symmetric(vertical: 8),
+                    elevation: 4,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _infoRow("Provider", recharge.rechargeProvider),
+                          _infoRow("Data Info", recharge.dataInfo),
+                          _infoRow("Validity", recharge.validity),
+                          _infoRow(
+                            "Price",
+                            "₹${recharge.price.toStringAsFixed(2)}",
                           ),
-                        ),
-                      );
-                    },
+                          _infoRow(
+                            "Status",
+                            recharge.status ?? "Pending",
+                            color: _getStatusColor(recharge.status),
+                          ),
+                          _infoRow(
+                            "Requested At",
+                            recharge.createdAt != null
+                                ? DateFormat(
+                                    'dd MMM yyyy, hh:mm a',
+                                  ).format(recharge.createdAt!.toDate())
+                                : "N/A",
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-              ],
+                );
+              },
             ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -255,12 +240,4 @@ class _RechargeRequestPageState extends State<RechargeRequestPage> {
       },
     );
   }
-
-  //filter container
-  List<String> allFilterMethods = [
-    "Pending",
-    "Success",
-    "Failed",
-    "Recharge By User",
-  ];
 }

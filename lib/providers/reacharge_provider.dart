@@ -15,9 +15,6 @@ class ReachargesProvider extends ChangeNotifier {
   List<RechargeModel> get allRecharge => _allRecharge;
   List<RechargeModel> get filterRechargeRequest => _filterRechargeRequest;
 
-  List<RechargeModel> _filterRecharge = [];
-  List<RechargeModel> get filterRecharge => _filterRecharge;
-
   //loading
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -49,9 +46,8 @@ class ReachargesProvider extends ChangeNotifier {
       _allRecharge = querySnapshot.docs
           .map((e) => RechargeModel.fromMap(e.data() as Map<String, dynamic>))
           .toList();
-      _filterRecharge = _allRecharge;
+      _filterRechargeRequest = _allRecharge;
       notifyListeners();
-      return _allRecharge;
     } catch (e) {
       if (context.mounted) {
         showSnackBar(context: context, e: e);
@@ -82,7 +78,7 @@ class ReachargesProvider extends ChangeNotifier {
       );
       await docRef.set(rechargeModel.toMap());
       _allRecharge.add(rechargeModel);
-      _filterRecharge = _allRecharge;
+      _filterRechargeRequest = _allRecharge;
       setLoading(false);
       notifyListeners();
       return true;
@@ -119,7 +115,7 @@ class ReachargesProvider extends ChangeNotifier {
       final int index = _allRecharge.indexWhere((element) => element.id == id);
       if (index != -1) {
         _allRecharge[index] = rechargeModel;
-        _filterRecharge = List.from(_allRecharge);
+        _filterRechargeRequest = List.from(_allRecharge);
       }
 
       setLoading(false);
@@ -145,7 +141,7 @@ class ReachargesProvider extends ChangeNotifier {
           .get();
       await documentSnapshot.reference.delete();
       _allRecharge.removeWhere((e) => e.id == id);
-      _filterRecharge = _allRecharge;
+      _filterRechargeRequest = _allRecharge;
       setDelLoading(false);
       notifyListeners();
       return true;
@@ -159,7 +155,7 @@ class ReachargesProvider extends ChangeNotifier {
   }
 
   void filterByName({required String query}) {
-    _filterRecharge = _allRecharge
+    _filterRechargeRequest = _allRecharge
         .where(
           (e) => e.rechargeProvider.toLowerCase().contains(query.toLowerCase()),
         )
@@ -189,6 +185,15 @@ class ReachargesProvider extends ChangeNotifier {
     return _allRechargeRequest;
   }
 
+  bool _isUpdateLoading = false;
+
+  bool get isUpdateLoading => _isUpdateLoading;
+
+  void updateLoading(bool value) {
+    _isUpdateLoading = value;
+    notifyListeners();
+  }
+
   Future<bool> updateRechargeStatus({
     required BuildContext context,
     required String customerId,
@@ -196,6 +201,7 @@ class ReachargesProvider extends ChangeNotifier {
     required String status,
   }) async {
     try {
+      updateLoading(true);
       final CollectionReference collectionReference = FirebaseFirestore.instance
           .collection("customers");
       final DocumentSnapshot documentSnapshot = await collectionReference
@@ -216,13 +222,48 @@ class ReachargesProvider extends ChangeNotifier {
       }
       _filterRechargeRequest = _allRechargeRequest;
       notifyListeners();
+      updateLoading(false);
       return true;
     } catch (e) {
+      updateLoading(false);
       if (context.mounted) {
         showSnackBar(context: context, e: e);
       }
     }
     return false;
+  }
+
+  //ui elements
+  //filter container
+  List<String> allFilterMethods = [
+    "All",
+    "Pending",
+    "Success",
+    "Failed",
+    "Recharge By User",
+  ];
+
+  int _currentIndex = 0;
+  int get currentIndex => _currentIndex;
+  void changeIndex(int index) {
+    _currentIndex = index;
+    notifyListeners();
+  }
+
+  void filterRechargeByStatus({required String status}) {
+    if (status == "All") {
+      _filterRechargeRequest = List.from(_allRechargeRequest);
+    } else if (status == "Recharge By User") {
+      _filterRechargeRequest = _allRechargeRequest.where((recharge) {
+        return recharge.customerId?.toLowerCase() ==
+            "user"; // adjust logic if needed
+      }).toList();
+    } else {
+      _filterRechargeRequest = _allRechargeRequest.where((recharge) {
+        return recharge.status?.toLowerCase() == status.toLowerCase();
+      }).toList();
+    }
+    notifyListeners(); // Make sure UI updates
   }
 }
 
