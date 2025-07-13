@@ -133,10 +133,6 @@ class OrderProvider extends ChangeNotifier {
 
       final orderData = orderDoc.data();
       final List<dynamic> products = orderData['products'] ?? [];
-      log(
-        "🚀 changeOrderStatus called for order: $orderId, newStatus: $orderStatus",
-      );
-      log("Products in order: $products");
 
       if (orderStatus.toLowerCase() == 'processing') {
         for (final prod in products) {
@@ -144,7 +140,6 @@ class OrderProvider extends ChangeNotifier {
           final int? orderedQty = prod['quantity'] as int?;
 
           if (productId == null || orderedQty == null) {
-            log("⚠️ Missing productId or quantity: $prod");
             continue;
           }
 
@@ -164,9 +159,6 @@ class OrderProvider extends ChangeNotifier {
               throw Exception("Insufficient stock for $productId");
             }
             txn.update(prodRef, {'stock': newStock});
-            log(
-              "✅ Deducted $orderedQty from product $productId, newStock = $newStock",
-            );
           });
         }
       }
@@ -186,7 +178,6 @@ class OrderProvider extends ChangeNotifier {
       if (context.mounted) {
         showSnackBar(context: context, e: e.toString());
       }
-      log("❌ changeOrderStatus error: $e");
     }
     return false;
   }

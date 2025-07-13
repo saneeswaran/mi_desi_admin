@@ -120,6 +120,7 @@ class _ShowOrderDetailsPageState extends State<ShowOrderDetailsPage> {
                       "Order ID",
                       widget.order.orderId.toString(),
                     ),
+
                     _buildDetailRow("Status", widget.order.orderStatus),
                     _buildDetailRow(
                       "Phone Number",
