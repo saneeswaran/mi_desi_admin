@@ -1,5 +1,7 @@
 import 'package:desi_shopping_seller/constants/constants.dart';
 import 'package:desi_shopping_seller/providers/auth_providers.dart';
+import 'package:desi_shopping_seller/screens/parner/partner%20profile%20page/components/reset_partner_page.dart';
+import 'package:desi_shopping_seller/util/util.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -61,22 +63,20 @@ class PartnerProfilePage extends StatelessWidget {
                     context: context,
                     icon: Icons.person,
                     text: 'Change Password',
-                    onTap: () {},
+                    onTap: () => moveToNextPageWithFadeAnimations(
+                      context: context,
+                      route: ResetPartnerPage(email: currentUserDetails.email),
+                    ),
                   ),
-
-                  _buildIndividualCard(
-                    context: context,
-                    icon: Icons.privacy_tip,
-                    text: 'Privacy and Policies',
-                    onTap: () {},
-                  ),
-
                   _buildIndividualCard(
                     context: context,
                     icon: Icons.logout,
                     text: 'Logout',
                     isLast: true,
-                    onTap: () {},
+                    onTap: () {
+                      final provider = context.read<AuthProviders>();
+                      provider.logout();
+                    },
                   ),
                 ],
               ),

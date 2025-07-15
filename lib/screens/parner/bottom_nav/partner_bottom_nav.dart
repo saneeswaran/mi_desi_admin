@@ -1,4 +1,4 @@
-import 'package:desi_shopping_seller/providers/partner_provider.dart';
+import 'package:desi_shopping_seller/providers/auth_providers.dart';
 import 'package:desi_shopping_seller/screens/parner/dashboard/partner_dashboard.dart';
 import 'package:desi_shopping_seller/screens/parner/partner%20profile%20page/partner_profile_page.dart';
 import 'package:desi_shopping_seller/screens/parner/partner%20profile/partner_products_page.dart';
@@ -28,41 +28,45 @@ class _PartnerBottomNavState extends State<PartnerBottomNav> {
     Icons.receipt_sharp,
     Icons.person,
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<AuthProviders>().getCurrentUserDetails(context: context);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    final partnerProvider = Provider.of<PartnerProvider>(context);
-    final status = partnerProvider.partner?.activeStatus;
-
-    return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: Colors.pink,
-        unselectedItemColor: Colors.grey,
-        showSelectedLabels: true,
-        showUnselectedLabels: false,
-        onTap: (int index) => setState(() => _currentIndex = index),
-        currentIndex: _currentIndex,
-        items: List.generate(
-          titles.length,
-          (index) => BottomNavigationBarItem(
-            icon: Icon(icons[index]),
-            label: titles[index],
-          ),
-        ),
-      ),
-      body: status == "inactive"
-          ? SizedBox(
-              height: size.height,
-              width: size.width,
-              child: const Center(
-                child: Text(
-                  "You don't have access until you get verified",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
+    final authProvider = context.read<AuthProviders>();
+    return FutureBuilder(
+      future: authProvider.getCurrentUserDetails(context: context),
+      builder: (context, asyncSnapshot) {
+        if (asyncSnapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        } else if (asyncSnapshot.data!.activeStatus == "inactive") {
+          return const Scaffold(body: Center(child: Text("Account Inactive")));
+        }
+        return Scaffold(
+          bottomNavigationBar: BottomNavigationBar(
+            selectedItemColor: Colors.pink,
+            unselectedItemColor: Colors.grey,
+            showSelectedLabels: true,
+            showUnselectedLabels: false,
+            onTap: (int index) => setState(() => _currentIndex = index),
+            currentIndex: _currentIndex,
+            items: List.generate(
+              titles.length,
+              (index) => BottomNavigationBarItem(
+                icon: Icon(icons[index]),
+                label: titles[index],
               ),
-            )
-          : pages[_currentIndex],
+            ),
+          ),
+          body: pages[_currentIndex],
+        );
+      },
     );
   }
 }

@@ -157,16 +157,28 @@ class AuthProviders extends ChangeNotifier {
     return _currentUser!;
   }
 
+  //laoder
+  bool _isloading = false;
+  bool get isLoading => _isloading;
+
+  void setLoading(bool value) {
+    _isloading = value;
+    notifyListeners();
+  }
+
   Future<bool> resetPartnerPassword({
     required BuildContext context,
     required String email,
   }) async {
     try {
+      setLoading(true);
       //reset  password
       final auth = FirebaseAuth.instance;
       await auth.sendPasswordResetEmail(email: email);
+      setLoading(false);
       return true;
     } catch (e) {
+      setLoading(false);
       if (context.mounted) {
         showSnackBar(context: context, e: e.toString());
         return false;
