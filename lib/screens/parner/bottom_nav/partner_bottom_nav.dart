@@ -20,7 +20,7 @@ class _PartnerBottomNavState extends State<PartnerBottomNav> {
     const PartnerDashboard(),
     const PartnerProductsPage(),
     const PartnerRechargeRequestScreen(),
-    const UserDetailsPage(),
+    const PartnerProfilePage(),
   ];
   List<IconData> icons = [
     Icons.home,

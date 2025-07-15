@@ -156,4 +156,22 @@ class AuthProviders extends ChangeNotifier {
     }
     return _currentUser!;
   }
+
+  Future<bool> resetPartnerPassword({
+    required BuildContext context,
+    required String email,
+  }) async {
+    try {
+      //reset  password
+      final auth = FirebaseAuth.instance;
+      await auth.sendPasswordResetEmail(email: email);
+      return true;
+    } catch (e) {
+      if (context.mounted) {
+        showSnackBar(context: context, e: e.toString());
+        return false;
+      }
+    }
+    return false;
+  }
 }
