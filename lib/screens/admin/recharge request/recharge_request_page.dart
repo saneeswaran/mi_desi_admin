@@ -24,6 +24,7 @@ class _RechargeRequestPageState extends State<RechargeRequestPage> {
     super.initState();
     final provider = context.read<ReachargesProvider>();
     provider.getAllRechageRechargeRequest(context: context);
+    context.read<UserProvider>().getAllUsers(context: context);
   }
 
   @override
@@ -31,9 +32,7 @@ class _RechargeRequestPageState extends State<RechargeRequestPage> {
     final size = MediaQuery.of(context).size;
     final rechargeProvider = context.watch<ReachargesProvider>();
     final rechargeRequests = rechargeProvider.filterRechargeRequest;
-    final userProvider = context.read<UserProvider>().getAllUsers(
-      context: context,
-    );
+    final userProvider = context.read<UserProvider>().filterUsers;
 
     final isLoading = rechargeProvider.isUpdateLoading;
 
@@ -136,6 +135,7 @@ class _RechargeRequestPageState extends State<RechargeRequestPage> {
                       ),
                     );
                   },
+
                   child: Card(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),

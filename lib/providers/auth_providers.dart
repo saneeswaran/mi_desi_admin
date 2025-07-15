@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:desi_shopping_seller/model/admin_model.dart';
+import 'package:desi_shopping_seller/model/partner_model.dart';
 import 'package:desi_shopping_seller/util/util.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -15,6 +18,10 @@ class AuthProviders extends ChangeNotifier {
 
   User? get user => _user;
   AdminModel? get userData => _userModel;
+
+  //partner model
+  PartnerModel? _currentUser;
+  PartnerModel? get currentUser => _currentUser;
 
   Future<bool> loginAdmin({
     required BuildContext context,
@@ -119,5 +126,34 @@ class AuthProviders extends ChangeNotifier {
     _userModel = null;
     notifyListeners();
     return true;
+  }
+
+  Future<PartnerModel> getCurrentUserDetails({
+    required BuildContext context,
+  }) async {
+    try {
+      final currentUser = FirebaseAuth.instance.currentUser!.uid;
+      final CollectionReference collectionReference = FirebaseFirestore.instance
+          .collection("partners");
+      final DocumentSnapshot documentSnapshot = await collectionReference
+          .doc(currentUser)
+          .get();
+
+      if (documentSnapshot.exists) {
+        _currentUser = PartnerModel.fromMap(
+          documentSnapshot.data()! as Map<String, dynamic>,
+        );
+        log(_currentUser.toString());
+        notifyListeners();
+      } else {
+        _currentUser = null;
+        notifyListeners();
+      }
+    } catch (e) {
+      if (context.mounted) {
+        showSnackBar(context: context, e: e.toString());
+      }
+    }
+    return _currentUser!;
   }
 }

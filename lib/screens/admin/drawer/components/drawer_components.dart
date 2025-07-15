@@ -11,6 +11,7 @@ import 'package:desi_shopping_seller/screens/admin/products/all_products_page.da
 import 'package:desi_shopping_seller/screens/admin/real%20brands/real_brand_page.dart';
 import 'package:desi_shopping_seller/screens/admin/recharge%20provider/recharge_provider_page.dart';
 import 'package:desi_shopping_seller/screens/admin/recharge%20request/recharge_request_page.dart';
+import 'package:desi_shopping_seller/screens/admin/splash%20screen/auth_page.dart';
 import 'package:desi_shopping_seller/screens/admin/youtube%20video/youtube_videos_list.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
@@ -96,6 +97,10 @@ Widget draweFunctions({required BuildContext context}) {
         title: const Text("Logout", style: TextStyle(color: Colors.black)),
         onTap: () {
           Provider.of<AuthProviders>(context, listen: false).logout();
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const AuthPage()),
+          );
         },
       ),
     ],

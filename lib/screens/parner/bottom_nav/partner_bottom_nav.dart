@@ -2,7 +2,7 @@ import 'package:desi_shopping_seller/providers/partner_provider.dart';
 import 'package:desi_shopping_seller/screens/parner/dashboard/partner_dashboard.dart';
 import 'package:desi_shopping_seller/screens/parner/partner%20profile%20page/partner_profile_page.dart';
 import 'package:desi_shopping_seller/screens/parner/partner%20profile/partner_products_page.dart';
-import 'package:desi_shopping_seller/screens/parner/recharge%20request%20screen/recharge_request_screen.dart';
+import 'package:desi_shopping_seller/screens/parner/recharge%20request%20screen/partner_recharge_request_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -19,8 +19,8 @@ class _PartnerBottomNavState extends State<PartnerBottomNav> {
   List<Widget> pages = [
     const PartnerDashboard(),
     const PartnerProductsPage(),
-    const RechargeRequestScreen(),
-    const PartnerProfilePage(),
+    const PartnerRechargeRequestScreen(),
+    const UserDetailsPage(),
   ];
   List<IconData> icons = [
     Icons.home,
