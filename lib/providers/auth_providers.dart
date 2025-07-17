@@ -29,6 +29,7 @@ class AuthProviders extends ChangeNotifier {
     required String password,
   }) async {
     try {
+      setLoading(true);
       final UserCredential userCredential = await _auth
           .signInWithEmailAndPassword(email: email, password: password);
 
@@ -42,20 +43,23 @@ class AuthProviders extends ChangeNotifier {
         final fcmToken = await FirebaseMessaging.instance.getToken();
 
         await _userCollection.doc(_user!.uid).update({'fcmToken': fcmToken});
-
+        setLoading(false);
         notifyListeners();
         return true;
       } else {
+        setLoading(false);
         if (context.mounted) {
           showSnackBar(context: context, e: 'Admin account not found');
         }
       }
     } on FirebaseAuthException catch (e) {
       if (context.mounted) {
+        setLoading(false);
         showSnackBar(context: context, e: e.message ?? 'Login failed');
       }
     } catch (e) {
       if (context.mounted) {
+        setLoading(false);
         showSnackBar(context: context, e: 'Something went wrong');
       }
     }
@@ -180,10 +184,19 @@ class AuthProviders extends ChangeNotifier {
     } catch (e) {
       setLoading(false);
       if (context.mounted) {
+        setLoading(false);
         showSnackBar(context: context, e: e.toString());
         return false;
       }
     }
     return false;
+  }
+
+  //ui controller
+  bool _isShowPass = true;
+  bool get isShowPass => _isShowPass;
+  void showPass() {
+    _isShowPass = !_isShowPass;
+    notifyListeners();
   }
 }

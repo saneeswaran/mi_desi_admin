@@ -24,8 +24,6 @@ class _LoginPageState extends State<LoginPage> {
   bool isLoading = false;
 
   void login() async {
-    setState(() => isLoading = true);
-
     if (!formKey.currentState!.validate()) return;
 
     final authProvider = Provider.of<AuthProviders>(context, listen: false);
@@ -43,7 +41,6 @@ class _LoginPageState extends State<LoginPage> {
           title: "DashBoard",
         ),
       );
-      setState(() => isLoading = false);
     }
   }
 
@@ -58,150 +55,135 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
 
-    return AbsorbPointer(
-      absorbing: isLoading,
-      child: Scaffold(
-        body: Stack(
-          children: [
-            Positioned.fill(
-              child: Image.asset(AppImages.backgroundImages, fit: BoxFit.cover),
-            ),
-            SingleChildScrollView(
-              child: Column(
-                children: [
-                  const SizedBox(height: 70),
-                  SizedBox(
-                    height: size.height * 0.85,
-                    child: Stack(
-                      children: [
-                        Positioned(
-                          top: size.height * -0.06,
-                          left: size.width * 0.12,
-                          child: Image.asset(
-                            AppImages.ayurvedicThayoli,
-                            height: size.height * 0.3,
-                            fit: BoxFit.contain,
-                          ),
+    return Scaffold(
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.asset(AppImages.backgroundImages, fit: BoxFit.cover),
+          ),
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                const SizedBox(height: 70),
+                SizedBox(
+                  height: size.height * 0.85,
+                  child: Stack(
+                    children: [
+                      Positioned(
+                        top: size.height * -0.06,
+                        left: size.width * 0.12,
+                        child: Image.asset(
+                          AppImages.ayurvedicThayoli,
+                          height: size.height * 0.3,
+                          fit: BoxFit.contain,
                         ),
-                        Align(
-                          alignment: Alignment.center,
-                          child: Card(
-                            elevation: 8,
-                            shape: RoundedRectangleBorder(
+                      ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Card(
+                          elevation: 8,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Container(
+                            alignment: Alignment.center,
+                            padding: const EdgeInsets.all(20),
+                            height: size.height * 0.5,
+                            width: size.width * 0.9,
+                            decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(16),
+                              color: Colors.white,
                             ),
-                            child: Container(
-                              alignment: Alignment.center,
-                              padding: const EdgeInsets.all(20),
-                              height: size.height * 0.5,
-                              width: size.width * 0.9,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(16),
-                                color: Colors.white,
-                              ),
-                              child: Form(
-                                key: formKey,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Center(
-                                      child: Container(
-                                        height: size.height * 0.005,
-                                        width: size.width * 0.1,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                            12,
-                                          ),
-                                          color: AppColors.textFormFieldColor,
-                                        ),
+                            child: Form(
+                              key: formKey,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Center(
+                                    child: Container(
+                                      height: size.height * 0.005,
+                                      width: size.width * 0.1,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        color: AppColors.textFormFieldColor,
                                       ),
                                     ),
-                                    const SizedBox(height: 10),
-                                    const Center(
-                                      child: Text(
-                                        "Login",
-                                        style: TextStyle(
-                                          color: Colors.pink,
-                                          fontSize: 22,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 20),
-                                    _customText(text: "Email"),
-                                    CustomTextFormField(
-                                      hintText: "Email",
-                                      controller: emailController,
-                                      color: AppColors.textFormFieldColor,
-                                    ),
-                                    const SizedBox(height: 12),
-                                    _customText(text: "Password"),
-                                    CustomTextFormField(
-                                      hintText: "Password",
-                                      controller: passwordController,
-                                      color: AppColors.textFormFieldColor,
-                                      isObscure: true,
-                                    ),
-                                    const SizedBox(height: 10),
-                                    SizedBox(
-                                      height: size.height * 0.05,
-                                      width: size.width * 0.8,
-                                      child: CustomElevatedButton(
+                                  ),
+                                  const SizedBox(height: 10),
+                                  const Center(
+                                    child: Text(
+                                      "Login",
+                                      style: TextStyle(
                                         color: Colors.pink,
-                                        onPressed: login,
-                                        child: const Text(
-                                          "Login",
-                                          style: TextStyle(color: Colors.white),
-                                        ),
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    const SizedBox(height: 20),
-                                    // Row(
-                                    //   mainAxisAlignment:
-                                    //       MainAxisAlignment.center,
-                                    //   children: [
-                                    //     const Text("Don't have an account? "),
-                                    //     TextButton(
-                                    //       onPressed: () {
-
-                                    //         Navigator.push(
-                                    //           context,
-                                    //           MaterialPageRoute(
-                                    //             builder: (context) =>
-                                    //                 const RegisterPage(),
-                                    //           ),
-                                    //         );
-                                    //       },
-                                    //       child: const Text(
-                                    //         "Register",
-                                    //         style: TextStyle(
-                                    //           color: Colors.pink,
-                                    //         ),
-                                    //       ),
-                                    //     ),
-                                    //   ],
-                                    // ),
-                                  ],
-                                ),
+                                  ),
+                                  const SizedBox(height: 20),
+                                  _customText(text: "Email"),
+                                  CustomTextFormField(
+                                    hintText: "Email",
+                                    controller: emailController,
+                                    color: AppColors.textFormFieldColor,
+                                  ),
+                                  const SizedBox(height: 12),
+                                  _customText(text: "Password"),
+                                  Consumer<AuthProviders>(
+                                    builder: (context, provider, child) {
+                                      final showPass = provider.isShowPass;
+                                      return CustomTextFormField(
+                                        hintText: "Password",
+                                        controller: passwordController,
+                                        color: AppColors.textFormFieldColor,
+                                        isObscure: showPass,
+                                        suffixIcon: IconButton(
+                                          onPressed: () => provider.showPass(),
+                                          icon: Icon(
+                                            showPass
+                                                ? Icons.visibility_off
+                                                : Icons.visibility,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  const SizedBox(height: 10),
+                                  SizedBox(
+                                    height: size.height * 0.05,
+                                    width: size.width * 0.8,
+                                    child: Consumer<AuthProviders>(
+                                      builder: (context, provider, child) {
+                                        final isLoading = provider.isLoading;
+                                        return CustomElevatedButton(
+                                          color: Colors.pink,
+                                          onPressed: login,
+                                          child: isLoading
+                                              ? const Loader()
+                                              : const Text(
+                                                  "Login",
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  const SizedBox(height: 20),
+                                ],
                               ),
                             ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            if (isLoading)
-              Container(
-                height: size.height * 1,
-                width: size.width * 1,
-                color: Colors.black38,
-                child: const Center(child: Loader()),
-              ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
