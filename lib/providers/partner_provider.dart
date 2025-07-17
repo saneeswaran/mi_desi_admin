@@ -36,6 +36,11 @@ class PartnerProvider extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
+  void setLoading(bool value) {
+    _isLoading = value;
+    notifyListeners();
+  }
+
   List<ProductModel> _filterProducts = [];
   List<ProductModel> get filterproducts => _filterProducts;
   Future<bool> registerPartner({
@@ -415,5 +420,40 @@ class PartnerProvider extends ChangeNotifier {
         .where((e) => e.activeStatus.toLowerCase() == query.toLowerCase())
         .toList();
     notifyListeners();
+  }
+
+  Future<bool> changePartnerStatus({
+    required BuildContext context,
+    required String id,
+    required String status,
+  }) async {
+    try {
+      setLoading(true);
+      final CollectionReference collectionReference = FirebaseFirestore.instance
+          .collection("partners");
+      final DocumentSnapshot documentSnapshot = await collectionReference
+          .doc(id)
+          .get();
+
+      if (documentSnapshot.exists) {
+        await documentSnapshot.reference.update({"activeStatus": status});
+        setLoading(false);
+        return true;
+      } else {
+        if (context.mounted) {
+          showSnackBar(context: context, e: "No such partner found");
+          setLoading(false);
+          notifyListeners();
+        }
+        setLoading(false);
+        return false;
+      }
+    } catch (e) {
+      setLoading(false);
+      if (context.mounted) {
+        showSnackBar(context: context, e: e);
+      }
+      return false;
+    }
   }
 }
