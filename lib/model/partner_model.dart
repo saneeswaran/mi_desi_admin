@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 import 'package:desi_shopping_seller/enum/app_enum.dart';
@@ -40,4 +41,9 @@ class PartnerModel {
 
   factory PartnerModel.fromJson(String source) =>
       PartnerModel.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() {
+    return 'PartnerModel(uid: $uid, name: $name, email: $email, password: $password, activeStatus: $activeStatus)';
+  }
 }

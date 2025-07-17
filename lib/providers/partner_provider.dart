@@ -405,7 +405,7 @@ class PartnerProvider extends ChangeNotifier {
           .map((e) => PartnerModel.fromMap(e.data() as Map<String, dynamic>))
           .toList();
       _filterPartners = _allPartners;
-      log(_allPartners.toString());
+
       notifyListeners();
     } catch (e) {
       if (context.mounted) {
@@ -419,7 +419,6 @@ class PartnerProvider extends ChangeNotifier {
     _filterPartners = _allPartners
         .where((e) => e.activeStatus.toLowerCase() == query.toLowerCase())
         .toList();
-    notifyListeners();
   }
 
   Future<bool> changePartnerStatus({
