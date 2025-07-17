@@ -82,4 +82,10 @@ class UserProvider extends ChangeNotifier {
         .where((e) => e.address.toLowerCase().contains(query.toLowerCase()))
         .toList();
   }
+
+  List<CustomerModel> filterUserByReferral({required String userId}) {
+    _filterUsers = _allUsers.where((e) => e.uid == userId).toList();
+    notifyListeners();
+    return _filterUsers;
+  }
 }

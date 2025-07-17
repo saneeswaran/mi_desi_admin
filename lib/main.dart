@@ -8,6 +8,7 @@ import 'package:desi_shopping_seller/providers/partner_provider.dart';
 import 'package:desi_shopping_seller/providers/product_provider.dart';
 import 'package:desi_shopping_seller/providers/brand_provider.dart';
 import 'package:desi_shopping_seller/providers/reacharge_provider.dart';
+import 'package:desi_shopping_seller/providers/referral_provider.dart';
 import 'package:desi_shopping_seller/providers/statemanagement_provider.dart';
 import 'package:desi_shopping_seller/providers/user_provider.dart';
 import 'package:desi_shopping_seller/providers/youtube_video_player_provider.dart';
@@ -87,6 +88,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => BannersProvider()),
         ChangeNotifierProvider(create: (_) => AuthProviders()),
+        ChangeNotifierProvider(create: (_) => ReferralProvider()),
         ChangeNotifierProvider(create: (_) => StatemanagementProvider()),
         ChangeNotifierProvider(create: (_) => PartnerProvider()),
         ChangeNotifierProvider(create: (_) => RechargeSimProvider()),
