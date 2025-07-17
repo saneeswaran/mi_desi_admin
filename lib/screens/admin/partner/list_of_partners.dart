@@ -122,6 +122,9 @@ class _ListOfPartnersState extends State<ListOfPartners> {
                                     status: selectedStatus!,
                                   );
                               if (context.mounted && isSuccess) {
+                                provider.filterByType(
+                                  query: filterTypes[currentIndex],
+                                );
                                 showSnackBar(
                                   context: context,
                                   e: "Status changed successfully",

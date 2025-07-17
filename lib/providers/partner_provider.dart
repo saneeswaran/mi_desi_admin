@@ -437,13 +437,18 @@ class PartnerProvider extends ChangeNotifier {
 
       if (documentSnapshot.exists) {
         await documentSnapshot.reference.update({"activeStatus": status});
+
+        if (context.mounted) {
+          await fetchAllPartners(context: context);
+        }
+        filterByType(query: status);
+
         setLoading(false);
+        notifyListeners();
         return true;
       } else {
         if (context.mounted) {
           showSnackBar(context: context, e: "No such partner found");
-          setLoading(false);
-          notifyListeners();
         }
         setLoading(false);
         return false;
@@ -451,7 +456,7 @@ class PartnerProvider extends ChangeNotifier {
     } catch (e) {
       setLoading(false);
       if (context.mounted) {
-        showSnackBar(context: context, e: e);
+        showSnackBar(context: context, e: e.toString());
       }
       return false;
     }
