@@ -11,6 +11,7 @@ import 'package:desi_shopping_seller/screens/admin/products/all_products_page.da
 import 'package:desi_shopping_seller/screens/admin/real%20brands/real_brand_page.dart';
 import 'package:desi_shopping_seller/screens/admin/recharge%20provider/recharge_provider_page.dart';
 import 'package:desi_shopping_seller/screens/admin/recharge%20request/recharge_request_page.dart';
+import 'package:desi_shopping_seller/screens/admin/referrals/all_referrals_page.dart';
 import 'package:desi_shopping_seller/screens/admin/splash%20screen/auth_page.dart';
 import 'package:desi_shopping_seller/screens/admin/youtube%20video/youtube_videos_list.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +34,7 @@ List<String> drawerItems = [
   "Recharges",
   "Recharge Request",
   "Customers",
+  "Referrals",
 ];
 
 List<IconData> drawerIcons = [
@@ -48,6 +50,7 @@ List<IconData> drawerIcons = [
   Icons.mobile_friendly,
   Icons.mobile_off,
   Icons.person,
+  Icons.person_add,
 ];
 
 List<Widget> pages = [
@@ -69,6 +72,7 @@ List<Widget> pages = [
     title: 'Recharge Request',
   ),
   const AdvanceDrawerPage(body: AllCustomersList(), title: 'Customers'),
+  const AdvanceDrawerPage(body: AllReferralsPage(), title: "Referrals"),
 ];
 Widget draweFunctions({required BuildContext context}) {
   return Column(

@@ -54,42 +54,85 @@ class _AllReferralsPageState extends State<AllReferralsPage> {
                 ),
               ),
               onTap: () {
+                // Filter users who were referred by the current user
                 List<CustomerModel> referredCustomers = referralProvider
                     .allReferral
                     .where((referral) => referral.referredBy == user.uid)
                     .map(
                       (referral) => userProvider.allUsers.firstWhere(
                         (customer) => customer.uid == referral.referredTo,
+                        orElse: () =>
+                            CustomerModel(name: '', email: '', imageUrl: ''),
                       ),
                     )
                     .toList();
+
                 normalDialog(
                   context: context,
                   title: "Referrals",
                   size: size,
                   height: size.height * 0.8,
                   width: size.width * 1,
-                  widget: ListView.builder(
-                    itemBuilder: (context, index) {
-                      final customer = referredCustomers[index];
-                      return Container(
-                        padding: const EdgeInsets.all(16),
-                        height: size.height * 1,
-                        width: size.width * 1,
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.pink, width: 1.2),
-                          borderRadius: BorderRadius.circular(12),
+                  widget: referredCustomers.isEmpty
+                      ? const Center(
+                          child: Text(
+                            "No Referrals",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        )
+                      : ListView.builder(
+                          itemCount: referredCustomers.length,
+                          shrinkWrap: true,
+                          physics: const ClampingScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            final customer = referredCustomers[index];
+                            return Container(
+                              padding: const EdgeInsets.all(16),
+                              height: size.height * 0.15,
+                              width: size.width * 1,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.pink,
+                                  width: 1.2,
+                                ),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    customer.name,
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    customer.email,
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    customer.usedReferralCode.toString(),
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
                         ),
-                        child: Column(
-                          children: [
-                            Text(customer.name),
-                            Text(customer.email),
-                            Text(customer.usedReferralCode.toString()),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
                 );
               },
             );
