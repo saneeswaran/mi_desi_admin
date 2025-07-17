@@ -265,6 +265,13 @@ class ReachargesProvider extends ChangeNotifier {
     }
     notifyListeners(); // Make sure UI updates
   }
+
+  List<RechargeModel> filterByUserId({required String userid}) {
+    _filterRechargeRequest = _allRechargeRequest
+        .where((e) => e.customerId == userid)
+        .toList();
+    return _filterRechargeRequest;
+  }
 }
 
 class RechargeSimProvider extends ChangeNotifier {
