@@ -13,8 +13,8 @@ class ProductDetailsForBanners extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    return Consumer<ProductProvider>(
-      builder: (context, value, index) {
+    return Consumer2<ProductProvider, BannersProvider>(
+      builder: (context, value, banner, index) {
         return ListView.builder(
           itemCount: value.filterProduct.length,
           shrinkWrap: true,
@@ -23,10 +23,7 @@ class ProductDetailsForBanners extends StatelessWidget {
             final products = value.filterProduct[index];
             return GestureDetector(
               onTap: () {
-                final banners = Provider.of<BannersProvider>(
-                  context,
-                  listen: false,
-                ).filterBanners;
+                final banners = banner.filterBanners;
                 final bannerHasProduct = banners.any(
                   (e) => e.productId == products.id,
                 );
