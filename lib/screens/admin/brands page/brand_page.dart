@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:desi_shopping_seller/constants/constants.dart';
+import 'package:desi_shopping_seller/model/brand_model.dart';
 import 'package:desi_shopping_seller/providers/brand_provider.dart';
 import 'package:desi_shopping_seller/screens/admin/brands%20page/components/add_brands.dart';
 import 'package:desi_shopping_seller/screens/admin/brands%20page/components/view_brands.dart';
@@ -17,13 +20,26 @@ class BrandPage extends StatefulWidget {
 
 class _BrandPageState extends State<BrandPage> {
   final searchController = TextEditingController();
+  Timer? _debounce;
+
   @override
   void initState() {
     super.initState();
-    Future.wait([context.read<BrandProvider>().getBrands(context: context)]);
     searchController.addListener(() {
-      context.read<BrandProvider>().filterBrandsByQuery(searchController.text);
+      if (_debounce?.isActive ?? false) _debounce!.cancel();
+      _debounce = Timer(const Duration(milliseconds: 300), () {
+        context.read<BrandProvider>().filterBrandsByQuery(
+          searchController.text,
+        );
+      });
     });
+  }
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -60,9 +76,10 @@ class _BrandPageState extends State<BrandPage> {
               ),
             ),
             Expanded(
-              child: Consumer<BrandProvider>(
-                builder: (context, value, index) {
-                  final brand = value.filteredBrands;
+              child: Selector<BrandProvider, List<BrandModel>>(
+                selector: (context, value) => value.filteredBrands,
+                builder: (context, brands, index) {
+                  final brand = brands;
                   return GridView.builder(
                     itemCount: brand.length,
                     gridDelegate:

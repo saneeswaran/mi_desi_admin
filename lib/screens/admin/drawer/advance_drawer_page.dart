@@ -1,21 +1,28 @@
-// ignore_for_file: deprecated_member_use
 import 'package:desi_shopping_seller/constants/constants.dart';
 import 'package:desi_shopping_seller/screens/admin/drawer/components/drawer_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 
-class AdvanceDrawerPage extends StatelessWidget {
+class AdvanceDrawerPage extends StatefulWidget {
   final String title;
   final Widget body;
   const AdvanceDrawerPage({super.key, required this.body, required this.title});
 
   @override
+  State<AdvanceDrawerPage> createState() => _AdvanceDrawerPageState();
+}
+
+class _AdvanceDrawerPageState extends State<AdvanceDrawerPage> {
+  final AdvancedDrawerController _advancedDrawerController =
+      AdvancedDrawerController();
+
+  void handleMenuButtonPressed() {
+    _advancedDrawerController.showDrawer();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final advancedDrawerController = AdvancedDrawerController();
-    void handleMenuButtonPressed() {
-      advancedDrawerController.showDrawer();
-    }
 
     return AdvancedDrawer(
       backdrop: Container(
@@ -25,7 +32,7 @@ class AdvanceDrawerPage extends StatelessWidget {
           image: DecorationImage(image: AssetImage(AppImages.backgroundImages)),
         ),
       ),
-      controller: advancedDrawerController,
+      controller: _advancedDrawerController,
       animationCurve: Curves.easeInOut,
       animationDuration: const Duration(milliseconds: 300),
       animateChildDecoration: true,
@@ -56,11 +63,11 @@ class AdvanceDrawerPage extends StatelessWidget {
       ),
       child: Scaffold(
         appBar: AppBar(
-          title: Text(title),
+          title: Text(widget.title),
           leading: IconButton(
             onPressed: handleMenuButtonPressed,
             icon: ValueListenableBuilder<AdvancedDrawerValue>(
-              valueListenable: advancedDrawerController,
+              valueListenable: _advancedDrawerController,
               builder: (context, value, child) {
                 return AnimatedSwitcher(
                   duration: const Duration(milliseconds: 250),
@@ -77,7 +84,7 @@ class AdvanceDrawerPage extends StatelessWidget {
             ),
           ),
         ),
-        body: body,
+        body: widget.body,
       ),
     );
   }

@@ -81,18 +81,15 @@ class _BannersPageState extends State<BannersPage> {
                   ],
                 ),
               ),
-              Consumer<BannersProvider>(
-                builder: (context, value, child) {
+              Consumer2<BannersProvider, ProductProvider>(
+                builder: (context, value, productProvider, child) {
                   final bannerCount = value.filterBanners.length;
                   return ListView.builder(
                     itemCount: bannerCount,
                     shrinkWrap: true,
                     physics: const AlwaysScrollableScrollPhysics(),
                     itemBuilder: (context, index) {
-                      final product = Provider.of<ProductProvider>(
-                        context,
-                        listen: false,
-                      ).filterProduct;
+                      final product = productProvider.filterProduct;
                       final selectedProduct = product.where(
                         (e) => e.id == value.filterBanners[index].productId,
                       );

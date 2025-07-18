@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:desi_shopping_seller/constants/constants.dart';
+import 'package:desi_shopping_seller/model/brand_model.dart';
 import 'package:desi_shopping_seller/providers/brand_provider.dart';
 import 'package:desi_shopping_seller/screens/admin/real%20brands/components/add_real_brands.dart';
 import 'package:desi_shopping_seller/screens/admin/real%20brands/components/edit_real_brands.dart';
@@ -64,9 +65,10 @@ class _RealBrandPageState extends State<RealBrandPage> {
               ),
             ),
             Expanded(
-              child: Consumer<BrandProvider>(
-                builder: (context, value, index) {
-                  final brand = value.filterRealBrands;
+              child: Selector<BrandProvider, List<BrandModel>>(
+                selector: (context, provider) => provider.filterRealBrands,
+                builder: (context, brands, index) {
+                  final brand = brands;
                   return GridView.builder(
                     itemCount: brand.length,
                     gridDelegate:
