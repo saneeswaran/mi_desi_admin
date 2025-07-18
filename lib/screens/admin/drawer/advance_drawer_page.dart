@@ -48,7 +48,7 @@ class AdvanceDrawerPage extends StatelessWidget {
                   decoration: const BoxDecoration(shape: BoxShape.circle),
                   child: const Icon(Icons.person, size: 32),
                 ),
-                draweFunctions(context: context),
+                const DrawerMenuList(),
               ],
             ),
           ),
